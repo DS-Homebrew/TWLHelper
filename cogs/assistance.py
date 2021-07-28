@@ -1,6 +1,7 @@
 import discord
 
 from discord.ext import commands
+from inspect import cleandoc
 
 class Assistance(commands.Cog):
     """
@@ -80,6 +81,14 @@ class Assistance(commands.Cog):
                 embed.url = "https://dsi.cfw.guide/"
                 embed.description = "DSi CFW Guide"
                 await ctx.send(embed=embed)
+
+    @commands.command()
+    async def twlfix(self, ctx):
+        """Information on how to fix a broken TWL Partition"""
+        await self.simple_embed(ctx, """
+                                If you are encountering black screen on a 3DS family console while using DS-mode applications, \
+                                use [TWLFix-CFW](https://github.com/MechanicalDragon0687/TWLFix-CFW/releases/) to fix it.
+                                """, title="Fix broken TWL")
 
     @commands.group(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel), invoke_without_command=True, case_insensitive=True)
     async def tutorial(self, ctx):
