@@ -22,6 +22,13 @@ print(settings["DEFAULT"]["TOKEN"])
 TOKEN = settings['DEFAULT']['TOKEN']
 print(TOKEN)
 
+class embedHelp(commands.MinimalHelpCommand):
+    async def send_pages(self):
+        destination = self.get_destination()
+        for page in self.paginator.pages:
+            embed = discord.Embed(description=page)
+            await destination.send(embed=embed)
+
 class TWLBot(commands.Bot):
     def load_cogs(self):
         for cog in cogs:
@@ -86,8 +93,8 @@ class TWLBot(commands.Bot):
 def main():
     intents = discord.Intents(guilds=True, members=True, bans=True, messages=True)
 
-    bot = TWLBot(settings['DEFAULT']['PREFIX'], description="TWLBot. DS(i) Mode Hacking Discord server bot", allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents)
-    bot.help_command = commands.DefaultHelpCommand(dm_help=None)
+    bot = TWLBot(settings['DEFAULT']['PREFIX'], description="TWLBot. DS⁽ⁱ⁾ Mode Hacking Discord server bot", allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents)
+    bot.help_command = embedHelp()
     print(f'Starting TWLBot...')
     bot.load_cogs()
     bot.run(TOKEN)
