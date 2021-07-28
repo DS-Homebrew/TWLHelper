@@ -1,0 +1,5 @@
+version: "3.8"
+services:
+  twlbot:
+    build: .
+    image: ghcr.io/DS-Homebrew/dsi-hacking-bot

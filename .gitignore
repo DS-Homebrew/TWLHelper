@@ -1,0 +1,6 @@
+*.ini
+._*
+.DS_Store
+token.txt
+config.ini
+__pycache__
