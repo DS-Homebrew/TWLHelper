@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import discord
 import configparser
 
@@ -13,6 +15,8 @@ cogs = [
 
 settings = configparser.ConfigParser()
 settings.read('settings.ini')
+
+print(settings["DEFAULT"]["TOKEN"])
 
 TOKEN = settings['DEFAULT']['TOKEN']
 print(TOKEN)
