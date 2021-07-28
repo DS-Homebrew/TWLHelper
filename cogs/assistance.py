@@ -75,7 +75,7 @@ class Assistance(commands.Cog):
                 await ctx.send(embed=embed)
             if self.check_console(x, 'dsi'):
                 embed = discord.Embed(title="Guide")
-                embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking", url="https://dsi.cfw.guide/credits")
+                embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking", url="https://dsi.cfw.guide/credits.html")
                 embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
                 embed.url = "https://dsi.cfw.guide/"
                 embed.description = "DSi CFW Guide"
@@ -84,11 +84,7 @@ class Assistance(commands.Cog):
     @commands.group(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel), invoke_without_command=True, case_insensitive=True)
     async def tutorial(self, ctx):
         """Links to one of multiple guides"""
-        if isinstance(ctx.channel, discord.DMChannel):
-            await ctx.send_help(ctx.command)
-        else:
-            await ctx.send(f'{ctx.author.mention}, if you wish to view the \
-complete list of tutorials, send `.tutorial` to me in a DM.', delete_after=10)
+        await ctx.send_help(ctx.command)
 
     @tutorial.command(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
     async def widescreen(self, ctx):
