@@ -90,12 +90,12 @@ class Assistance(commands.Cog):
                                 use [TWLFix-CFW](https://github.com/MechanicalDragon0687/TWLFix-CFW/releases/) to fix it.
                                 """, title="Fix broken TWL")
 
-    @commands.group(aliases=["howto"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel), invoke_without_command=True, case_insensitive=True)
+    @commands.group(aliases=["howto"], invoke_without_command=True, case_insensitive=True)
     async def tutorial(self, ctx):
         """Links to one of multiple guides"""
         await ctx.send_help(ctx.command)
 
-    @tutorial.command(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
+    @tutorial.command()
     async def widescreen(self, ctx):
         """Widescreen for 3DS TWLMenu++"""
         embed = discord.Embed(title="Playing in Widescreen")

@@ -33,12 +33,12 @@ class Wiki(commands.Cog):
                 out += "-"
         return out
 
-    @commands.group(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel), invoke_without_command=True, case_insensitive=True)
+    @commands.group(invoke_without_command=True, case_insensitive=True)
     async def faq(self, ctx):
         """Links to the FAQ for an application."""
         await ctx.send_help(ctx.command)
 
-    @faq.command(aliases=["twl", "twlmenu"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
+    @faq.command(aliases=["twl", "twlmenu"])
     async def twilight(self, ctx, *, arg=""):
         embed = discord.Embed(title="TWiLight Menu++ FAQ")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
@@ -52,7 +52,7 @@ class Wiki(commands.Cog):
                     embed.description = faq
         await ctx.send(embed=embed)
     
-    @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
+    @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
     async def ndsbootstrap(self, ctx, *, arg=""):
         embed = discord.Embed(title="nds-bootstrap FAQ")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
@@ -66,7 +66,7 @@ class Wiki(commands.Cog):
                     embed.description = faq
         await ctx.send(embed=embed)
 
-    @faq.command(aliases=["gbar2"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
+    @faq.command(aliases=["gbar2"])
     async def gbarunner2(self, ctx, *, arg=""):
         embed = discord.Embed(title="GBARunner2 FAQ")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
@@ -80,7 +80,7 @@ class Wiki(commands.Cog):
                     embed.description = faq
         await ctx.send(embed=embed)
 
-    @faq.command(aliases=["hiya"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
+    @faq.command(aliases=["hiya"])
     async def hiyacfw(self, ctx):
         embed = discord.Embed(title="hiyaCFW Troubleshooting")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
