@@ -1,7 +1,8 @@
 import discord
+import sys
 
 from discord.ext import commands
-from . import results
+from .results import faqs
 
 class Wiki(commands.Cog):
     """
@@ -37,7 +38,7 @@ class Wiki(commands.Cog):
         """Links to the FAQ for an application."""
         await ctx.send_help(ctx.command)
 
-    @faq.command(aliases=["twl"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
+    @faq.command(aliases=["twl", "twlmenu"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
     async def twilight(self, ctx, *, arg=""):
         embed = discord.Embed(title="TWiLight Menu++ FAQ")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
@@ -45,7 +46,7 @@ class Wiki(commands.Cog):
         embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
-            for faq in results.twl_faqs:
+            for faq in faqs.twlmenu:
                 if arg.lower() in faq.lower():
                     embed.url = embed.url + "?faq=" + self.web_name(faq)
                     embed.description = faq
@@ -59,7 +60,7 @@ class Wiki(commands.Cog):
         embed.url = "https://wiki.ds-homebrew.com/nds-bootstrap/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
-            for faq in results.bootstrap_faqs:
+            for faq in faqs.bootstrap:
                 if arg.lower() in faq.lower():
                     embed.url = embed.url + "?faq=" + self.web_name(faq)
                     embed.description = faq
@@ -73,7 +74,7 @@ class Wiki(commands.Cog):
         embed.url = "https://wiki.ds-homebrew.com/gbarunner2/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
-            for faq in results.gbar2_faqs:
+            for faq in faqs.gbar2:
                 if arg.lower() in faq.lower():
                     embed.url = embed.url + "?faq=" + self.web_name(faq)
                     embed.description = faq

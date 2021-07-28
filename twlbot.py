@@ -10,7 +10,7 @@ intents = discord.Intents.default()
 
 cogs = [
     'cogs.assistance',
-    'cogs.wiki.wiki',
+    'cogs.wiki',
     # 'cogs.general',
     ]
 

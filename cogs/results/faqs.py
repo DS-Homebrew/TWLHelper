@@ -1,4 +1,4 @@
-twl_faqs = (
+twlmenu = (
     "Why does my 3DS/2DS get stuck on black screens, crash, power off, etc when launching TWiLight Menu++?",
     "TWL_FIRM might’ve somehow got corrupted. Follow this guide to fix the issue: https://3ds.hacks.guide/troubleshooting#dsi--ds-functionality-is-broken-after-completing-the-guide",
     "How do I fix getting a white screen when booting TWiLight Menu++?",
@@ -16,7 +16,7 @@ twl_faqs = (
     "Can The Biggest Loser boot TWiLight Menu++?"
 )
 
-bootstrap_faqs = (
+bootstrap = (
     "nds-bootstrap FAQ & Troubleshooting",
     "Why do I get a white screen when trying to load a game from SD card?",
     "nds-bootstrap troubleshooting",
@@ -27,7 +27,7 @@ bootstrap_faqs = (
     "Why do my cheats not work?",
 )
 
-gbar2_faqs = (
+gbar2 = (
     "How do I create and add custom borders?",
     "Are cheats supported?",
     "How do I use nightly GBARunner2 builds in TWiLight Menu++?",
