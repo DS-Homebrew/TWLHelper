@@ -36,7 +36,7 @@ class Wiki(commands.Cog):
         for x in consoleslist:
             if self.check_console(x, ('twilight', 'twl')):
                 embed = discord.Embed(title="TWiLight Menu++")
-                embed.set_author(name="DS-Homebrew", url="https://wiki.ds-homebrew.com/")
+                embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
                 embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
                 embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq"
                 embed.description = "Frequently Asked Questions & Troubleshooting"
@@ -44,7 +44,7 @@ class Wiki(commands.Cog):
                 continue
             if self.check_console(x, 'nds-bootstrap'):
                 embed = discord.Embed(title="nds-bootstrap")
-                embed.set_author(name="DS-Homebrew", url="https://wiki.ds-homebrew.com/")
+                embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
                 embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
                 embed.url = "https://wiki.ds-homebrew.com/nds-bootstrap/faq"
                 embed.description = "Frequently Asked Questions & Troubleshooting"
@@ -52,15 +52,15 @@ class Wiki(commands.Cog):
                 continue
             if self.check_console(x, 'gbarunner2'):
                 embed = discord.Embed(title="GBARunner2")
-                embed.set_author(name="DS-Homebrew", url="https://wiki.ds-homebrew.com/")
+                embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
                 embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
                 embed.url = "https://wiki.ds-homebrew.com/gbarunner2/faq"
                 embed.description = "Frequently Asked Questions & Troubleshooting"
                 await ctx.send(embed=embed)
                 continue
             if self.check_console(x, 'hiyacfw'):
-                embed = discord.Embed(title="TWiLight Menu++")
-                embed.set_author(name="DS-Homebrew", url="https://wiki.ds-homebrew.com/")
+                embed = discord.Embed(title="hiyaCFW")
+                embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
                 embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
                 embed.url = "https://wiki.ds-homebrew.com/hiyacfw/faq"
                 embed.description = "Frequently Asked Questions & Troubleshooting"
