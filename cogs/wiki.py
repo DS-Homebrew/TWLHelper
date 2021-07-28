@@ -83,7 +83,7 @@ class Wiki(commands.Cog):
             "Why do my cheats not work?",
         )
 
-        embed = discord.Embed(title="nds-bootstrap")
+        embed = discord.Embed(title="nds-bootstrap FAQ")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
         embed.url = "https://wiki.ds-homebrew.com/nds-bootstrap/faq.html"
@@ -106,7 +106,7 @@ class Wiki(commands.Cog):
             "How do I use Wi-Fi link features?",
         )
 
-        embed = discord.Embed(title="GBARunner2")
+        embed = discord.Embed(title="GBARunner2 FAQ")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
         embed.url = "https://wiki.ds-homebrew.com/gbarunner2/faq.html"
@@ -122,7 +122,7 @@ class Wiki(commands.Cog):
 
     @faq.command(aliases=["hiya"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
     async def hiyacfw(self, ctx):
-        embed = discord.Embed(title="hiyaCFW")
+        embed = discord.Embed(title="hiyaCFW Troubleshooting")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
         embed.url = "https://wiki.ds-homebrew.com/hiyacfw/troubleshooting.html"
