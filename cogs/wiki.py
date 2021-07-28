@@ -9,18 +9,11 @@ class Wiki(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.applications = ("twilight", "twl", "nds-bootstrap", "gbarunner2", "hiyacfw")
 
     async def simple_embed(self, ctx, text, *, title="", color=discord.Color.default()):
         embed = discord.Embed(title=title, color=color)
         embed.description = cleandoc(text)
         await ctx.send(embed=embed)
-
-    def check_console(self, message, consoles):
-        message = message.lower()
-        if message in consoles:
-            return True
-        return False
 
     @commands.group(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel), invoke_without_command=True, case_insensitive=True)
     async def faq(self, ctx, *, consoles=""):
