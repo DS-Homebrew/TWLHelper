@@ -10,23 +10,36 @@ class Wiki(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def check_arg(self, message, arg):
+        message = message.lower()
+        if message in arg:
+            return True
+        return False
+
     async def simple_embed(self, ctx, text, *, title="", color=discord.Color.default()):
         embed = discord.Embed(title=title, color=color)
         embed.description = cleandoc(text)
         await ctx.send(embed=embed)
 
     @commands.group(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel), invoke_without_command=True, case_insensitive=True)
-    async def faq(self, ctx, *, consoles=""):
+    async def faq(self, ctx):
         """Links to the FAQ for an application."""
         await ctx.send_help(ctx.command)
 
     @faq.command(aliases=["twl"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
-    async def twilight(self, ctx):
-        embed = discord.Embed(title="TWiLight Menu++")
-        embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
-        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq.html"
-        embed.description = "Frequently Asked Questions & Troubleshooting"
+    async def twilight(self, ctx, *, arg=""):
+        if self.check_arg('cheats', arg):
+            embed = discord.Embed(title="TWiLight Menu++")
+            embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
+            embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
+            embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq.html#how-do-i-use-cheats"
+            embed.description = "Frequently Asked Questions: Cheats"
+        else:
+            embed = discord.Embed(title="TWiLight Menu++")
+            embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
+            embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
+            embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq.html"
+            embed.description = "Frequently Asked Questions & Troubleshooting"
         await ctx.send(embed=embed)
     
     @faq.command(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
