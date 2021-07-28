@@ -51,7 +51,7 @@ class Wiki(commands.Cog):
                     embed.description = faq
         await ctx.send(embed=embed)
     
-    @faq.command(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
+    @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
     async def ndsbootstrap(self, ctx, *, arg=""):
         embed = discord.Embed(title="nds-bootstrap FAQ")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
@@ -65,7 +65,7 @@ class Wiki(commands.Cog):
                     embed.description = faq
         await ctx.send(embed=embed)
 
-    @faq.command(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
+    @faq.command(aliases=["gbar2"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
     async def gbarunner2(self, ctx, *, arg=""):
         embed = discord.Embed(title="GBARunner2 FAQ")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
