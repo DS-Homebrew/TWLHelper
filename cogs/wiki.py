@@ -48,7 +48,7 @@ class Wiki(commands.Cog):
         if arg != "":
             for faq in faqs.twlmenu:
                 if arg.lower() in faq.lower():
-                    embed.url = embed.url + "?faq=" + self.web_name(faq)
+                    embed.url += "?faq=" + self.web_name(faq)
                     embed.description = faq
         await ctx.send(embed=embed)
     
@@ -62,7 +62,7 @@ class Wiki(commands.Cog):
         if arg != "":
             for faq in faqs.bootstrap:
                 if arg.lower() in faq.lower():
-                    embed.url = embed.url + "?faq=" + self.web_name(faq)
+                    embed.url += "?faq=" + self.web_name(faq)
                     embed.description = faq
         await ctx.send(embed=embed)
 
@@ -76,7 +76,7 @@ class Wiki(commands.Cog):
         if arg != "":
             for faq in faqs.gbar2:
                 if arg.lower() in faq.lower():
-                    embed.url = embed.url + "?faq=" + self.web_name(faq)
+                    embed.url += "?faq=" + self.web_name(faq)
                     embed.description = faq
         await ctx.send(embed=embed)
 
