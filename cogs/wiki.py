@@ -25,7 +25,7 @@ class Wiki(commands.Cog):
         embed = discord.Embed(title="TWiLight Menu++")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq"
+        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         await ctx.send(embed=embed)
     
@@ -34,7 +34,7 @@ class Wiki(commands.Cog):
         embed = discord.Embed(title="nds-bootstrap")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/nds-bootstrap/faq"
+        embed.url = "https://wiki.ds-homebrew.com/nds-bootstrap/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         await ctx.send(embed=embed)
 
@@ -43,7 +43,7 @@ class Wiki(commands.Cog):
         embed = discord.Embed(title="GBARunner2")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/gbarunner2/faq"
+        embed.url = "https://wiki.ds-homebrew.com/gbarunner2/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         await ctx.send(embed=embed)
     @faq.command(aliases=["hiya"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
@@ -51,7 +51,7 @@ class Wiki(commands.Cog):
         embed = discord.Embed(title="hiyaCFW")
         embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/hiyacfw/faq"
+        embed.url = "https://wiki.ds-homebrew.com/hiyacfw/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         await ctx.send(embed=embed)
 
