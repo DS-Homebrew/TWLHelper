@@ -23,5 +23,5 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 ```
 
 ### Credits
-Discord.py: This wouldn't exist without it
-[Nintendo Homebrew's Kurisu](https://github.com/nh-server/kurisu): error embeds, `assistance.py` simple_embed and console-specific identifiers
+- Discord.py: This wouldn't exist without it
+- [Nintendo Homebrew's Kurisu](https://github.com/nh-server/kurisu): error embeds, `assistance.py` simple_embed and console-specific identifiers
