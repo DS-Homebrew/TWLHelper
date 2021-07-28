@@ -3,15 +3,15 @@
 ## How to use
 
 Docker (UNTESTED!):
-    - Just run `docker-compose up --build -d` 
+  - Just run `docker-compose up --build -d` 
 
 Command line:
-    - get latest python
-    - run `pip install -r requirements.txt`
-    - make a copy of `settings.ini.example` and name it `settings.ini`
-    - set bot token ID
-    - set other args if you want. Don't use quotes
-    - run `python3 twlbot.py`
+  - get latest python
+  - run `pip install -r requirements.txt`
+  - make a copy of `settings.ini.example` and name it `settings.ini`
+  - set bot token ID
+  - set other args if you want. Don't use quotes
+  - run `python3 twlbot.py`
 
 ### License
 ```
