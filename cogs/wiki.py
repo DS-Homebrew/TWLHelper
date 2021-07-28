@@ -28,16 +28,13 @@ class Wiki(commands.Cog):
 
     @faq.command(aliases=["twl"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
     async def twilight(self, ctx, *, arg=""):
+        embed = discord.Embed(title="TWiLight Menu++")
+        embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
+        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
         if self.check_arg('cheats', arg):
-            embed = discord.Embed(title="TWiLight Menu++")
-            embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
-            embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
             embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq.html#how-do-i-use-cheats"
             embed.description = "Frequently Asked Questions: Cheats"
         else:
-            embed = discord.Embed(title="TWiLight Menu++")
-            embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
-            embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
             embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq.html"
             embed.description = "Frequently Asked Questions & Troubleshooting"
         await ctx.send(embed=embed)
