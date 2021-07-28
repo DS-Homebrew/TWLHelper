@@ -17,10 +17,7 @@ cogs = [
 settings = configparser.ConfigParser()
 settings.read('settings.ini')
 
-print(settings["DEFAULT"]["TOKEN"])
-
 TOKEN = settings['DEFAULT']['TOKEN']
-print(TOKEN)
 
 class embedHelp(commands.MinimalHelpCommand):
     async def send_pages(self):
