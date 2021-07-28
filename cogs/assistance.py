@@ -81,6 +81,23 @@ class Assistance(commands.Cog):
                 embed.description = "DSi CFW Guide"
                 await ctx.send(embed=embed)
 
+    @commands.group(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel), invoke_without_command=True, case_insensitive=True)
+    async def tutorial(self, ctx):
+        """Links to one of multiple guides"""
+        if isinstance(ctx.channel, discord.DMChannel):
+            await ctx.send_help(ctx.command)
+        else:
+            await ctx.send(f'{ctx.author.mention}, if you wish to view the \
+complete list of tutorials, send `.tutorial` to me in a DM.', delete_after=10)
+
+    @tutorial.command(cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
+    async def widescreen(self, ctx):
+        """Widescreen for 3DS TWLMenu++"""
+        embed = discord.Embed(title="Playing in Widescreen")
+        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
+        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/playing-in-widescreen.html"
+        embed.description = "Playing in widescreen with TWiLight Menu++ on 3DS"
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Assistance(bot))
