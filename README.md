@@ -2,7 +2,7 @@
 
 ## How to use
 
-Docker (UNTESTED!):
+Docker:
   - Just run `docker-compose up --build -d` 
 
 Command line:
