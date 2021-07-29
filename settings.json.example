@@ -1,0 +1,12 @@
+{ 
+    "DEFAULT": {
+        "TOKEN": "",
+        "STATUS": "",
+        "PREFIX": "."
+    },
+
+    "MODERATOR": [
+        "Da Master",
+        "Admin"
+    ]
+}

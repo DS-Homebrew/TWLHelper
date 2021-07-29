@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import discord
-import configparser
+import json
 
 from discord.ext import commands
 from utils.utils import create_error_embed
@@ -14,8 +14,8 @@ cogs = [
     # 'cogs.general',
     ]
 
-settings = configparser.ConfigParser()
-settings.read('settings.ini')
+settingsf = open('settings.json')
+settings = json.load(settingsf)
 
 TOKEN = settings['DEFAULT']['TOKEN']
 
