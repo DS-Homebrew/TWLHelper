@@ -37,7 +37,7 @@ class Assistance(commands.Cog):
         for x in consoleslist:
             if self.check_console(x, '3ds'):
                 embed = discord.Embed(title="Guide")
-                embed.set_author(name="Nintendo Homebrew & Plailect", url="https://3ds.hacks.guide/")
+                embed.set_author(name="Nintendo Homebrew & Plailect")
                 embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
                 embed.url = "https://3ds.hacks.guide/"
                 embed.description = "3DS Hacks Guide"
@@ -45,7 +45,7 @@ class Assistance(commands.Cog):
                 continue
             if self.check_console(x, ('wiiu',)):
                 embed = discord.Embed(title="Guide")
-                embed.set_author(name="Nintendo Homebrew", url="https://wiiu.hacks.guide/")
+                embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
                 embed.url = "https://wiiu.hacks.guide/"
                 embed.description = "Wii U Hacks Guide"
@@ -53,7 +53,7 @@ class Assistance(commands.Cog):
                 continue
             if self.check_console(x, ('vwii',)):
                 embed = discord.Embed(title="Guide")
-                embed.set_author(name="Nintendo Homebrew", url="https://wiiu.hacks.guide/#/vwii-modding")
+                embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/FclGzNz.png")
                 embed.url = "https://wiiu.hacks.guide/#/vwii-modding"
                 embed.description = "vWii modding guide"
@@ -61,7 +61,7 @@ class Assistance(commands.Cog):
                 continue
             if self.check_console(x, ('switch', 'nx', 'ns')):
                 embed = discord.Embed(title="Guide")
-                embed.set_author(name="Nintendo Homebrew", url="https://nh-server.github.io/switch-guide/")
+                embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
                 embed.url = "https://nh-server.github.io/switch-guide/"
                 embed.description = "Switch hacking guide"
@@ -69,14 +69,14 @@ class Assistance(commands.Cog):
                 continue
             if self.check_console(x, 'wii'):
                 embed = discord.Embed(title="Guide")
-                embed.set_author(name="RiiConnect24", url="https://wii.guide/")
+                embed.set_author(name="RiiConnect24")
                 embed.set_thumbnail(url="https://i.imgur.com/KI6IXmm.png")
                 embed.url = "https://wii.guide/"
                 embed.description = "Wii softmod guide"
                 await ctx.send(embed=embed)
             if self.check_console(x, 'dsi'):
                 embed = discord.Embed(title="Guide")
-                embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking", url="https://dsi.cfw.guide/credits.html")
+                embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
                 embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
                 embed.url = "https://dsi.cfw.guide/"
                 embed.description = "DSi CFW Guide"
@@ -99,6 +99,7 @@ class Assistance(commands.Cog):
     async def widescreen(self, ctx):
         """Widescreen for 3DS TWLMenu++"""
         embed = discord.Embed(title="Playing in Widescreen")
+        embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
         embed.url = "https://wiki.ds-homebrew.com/twilightmenu/playing-in-widescreen.html"
         embed.description = "Playing in widescreen with TWiLight Menu++ on 3DS"

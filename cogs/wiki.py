@@ -41,7 +41,7 @@ class Wiki(commands.Cog):
     @faq.command(aliases=["twl", "twlmenu"])
     async def twilight(self, ctx, *, arg=""):
         embed = discord.Embed(title="TWiLight Menu++ FAQ")
-        embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
+        embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
         embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
@@ -55,7 +55,7 @@ class Wiki(commands.Cog):
     @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
     async def ndsbootstrap(self, ctx, *, arg=""):
         embed = discord.Embed(title="nds-bootstrap FAQ")
-        embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
+        embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
         embed.url = "https://wiki.ds-homebrew.com/nds-bootstrap/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
@@ -69,7 +69,7 @@ class Wiki(commands.Cog):
     @faq.command(aliases=["gbar2"])
     async def gbarunner2(self, ctx, *, arg=""):
         embed = discord.Embed(title="GBARunner2 FAQ")
-        embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
+        embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
         embed.url = "https://wiki.ds-homebrew.com/gbarunner2/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
@@ -83,7 +83,7 @@ class Wiki(commands.Cog):
     @faq.command(aliases=["hiya"])
     async def hiyacfw(self, ctx):
         embed = discord.Embed(title="hiyaCFW Troubleshooting")
-        embed.set_author(name="DS-Homebrew Wiki", url="https://wiki.ds-homebrew.com/")
+        embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
         embed.url = "https://wiki.ds-homebrew.com/hiyacfw/troubleshooting.html"
         embed.description = "Troubleshooting"
