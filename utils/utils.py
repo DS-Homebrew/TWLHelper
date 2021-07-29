@@ -17,9 +17,12 @@
 import discord
 import random
 import re
+import json
 
 from discord.ext import commands
 
+settingsf = open('settings.json')
+settings = json.load(settingsf)
 
 async def send_dm_message(member: discord.Member, message: str, ctx: commands.Context = None, **kwargs) -> bool:
     """A helper method for sending a message to a member's DMs.
@@ -53,3 +56,9 @@ def create_error_embed(ctx, exc) -> discord.Embed:
     embed.add_field(name=f"{exc.__class__.__name__} Exception ", value=exc, inline=False)
     embed.add_field(name="Information", value=f"channel: {ctx.channel.mention if isinstance(ctx.channel, discord.TextChannel) else 'Direct Message'}\ncommand: {ctx.command}\nmessage: {ctx.message.content}\nuser: {ctx.author.mention}", inline=False)
     return embed
+
+
+def is_staff():
+    def predicate(ctx):
+        return any(ctx.message.author.roles == role for role in settings['MODERATOR']) if not ctx.author == ctx.guild.owner else True
+    return commands.check(predicate)
