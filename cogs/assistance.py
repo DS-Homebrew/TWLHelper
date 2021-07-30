@@ -30,9 +30,10 @@ class Assistance(commands.Cog):
         arg = arg.casefold()
         arglist = {x for x in arg.split() if x in self.systems}
 
-        if not arglist:
+        if arg not in systems:
             await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in self.systems])}.")
             return
+
         for x in arglist:
             if self.check_arg(x, '3ds'):
                 embed = discord.Embed(title="Guide")
@@ -88,6 +89,40 @@ class Assistance(commands.Cog):
                                 If you are encountering black screen on a 3DS family console while using DS-mode applications, \
                                 use [TWLFix-CFW](https://github.com/MechanicalDragon0687/TWLFix-CFW/releases/) to fix it.
                                 """, title="Fix broken TWL")
+
+    @commands.command()
+    async def unlaunch(self, ctx):
+        """Installing Unlaunch"""
+        embed = discord.Embed(title="Installing Unlaunch")
+        embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
+        embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
+        embed.url = "https://dsi.cfw.guide/installing-unlaunch.html"
+        embed.description = "How to install Unlaunch on the DSi"
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def dump(self, ctx, arg=None):
+        """How to dump games and data for CFW consoles"""
+        systems = ("3ds", "dsi")
+
+        if arg not in systems:
+            await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in systems])}.")
+            return
+
+        if self.check_arg(arg, '3ds'):
+            embed = discord.Embed(title="GodMode9 Dump Guide")
+            embed.set_author(name="Nintendo Homebrew & Plailect", url="https://3ds.hacks.guide/dumping-titles-and-game-cartridges")
+            embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
+            embed.url = "https://3ds.hacks.guide/dumping-titles-and-game-cartridges.html"
+            embed.description = "How to dump Cartridges and Files on a 3DS using GodMode9"
+            await ctx.send(embed=embed)
+        elif self.check_arg(arg, 'dsi'):
+            embed = discord.Embed(title="GodMode9i Dump Guide")
+            embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking", url="https://dsi.cfw.guide/dumping-game-cards")
+            embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
+            embed.url = "https://dsi.cfw.guide/dumping-game-cards.html"
+            embed.description = "How to dump cartridges on a Nintendo DSi using GodMode9i"
+            await ctx.send(embed=embed)
 
 
 def setup(bot):
