@@ -39,8 +39,8 @@ class Wiki(commands.Cog):
         """Links to the FAQ for an application."""
         await ctx.send_help(ctx.command)
 
-    @faq.command(aliases=["twl", "twlmenu", "twilightmenu"])
-    async def twilight(self, ctx, *, arg=""):
+    @faq.command(name="twilight", aliases=["twl", "twlmenu", "twilightmenu"])
+    async def twilight_faq(self, ctx, *, arg=""):
         embed = discord.Embed(title="TWiLight Menu++ FAQ")
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
@@ -95,13 +95,38 @@ class Wiki(commands.Cog):
         """Links and/or information on updating apps or system."""
         await ctx.send_help(ctx.command)
 
-    @update.command(aliases=["twlmenu", "twl", "twilight"])
-    async def twilightmenu(self, ctx, *, arg=""):
+    @update.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
+    async def twilight_update(self, ctx, *, arg=""):
         embed = discord.Embed(title="TWiLight Menu++ Update Guide")
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
         embed.url = "https://wiki.ds-homebrew.com/twilightmenu/updating"
         embed.description = "How to update TWiLight Menu++"
+        if arg != "":
+            if self.check_arg(arg, ("3ds",)):
+                embed.url += "-3ds"
+                embed.description += " on the 3DS"
+            elif self.check_arg(arg, ("dsi",)):
+                embed.url += "-dsi"
+                embed.description += " on the DSi"
+            elif self.check_arg(arg, ("flashcard", "flashcart", "ds")):
+                embed.url += "-flashcard"
+                embed.description += " on flashcards"
+        embed.url += ".html"
+        await ctx.send(embed=embed)
+
+    @commands.group(invoke_without_command=True, case_insensitive=True)
+    async def install(self, ctx):
+        """Links and/or information on installing apps."""
+        await ctx.send_help(ctx.command)
+
+    @install.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
+    async def twilight_install(self, ctx, *, arg=""):
+        embed = discord.Embed(title="TWiLight Menu++ Installation Guide")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
+        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/installing"
+        embed.description = "How to install TWiLight Menu++"
         if arg != "":
             if self.check_arg(arg, ("3ds",)):
                 embed.url += "-3ds"
