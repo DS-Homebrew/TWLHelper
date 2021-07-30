@@ -189,6 +189,26 @@ class Wiki(commands.Cog):
         embed.description = "How to hardmod a Nintendo DSi"
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=["serverrules", "discordrules"])
+    async def rules(self, ctx):
+        """Links to the DSi hardmod guide"""
+        embed = discord.Embed(title="DS⁽ⁱ⁾ Mode Hacking Rules")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/community/discord-rules.html"
+        embed.description = "The rules for the DS⁽ⁱ⁾ Mode Hacking Discord server"
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=["discordinfo"])
+    async def serverinfo(self, ctx):
+        """Links to the DSi hardmod guide"""
+        embed = discord.Embed(title="DS⁽ⁱ⁾ Mode Hacking Info")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/community/discord-info.html"
+        embed.description = "Information for the DS⁽ⁱ⁾ Mode Hacking Discord server"
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Wiki(bot))
