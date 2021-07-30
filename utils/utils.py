@@ -15,12 +15,8 @@
 
 
 import discord
-import json
-
+import settings
 from discord.ext import commands
-
-settingsf = open('settings.json')
-settings = json.load(settingsf)
 
 
 async def send_dm_message(member: discord.Member, message: str, ctx: commands.Context = None, **kwargs) -> bool:
@@ -59,5 +55,5 @@ def create_error_embed(ctx, exc) -> discord.Embed:
 
 def is_staff():
     def predicate(ctx):
-        return any((role.id in settings["MODERATOR"] or role.name in settings["MODERATOR"]) for role in ctx.message.author.roles) if not ctx.author == ctx.guild.owner else True
+        return any((role.id in settings.staff_roles or role.name in settings.staff_roles) for role in ctx.message.author.roles) if not ctx.author == ctx.guild.owner else True
     return commands.check(predicate)

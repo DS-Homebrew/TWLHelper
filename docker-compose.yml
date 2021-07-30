@@ -3,3 +3,11 @@ services:
   twlhelper:
     build: .
     image: ghcr.io/ds-homebrew/twlhelper
+    environment:
+      twlhelper_settings_json: /run/secrets/twlhelper_settings
+    secrets:
+      - twlhelper_settings
+
+secrets:
+  twlhelper_settings:
+    file: ./settings.json

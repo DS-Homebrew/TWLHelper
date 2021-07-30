@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import discord
-import json
+import settings
 
 from discord.ext import commands
 from utils.utils import create_error_embed
+
 
 intents = discord.Intents.default()
 
@@ -12,12 +13,8 @@ cogs = [
     'cogs.general',
     'cogs.wiki',
     'cogs.load',
+    'cogs.convert',
 ]
-
-settingsf = open('settings.json')
-settings = json.load(settingsf)
-
-TOKEN = settings['DEFAULT']['TOKEN']
 
 
 class embedHelp(commands.MinimalHelpCommand):
@@ -25,6 +22,7 @@ class embedHelp(commands.MinimalHelpCommand):
         destination = self.get_destination()
         for page in self.paginator.pages:
             embed = discord.Embed(description=page)
+            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
             await destination.send(embed=embed)
 
 
@@ -40,7 +38,7 @@ class TWLHelper(commands.Bot):
 
     async def on_ready(self):
         print("TWLHelper ready.")
-        await self.change_presence(status=discord.Status.online, activity=discord.Game(settings['DEFAULT']['STATUS']))
+        await self.change_presence(status=discord.Status.online, activity=discord.Game(settings.STATUS))
 
     async def on_command_error(self, ctx: commands.Context, exc: commands.CommandInvokeError):
         author: discord.Member = ctx.author
@@ -93,11 +91,11 @@ class TWLHelper(commands.Bot):
 def main():
     intents = discord.Intents(guilds=True, members=True, bans=True, messages=True)
 
-    bot = TWLHelper(settings['DEFAULT']['PREFIX'], description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot", allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents, case_insensitive=True)
+    bot = TWLHelper(settings.PREFIX, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot", allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents, case_insensitive=True)
     bot.help_command = embedHelp()
     print('Starting TWLHelper...')
     bot.load_cogs()
-    bot.run(TOKEN)
+    bot.run(settings.TOKEN)
 
     settingsf.close()
 

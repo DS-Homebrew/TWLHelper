@@ -16,6 +16,8 @@ There are currently two ways to run the bot:
 
 ### Command line:
 1. Install the latest version of Python 3, at minimum 3.8, for your host.
+1. Install ImageMagick for your host. At this time, the code expects ImageMagick 6. Any other version is UNTESTED.
+1. Install Gifsicle for your host.
 1. Run `pip install -r requirements.txt`.
     - If you want to use the [discord.py master](https://github.com/Rapptz/discord.py) branch, run `pip install -r requirements-master.txt`.
         - If you want to switch back to the release branch, you **must** re-run the regular `pip` command!
