@@ -5,7 +5,7 @@
 1. Make a copy of `settings.json.example` and name it `settings.json`.
 1. Set your bot's token ID.
     - You will need to create a bot over at [Discord Developer Portal](https://discord.com/developers/applications).
-1. You can also set other arguments in `settings.ini`, such as command prefix, account status, and moderator roles.
+1. You can also set other arguments in `settings.json`, such as command prefix, account status, and moderator roles.
 
 There are currently two ways to run the bot:
 

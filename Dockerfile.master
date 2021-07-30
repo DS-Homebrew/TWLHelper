@@ -3,7 +3,7 @@ LABEL org.opencontainers.image.source https://github.com/DS-Homebrew/TWLHelper
 ENV IS_DOCKER=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
-ENV HOME /home/twlbot
+ENV HOME /home/twlhelper
 RUN useradd -m -d $HOME -s /bin/sh -u 2849 twlhelper
 WORKDIR $HOME
 COPY ./requirements-master.txt .
