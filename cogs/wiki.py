@@ -140,6 +140,15 @@ class Wiki(commands.Cog):
         embed.url += ".html"
         await ctx.send(embed=embed)
 
+    @install.command(name="hiyacfw", aliases=["hiya"])
+    async def hiyacfw_install(self, ctx, *, arg=""):
+        embed = discord.Embed(title="hiyaCFW Installation Guide")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
+        embed.url = "https://wiki.ds-homebrew.com/hiyacfw/installing"
+        embed.description = "How to install hiyaCFW on the DSi"
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def widescreen(self, ctx):
         """Widescreen for 3DS TWLMenu++"""
