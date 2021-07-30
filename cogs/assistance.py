@@ -18,25 +18,23 @@ class Assistance(commands.Cog):
         embed.description = cleandoc(text)
         await ctx.send(embed=embed)
 
-    def check_console(self, message, consoles):
+    def check_arg(self, message, arg):
         message = message.lower()
-        if message in consoles:
+        if message in arg:
             return True
         return False
 
     @commands.command()
-    async def guide(self, ctx, *, consoles=""):
+    async def guide(self, ctx, *, arg=""):
         """Links to the recommended guides."""
-        consoles = consoles.casefold()
-        consoleslist = {x for x in consoles.split() if x in self.systems}
+        arg = arg.casefold()
+        arglist = {x for x in arg.split() if x in self.systems}
 
-        if not consoleslist:
+        if not arglist:
             await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in self.systems])}.")
-
-            ctx.command.reset_cooldown(ctx)
             return
-        for x in consoleslist:
-            if self.check_console(x, '3ds'):
+        for x in arglist:
+            if self.check_arg(x, '3ds'):
                 embed = discord.Embed(title="Guide")
                 embed.set_author(name="Nintendo Homebrew & Plailect")
                 embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
@@ -44,7 +42,7 @@ class Assistance(commands.Cog):
                 embed.description = "3DS Hacks Guide"
                 await ctx.send(embed=embed)
                 continue
-            if self.check_console(x, ('wiiu',)):
+            if self.check_arg(x, ('wiiu',)):
                 embed = discord.Embed(title="Guide")
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
@@ -52,7 +50,7 @@ class Assistance(commands.Cog):
                 embed.description = "Wii U Hacks Guide"
                 await ctx.send(embed=embed)
                 continue
-            if self.check_console(x, ('vwii',)):
+            if self.check_arg(x, ('vwii',)):
                 embed = discord.Embed(title="Guide")
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/FclGzNz.png")
@@ -60,7 +58,7 @@ class Assistance(commands.Cog):
                 embed.description = "vWii modding guide"
                 await ctx.send(embed=embed)
                 continue
-            if self.check_console(x, ('switch', 'nx', 'ns')):
+            if self.check_arg(x, ('switch', 'nx', 'ns')):
                 embed = discord.Embed(title="Guide")
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
@@ -68,14 +66,14 @@ class Assistance(commands.Cog):
                 embed.description = "Switch hacking guide"
                 await ctx.send(embed=embed)
                 continue
-            if self.check_console(x, 'wii'):
+            if self.check_arg(x, 'wii'):
                 embed = discord.Embed(title="Guide")
                 embed.set_author(name="RiiConnect24")
                 embed.set_thumbnail(url="https://i.imgur.com/KI6IXmm.png")
                 embed.url = "https://wii.guide/"
                 embed.description = "Wii softmod guide"
                 await ctx.send(embed=embed)
-            if self.check_console(x, 'dsi'):
+            if self.check_arg(x, 'dsi'):
                 embed = discord.Embed(title="Guide")
                 embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
                 embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
@@ -90,31 +88,6 @@ class Assistance(commands.Cog):
                                 If you are encountering black screen on a 3DS family console while using DS-mode applications, \
                                 use [TWLFix-CFW](https://github.com/MechanicalDragon0687/TWLFix-CFW/releases/) to fix it.
                                 """, title="Fix broken TWL")
-
-    @commands.group(aliases=["howto"], invoke_without_command=True, case_insensitive=True)
-    async def tutorial(self, ctx):
-        """Links to one of multiple guides"""
-        await ctx.send_help(ctx.command)
-
-    @tutorial.command()
-    async def widescreen(self, ctx):
-        """Widescreen for 3DS TWLMenu++"""
-        embed = discord.Embed(title="Playing in Widescreen")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/playing-in-widescreen.html"
-        embed.description = "Playing in widescreen with TWiLight Menu++ on 3DS"
-        await ctx.send(embed=embed)
-
-    @tutorial.command(aliases=["forwarders", "forwarder", "twlforwarders"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
-    async def ndsforwarders(self, ctx):
-        """Links to nds forwarders"""
-        embed = discord.Embed(title="NDS Forwarder Guide")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://wiki.ds-homebrew.com/ds-index/3ds-forwarders"
-        embed.description = "Tutorial for NDS Forwarders"
-        await ctx.send(embed=embed)
 
 
 def setup(bot):

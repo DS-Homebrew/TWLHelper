@@ -90,6 +90,51 @@ class Wiki(commands.Cog):
         embed.description = "Troubleshooting"
         await ctx.send(embed=embed)
 
+    @commands.group(invoke_without_command=True, case_insensitive=True)
+    async def update(self, ctx):
+        """Links and/or information on updating apps or system."""
+        await ctx.send_help(ctx.command)
+
+    @update.command(aliases=["twlmenu", "twl", "twilightmenu"])
+    async def twilight(self, ctx, *, arg=""):
+        embed = discord.Embed(title="TWiLight Menu++ Update Guide")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
+        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/updating"
+        embed.description = "How to update TWiLight Menu++"
+        if arg != "":
+            if self.check_arg(arg, ("3ds",)):
+                embed.url += "-3ds"
+                embed.description += " on the 3DS"
+            elif self.check_arg(arg, ("dsi",)):
+                embed.url += "-dsi"
+                embed.description += " on the DSi"
+            elif self.check_arg(arg, ("flashcard", "flashcart", "ds")):
+                embed.url += "-flashcard"
+                embed.description += " on flashcards"
+        embed.url += ".html"
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def widescreen(self, ctx):
+        """Widescreen for 3DS TWLMenu++"""
+        embed = discord.Embed(title="Playing in Widescreen")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
+        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/playing-in-widescreen.html"
+        embed.description = "Playing in widescreen with TWiLight Menu++ on 3DS"
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=["forwarders", "forwarder", "twlforwarders"])
+    async def ndsforwarders(self, ctx):
+        """Links to nds forwarders"""
+        embed = discord.Embed(title="NDS Forwarder Guide")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/ds-index/forwarders.html"
+        embed.description = "Creating forwarders for nds-bootstrap"
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Wiki(bot))
