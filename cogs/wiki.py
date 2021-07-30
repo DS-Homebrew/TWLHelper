@@ -39,7 +39,7 @@ class Wiki(commands.Cog):
         """Links to the FAQ for an application."""
         await ctx.send_help(ctx.command)
 
-    @faq.command(aliases=["twl", "twlmenu"])
+    @faq.command(aliases=["twl", "twlmenu", "twilightmenu"])
     async def twilight(self, ctx, *, arg=""):
         embed = discord.Embed(title="TWiLight Menu++ FAQ")
         embed.set_author(name="DS-Homebrew Wiki")
@@ -95,8 +95,8 @@ class Wiki(commands.Cog):
         """Links and/or information on updating apps or system."""
         await ctx.send_help(ctx.command)
 
-    @update.command(aliases=["twlmenu", "twl", "twilightmenu"])
-    async def twilight(self, ctx, *, arg=""):
+    @update.command(aliases=["twlmenu", "twl", "twilight"])
+    async def twilightmenu(self, ctx, *, arg=""):
         embed = discord.Embed(title="TWiLight Menu++ Update Guide")
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
