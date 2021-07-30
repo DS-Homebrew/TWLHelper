@@ -1,8 +1,9 @@
 import discord
-import sys
 
 from discord.ext import commands
+from inspect import cleandoc
 from .results import faqs
+
 
 class Wiki(commands.Cog):
     """
@@ -51,7 +52,7 @@ class Wiki(commands.Cog):
                     embed.url += "?faq=" + self.web_name(faq)
                     embed.description = faq
         await ctx.send(embed=embed)
-    
+
     @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
     async def ndsbootstrap(self, ctx, *, arg=""):
         embed = discord.Embed(title="nds-bootstrap FAQ")

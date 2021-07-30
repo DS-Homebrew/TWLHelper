@@ -1,0 +1,86 @@
+name: 'Docker image build'
+
+on:
+  push:
+    branches: main
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Send job start webhook
+        continue-on-error: true
+        uses: appleboy/discord-action@3c62873803ab2f276e28cdde23972899fb26e3a5
+        with:
+          webhook_id: ${{ secrets.WEBHOOK_ID }}
+          webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
+          message: |
+            Starting build for commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }}) by ${{ github.actor }}
+            >>> ${{ github.event.head_commit.message }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install testing dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install flake8
+      - name: Check with flake8
+        run: |
+          flake8 . --ignore=E501,E722,E126,E128,W503,E121 --exclude=migrations
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          # github username and personal access token
+          registry: ghcr.io
+          username: ${{ github.REPOSITORY_OWNER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Docker image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/ds-homebrew/dsi-hacking-bot:latest
+          build-args: |
+            COMMIT=${{ github.sha }}
+            BRANCH=${{ github.ref }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Send webhook on failure
+        if: ${{ failure() }}
+        continue-on-error: true
+        uses: appleboy/discord-action@3c62873803ab2f276e28cdde23972899fb26e3a5
+        with:
+          webhook_id: ${{ secrets.WEBHOOK_ID }}
+          webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
+          message: |
+            Failed to build [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+      - name: Send webhook on cancellation
+        if: ${{ cancelled() }}
+        continue-on-error: true
+        uses: appleboy/discord-action@3c62873803ab2f276e28cdde23972899fb26e3a5
+        with:
+          webhook_id: ${{ secrets.WEBHOOK_ID }}
+          webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
+          message: |
+            Cancelled build for [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})

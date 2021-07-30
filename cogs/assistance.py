@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 from inspect import cleandoc
 
+
 class Assistance(commands.Cog):
     """
     Commands that assist
@@ -104,6 +105,7 @@ class Assistance(commands.Cog):
         embed.url = "https://wiki.ds-homebrew.com/twilightmenu/playing-in-widescreen.html"
         embed.description = "Playing in widescreen with TWiLight Menu++ on 3DS"
         await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Assistance(bot))

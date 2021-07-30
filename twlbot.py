@@ -12,12 +12,13 @@ cogs = [
     'cogs.assistance',
     'cogs.wiki',
     # 'cogs.general',
-    ]
+]
 
 settingsf = open('settings.json')
 settings = json.load(settingsf)
 
 TOKEN = settings['DEFAULT']['TOKEN']
+
 
 class embedHelp(commands.MinimalHelpCommand):
     async def send_pages(self):
@@ -25,6 +26,7 @@ class embedHelp(commands.MinimalHelpCommand):
         for page in self.paginator.pages:
             embed = discord.Embed(description=page)
             await destination.send(embed=embed)
+
 
 class TWLBot(commands.Bot):
     def load_cogs(self):
@@ -87,12 +89,13 @@ class TWLBot(commands.Bot):
             embed = create_error_embed(ctx, exc)
             await channel.send(embed=embed)
 
+
 def main():
     intents = discord.Intents(guilds=True, members=True, bans=True, messages=True)
 
     bot = TWLBot(settings['DEFAULT']['PREFIX'], description="TWLBot. DS⁽ⁱ⁾ Mode Hacking Discord server bot", allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents, case_insensitive=True)
     bot.help_command = embedHelp()
-    print(f'Starting TWLBot...')
+    print('Starting TWLBot...')
     bot.load_cogs()
     bot.run(TOKEN)
 
