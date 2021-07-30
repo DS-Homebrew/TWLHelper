@@ -93,7 +93,7 @@ class TWLHelper(commands.Bot):
 def main():
     intents = discord.Intents(guilds=True, members=True, bans=True, messages=True)
 
-    bot = TWLHelper(settings['DEFAULT']['PREFIX'], description="TWHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot", allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents, case_insensitive=True)
+    bot = TWLHelper(settings['DEFAULT']['PREFIX'], description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot", allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents, case_insensitive=True)
     bot.help_command = embedHelp()
     print('Starting TWLHelper...')
     bot.load_cogs()
