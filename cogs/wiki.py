@@ -19,10 +19,12 @@ class Wiki(commands.Cog):
             return True
         return False
 
-    async def simple_embed(self, ctx, text, *, title="", color=discord.Color.default()):
-        embed = discord.Embed(title=title, color=color)
-        embed.description = cleandoc(text)
-        await ctx.send(embed=embed)
+    def embed(self, title):
+        embed = discord.Embed(title=title)
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/"
+        return embed
 
     def web_name(self, name):
         name = name.lower()
@@ -41,10 +43,9 @@ class Wiki(commands.Cog):
 
     @faq.command(name="twilight", aliases=["twl", "twlmenu", "twilightmenu"])
     async def twilight_faq(self, ctx, *, arg=""):
-        embed = discord.Embed(title="TWiLight Menu++ FAQ")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/faq.html"
+        embed = self.embed("TWiLight Menu++ FAQ")
+        embed.title = "TWiLight Menu++ FAQ"
+        embed.url += "twilightmenu/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
             for faq in faqs.twlmenu:
@@ -55,10 +56,8 @@ class Wiki(commands.Cog):
 
     @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
     async def ndsbootstrap(self, ctx, *, arg=""):
-        embed = discord.Embed(title="nds-bootstrap FAQ")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/nds-bootstrap/faq.html"
+        embed = self.embed("nds-bootstrap FAQ")
+        embed.url += "nds-bootstrap/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
             for faq in faqs.bootstrap:
@@ -69,10 +68,8 @@ class Wiki(commands.Cog):
 
     @faq.command(aliases=["gbar2"])
     async def gbarunner2(self, ctx, *, arg=""):
-        embed = discord.Embed(title="GBARunner2 FAQ")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/gbarunner2/faq.html"
+        embed = self.embed("GBARunner2 FAQ")
+        embed.url += "gbarunner2/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
             for faq in faqs.gbar2:
@@ -83,10 +80,8 @@ class Wiki(commands.Cog):
 
     @faq.command(aliases=["hiya"])
     async def hiyacfw(self, ctx):
-        embed = discord.Embed(title="hiyaCFW Troubleshooting")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/hiyacfw/troubleshooting.html"
+        embed = self.embed("hiyaCFW Troubleshooting")
+        embed.url += "hiyacfw/troubleshooting.html"
         embed.description = "Troubleshooting"
         await ctx.send(embed=embed)
 
@@ -97,10 +92,8 @@ class Wiki(commands.Cog):
 
     @update.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
     async def twilight_update(self, ctx, *, arg=""):
-        embed = discord.Embed(title="TWiLight Menu++ Update Guide")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/updating"
+        embed = self.embed("TWiLight Menu++ Update Guide")
+        embed.url += "twilightmenu/updating"
         embed.description = "How to update TWiLight Menu++"
         if arg != "":
             if self.check_arg(arg, ("3ds",)):
@@ -122,10 +115,8 @@ class Wiki(commands.Cog):
 
     @install.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
     async def twilight_install(self, ctx, *, arg=""):
-        embed = discord.Embed(title="TWiLight Menu++ Installation Guide")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/installing"
+        embed = self.embed("TWiLight Menu++ Installation Guide")
+        embed.url += "twilightmenu/installing"
         embed.description = "How to install TWiLight Menu++"
         if arg != "":
             if self.check_arg(arg, ("3ds",)):
@@ -142,70 +133,56 @@ class Wiki(commands.Cog):
 
     @install.command(name="hiyacfw", aliases=["hiya"])
     async def hiyacfw_install(self, ctx, *, arg=""):
-        embed = discord.Embed(title="hiyaCFW Installation Guide")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/hiyacfw/installing"
+        embed = self.embed("hiyaCFW Installation Guide")
+        embed.url += "hiyacfw/installing"
         embed.description = "How to install hiyaCFW on the DSi"
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["ds-index"])
     async def dsindex(self, ctx):
         """Links to the DS index"""
-        embed = discord.Embed(title="Nintendo DS Modding Index")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://wiki.ds-homebrew.com/ds-index/"
+        embed = self.embed("Nintendo DS Modding Index")
+        embed.url += "ds-index/"
         embed.description = "An explanation of all things DS modding"
         await ctx.send(embed=embed)
 
     @commands.command()
     async def widescreen(self, ctx):
         """Widescreen for 3DS TWLMenu++"""
-        embed = discord.Embed(title="Playing in Widescreen")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://wiki.ds-homebrew.com/assets/images/favicon/apple-icon-180x180.png")
-        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/playing-in-widescreen.html"
+        embed = self.embed("Playing in Widescreen")
+        embed.url += "twilightmenu/playing-in-widescreen.html"
         embed.description = "Playing in widescreen with TWiLight Menu++ on 3DS"
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["forwarders", "forwarder", "twlforwarders"])
     async def ndsforwarders(self, ctx):
         """Links to nds forwarders"""
-        embed = discord.Embed(title="NDS Forwarder Guide")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://wiki.ds-homebrew.com/ds-index/forwarders.html"
+        embed = self.embed("NDS Forwarder Guide")
+        embed.url += "ds-index/forwarders.html"
         embed.description = "Creating forwarders for nds-bootstrap"
         await ctx.send(embed=embed)
 
     @commands.command()
     async def hardmod(self, ctx):
         """Links to the DSi hardmod guide"""
-        embed = discord.Embed(title="Nintendo DSi Hardmod Guide")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://wiki.ds-homebrew.com/ds-index/hardmod.html"
+        embed = self.embed("Nintendo DSi Hardmod Guide")
+        embed.url += "ds-index/hardmod.html"
         embed.description = "How to hardmod a Nintendo DSi"
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["serverrules", "discordrules"])
     async def rules(self, ctx):
         """Links to the DSi hardmod guide"""
-        embed = discord.Embed(title="DS⁽ⁱ⁾ Mode Hacking Rules")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://wiki.ds-homebrew.com/community/discord-rules.html"
+        embed = self.embed("DS⁽ⁱ⁾ Mode Hacking Rules")
+        embed.url += "community/discord-rules.html"
         embed.description = "The rules for the DS⁽ⁱ⁾ Mode Hacking Discord server"
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["discordinfo"])
     async def serverinfo(self, ctx):
         """Links to the DSi hardmod guide"""
-        embed = discord.Embed(title="DS⁽ⁱ⁾ Mode Hacking Info")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://wiki.ds-homebrew.com/community/discord-info.html"
+        embed = self.embed("DS⁽ⁱ⁾ Mode Hacking Info")
+        embed.url += "community/discord-info.html"
         embed.description = "Information for the DS⁽ⁱ⁾ Mode Hacking Discord server"
         await ctx.send(embed=embed)
 
