@@ -160,5 +160,6 @@ class Assistance(commands.Cog):
         embed.description = "Help translate the DSi Guide on Crowdin."
         await ctx.send(embed=embed)
 
+
 def setup(bot):
     bot.add_cog(Assistance(bot))
