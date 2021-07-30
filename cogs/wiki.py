@@ -37,7 +37,7 @@ class Wiki(commands.Cog):
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def faq(self, ctx):
-        """Links to the FAQ for an application."""
+        """Links to the FAQ for an application"""
         await ctx.send_help(ctx.command)
 
     @faq.command(name="twilight", aliases=["twl", "twlmenu", "twilightmenu"])
@@ -86,7 +86,7 @@ class Wiki(commands.Cog):
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def update(self, ctx):
-        """Links and/or information on updating apps or system."""
+        """Links and/or information on updating apps or system"""
         await ctx.send_help(ctx.command)
 
     @update.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
@@ -109,7 +109,7 @@ class Wiki(commands.Cog):
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def install(self, ctx):
-        """Links and/or information on installing apps."""
+        """Links and/or information on installing apps"""
         await ctx.send_help(ctx.command)
 
     @install.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])

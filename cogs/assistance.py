@@ -26,7 +26,7 @@ class Assistance(commands.Cog):
 
     @commands.command()
     async def guide(self, ctx, *, arg=""):
-        """Links to the recommended guides."""
+        """Links to the recommended guides"""
         arg = arg.casefold()
         arglist = {x for x in arg.split() if x in self.systems}
 
@@ -121,7 +121,7 @@ class Assistance(commands.Cog):
 
     @commands.group(aliases=["crowdin"], invoke_without_command=True, case_insensitive=True)
     async def translate(self, ctx):
-        """Links to Crowdin projects."""
+        """Links to Crowdin projects"""
         await ctx.send_help(ctx.command)
 
     @translate.command(aliases=["twlmenu", "twl", "twilightmenu"])
