@@ -119,6 +119,46 @@ class Assistance(commands.Cog):
             embed.description = "How to dump cartridges on a Nintendo DSi using GodMode9i"
             await ctx.send(embed=embed)
 
+    @commands.group(aliases=["crowdin"], invoke_without_command=True, case_insensitive=True)
+    async def translate(self, ctx):
+        """Links to Crowdin projects."""
+        await ctx.send_help(ctx.command)
+
+    @translate.command(aliases=["twlmenu", "twl", "twilightmenu"])
+    async def twilight(self, ctx, *, arg=""):
+        embed = discord.Embed(title="TWiLight Menu++ Crowdin Project")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://support.crowdin.com/assets/logos/crowdin-white-symbol.png")
+        embed.url = "https://crowdin.com/project/TwilightMenu" # Don't add .html, it breaks the link
+        embed.description = "Help translate TWiLight Menu++ on Crowdin."
+        await ctx.send(embed=embed)
+
+    @translate.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
+    async def ndsbootstrap(self, ctx, *, arg=""):
+        embed = discord.Embed(title="nds-bootstrap Crowdin Project")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://support.crowdin.com/assets/logos/crowdin-white-symbol.png")
+        embed.url = "https://crowdin.com/project/nds-bootstrap" # Don't add .html, it breaks the link
+        embed.description = "Help translate nds-bootstrap on Crowdin."
+        await ctx.send(embed=embed)
+
+    @translate.command(aliases=["skins", "ds-homebrew.com", "website"])
+    async def wiki(self, ctx, *, arg=""):
+        embed = discord.Embed(title="DS-Homebrew Wiki Crowdin Project")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://support.crowdin.com/assets/logos/crowdin-white-symbol.png")
+        embed.url = "https://crowdin.com/project/ds-homebrew-wiki" # Don't add .html, it breaks the link
+        embed.description = "Help translate the DS-Homebrew Wiki on Crowdin."
+        await ctx.send(embed=embed)
+
+    @translate.command(aliases=["dsicfwguide", "dsi.cfw.guide"])
+    async def dsiguide(self, ctx, *, arg=""):
+        embed = discord.Embed(title="DSi Guide Crowdin Project")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://support.crowdin.com/assets/logos/crowdin-white-symbol.png")
+        embed.url = "https://crowdin.com/project/dsi-guide" # Don't add .html, it breaks the link
+        embed.description = "Help translate the DSi Guide on Crowdin."
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Assistance(bot))
