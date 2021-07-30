@@ -106,6 +106,16 @@ class Assistance(commands.Cog):
         embed.description = "Playing in widescreen with TWiLight Menu++ on 3DS"
         await ctx.send(embed=embed)
 
+    @tutorial.command(aliases=["forwarders", "forwarder", "twlforwarders"], cooldown=commands.Cooldown(0, 0, commands.BucketType.channel))
+    async def ndsforwarders(self, ctx):
+        """Links to nds forwarders"""
+        embed = discord.Embed(title="NDS Forwarder Guide")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/ds-index/3ds-forwarders"
+        embed.description = "Tutorial for NDS Forwarders"
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Assistance(bot))
