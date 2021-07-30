@@ -1,0 +1,11 @@
+.git
+.github
+.gitignore
+.dockerignore
+*.yml
+Dockerfile
+Dockerfile.master
+requirements-master.txt
+settings.json
+settings.json.example
+dockerbuild.sh
