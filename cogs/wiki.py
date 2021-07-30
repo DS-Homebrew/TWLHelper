@@ -149,6 +149,16 @@ class Wiki(commands.Cog):
         embed.description = "How to install hiyaCFW on the DSi"
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=["ds-index"])
+    async def dsindex(self, ctx):
+        """Links to the DS index"""
+        embed = discord.Embed(title="Nintendo DS Modding Index")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/ds-index/"
+        embed.description = "An explanation of all things DS modding"
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def widescreen(self, ctx):
         """Widescreen for 3DS TWLMenu++"""
@@ -167,6 +177,16 @@ class Wiki(commands.Cog):
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.url = "https://wiki.ds-homebrew.com/ds-index/forwarders.html"
         embed.description = "Creating forwarders for nds-bootstrap"
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def hardmod(self, ctx):
+        """Links to the DSi hardmod guide"""
+        embed = discord.Embed(title="Nintendo DSi Hardmod Guide")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/ds-index/hardmod.html"
+        embed.description = "How to hardmod a Nintendo DSi"
         await ctx.send(embed=embed)
 
 
