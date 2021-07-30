@@ -11,7 +11,7 @@ intents = discord.Intents.default()
 cogs = [
     'cogs.assistance',
     'cogs.wiki',
-    # 'cogs.general',
+    'cogs.load',
 ]
 
 settingsf = open('settings.json')

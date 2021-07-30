@@ -47,4 +47,4 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ## Credits
 - Discord.py: This wouldn't exist without it
-- [Nintendo Homebrew's Kurisu](https://github.com/nh-server/kurisu): `utils.py` error embeds, `assistance.py` simple_embed and console-specific identifiers
+- [Nintendo Homebrew's Kurisu](https://github.com/nh-server/kurisu): `utils.py` error embeds, `load.py`, `assistance.py` simple_embed and console-specific identifiers
