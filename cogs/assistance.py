@@ -30,13 +30,13 @@ class Assistance(commands.Cog):
         arg = arg.casefold()
         arglist = {x for x in arg.split() if x in self.systems}
 
-        if arg not in systems:
+        if arg not in self.systems:
             await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in self.systems])}.")
             return
 
+        embed = discord.Embed(title="Guide")
         for x in arglist:
             if self.check_arg(x, '3ds'):
-                embed = discord.Embed(title="Guide")
                 embed.set_author(name="Nintendo Homebrew & Plailect")
                 embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
                 embed.url = "https://3ds.hacks.guide/"
@@ -44,7 +44,6 @@ class Assistance(commands.Cog):
                 await ctx.send(embed=embed)
                 continue
             if self.check_arg(x, ('wiiu',)):
-                embed = discord.Embed(title="Guide")
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
                 embed.url = "https://wiiu.hacks.guide/"
@@ -52,7 +51,6 @@ class Assistance(commands.Cog):
                 await ctx.send(embed=embed)
                 continue
             if self.check_arg(x, ('vwii',)):
-                embed = discord.Embed(title="Guide")
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/FclGzNz.png")
                 embed.url = "https://wiiu.hacks.guide/#/vwii-modding"
@@ -60,7 +58,6 @@ class Assistance(commands.Cog):
                 await ctx.send(embed=embed)
                 continue
             if self.check_arg(x, ('switch', 'nx', 'ns')):
-                embed = discord.Embed(title="Guide")
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
                 embed.url = "https://nh-server.github.io/switch-guide/"
@@ -68,14 +65,12 @@ class Assistance(commands.Cog):
                 await ctx.send(embed=embed)
                 continue
             if self.check_arg(x, 'wii'):
-                embed = discord.Embed(title="Guide")
                 embed.set_author(name="RiiConnect24")
                 embed.set_thumbnail(url="https://i.imgur.com/KI6IXmm.png")
                 embed.url = "https://wii.guide/"
                 embed.description = "Wii softmod guide"
                 await ctx.send(embed=embed)
             if self.check_arg(x, 'dsi'):
-                embed = discord.Embed(title="Guide")
                 embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
                 embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
                 embed.url = "https://dsi.cfw.guide/"
