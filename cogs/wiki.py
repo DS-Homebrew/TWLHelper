@@ -1,7 +1,6 @@
 import discord
 
 from discord.ext import commands
-from inspect import cleandoc
 from .results import faqs
 
 
