@@ -28,7 +28,7 @@ class embedHelp(commands.MinimalHelpCommand):
             await destination.send(embed=embed)
 
 
-class TWLBot(commands.Bot):
+class TWLHelper(commands.Bot):
     def load_cogs(self):
         for cog in cogs:
             try:
@@ -39,7 +39,7 @@ class TWLBot(commands.Bot):
                 print("Failed to load cog {}\n{}".format(cog, exc))
 
     async def on_ready(self):
-        print("TWLBot ready.")
+        print("TWLHelper ready.")
         await self.change_presence(status=discord.Status.online, activity=discord.Game(settings['DEFAULT']['STATUS']))
 
     async def on_command_error(self, ctx: commands.Context, exc: commands.CommandInvokeError):
@@ -93,9 +93,9 @@ class TWLBot(commands.Bot):
 def main():
     intents = discord.Intents(guilds=True, members=True, bans=True, messages=True)
 
-    bot = TWLBot(settings['DEFAULT']['PREFIX'], description="TWLBot. DS⁽ⁱ⁾ Mode Hacking Discord server bot", allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents, case_insensitive=True)
+    bot = TWLHelper(settings['DEFAULT']['PREFIX'], description="TWHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot", allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents, case_insensitive=True)
     bot.help_command = embedHelp()
-    print('Starting TWLBot...')
+    print('Starting TWLHelper...')
     bot.load_cogs()
     bot.run(TOKEN)
 

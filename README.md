@@ -1,4 +1,4 @@
-# DS⁽ⁱ⁾ Mode Hacking Discord server bot
+# TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot
 
 ## How to use
 
@@ -21,8 +21,8 @@ There are currently two ways to run the bot:
         - If you want to switch back to the release branch, you **must** re-run the regular `pip` command!
         - This is UNTESTED. Use at your own risk.
 1. Run the following command:
-    - UNIX-based: `python3 twlbot.py`
-    - Windows: `py twlbot.py`
+    - UNIX-based: `python3 twlhelper.py`
+    - Windows: `py twlhelper.py`
 
 ## License
 

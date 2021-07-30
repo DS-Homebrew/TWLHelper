@@ -1,5 +1,5 @@
 version: "3.8"
 services:
-  twlbot:
+  twlhelper:
     build: .
-    image: ghcr.io/ds-homebrew/dsi-hacking-bot
+    image: ghcr.io/ds-homebrew/twlhelper
