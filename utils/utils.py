@@ -59,5 +59,5 @@ def create_error_embed(ctx, exc) -> discord.Embed:
 
 def is_staff():
     def predicate(ctx):
-        return any(ctx.message.author.roles == role for role in settings['MODERATOR']) if not ctx.author == ctx.guild.owner else True
+        return any((role.id in settings["MODERATOR"] or role.name in settings["MODERATOR"]) for role in ctx.message.author.roles) if not ctx.author == ctx.guild.owner else True
     return commands.check(predicate)
