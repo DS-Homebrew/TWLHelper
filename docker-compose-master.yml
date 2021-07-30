@@ -1,7 +1,0 @@
-version: "3.8"
-services:
-  twlhelper:
-    build: 
-      context: .
-      dockerfile: Dockerfile.master
-    image: ghcr.io/ds-homebrew/twlhelper

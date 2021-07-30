@@ -97,8 +97,6 @@ def main():
     bot.load_cogs()
     bot.run(settings.TOKEN)
 
-    settingsf.close()
-
     return bot.exitcode
 
 

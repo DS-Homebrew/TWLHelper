@@ -744,9 +744,13 @@ class Convert(commands.Cog):
                     return
                 await outputtext.edit(content="`Converting video...`")
                 with open(os.devnull, "w") as devnull:
-                    output = subprocess.run(['ffmpeg','-i', fileName, '-f', 'mp4','-vf', "fps=24000/1001, colorspace=space=ycgco:primaries=bt709:trc=bt709:range=pc:iprimaries=bt709:iall=bt709, scale=256:144", '-dst_range', "1", '-color_range', "2", '-vcodec', 'mpeg4', '-profile:v', "0", '-level', "8", "-q:v", "2", "-maxrate", "500k", "-acodec", "aac", "-ar", "32k", "-b:a","64000", "-ac", "1","-slices", "1","-g","50",'downloads/senpai_converted.mp4'],stdout=devnull)
+                    subprocess.run(['ffmpeg','-i', fileName, '-f', 'mp4', '-vf', "fps=24000/1001, \
+                    colorspace=space=ycgco:primaries=bt709:trc=bt709:range=pc:iprimaries=bt709:iall=bt709, \
+                    scale=256:144", '-dst_range', "1", '-color_range', "2", '-vcodec', 'mpeg4', '-profile:v', \
+                    "0", '-level', "8", "-q:v", "2", "-maxrate", "500k", "-acodec", "aac", "-ar", "32k", "-b:a", \
+                    "64000", "-ac", "1", "-slices", "1", "-g","50", 'downloads/senpai_converted.mp4'],stdout=devnull)
                 if os.path.getsize("downloads/senpai_converted.mp4") < 8388119:
-                    await ctx.send(file=discord.File("downloads/senpai_converted.mp4"),reference=ctx.message)    
+                    await ctx.send(file=discord.File("downloads/senpai_converted.mp4"), reference=ctx.message)    
                 else:
                     params = (
                         ('d', 'upload-tool'),
@@ -757,33 +761,33 @@ class Convert(commands.Cog):
                     }
                     response = requests.post('https://tmp.ninja/api.php', params=params, files=files)
                     await ctx.send("""Converted video link {hosted by `tmp.ninja`}
-                    """+response.content.decode("utf-8"),reference=ctx.message)
+                    """+ response.content.decode("utf-8"), reference=ctx.message)
                 os.remove("downloads/senpai_converted.mp4")
                 os.remove(fileName)
-                await outputtext.edit(content="`Done! Completed in "+str(round(time.time()-start_time,2))+" seconds`")
+                await outputtext.edit(content="`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
         else:
             return
 
     @convert.command()
-    async def video(self,ctx,filelink=None):
+    async def video(self, ctx, filelink=None):
         self.check_dir()
         supported = False
         if filelink is None:
             if ctx.message.attachments:
                 f = ctx.message.attachments[0]
-                
+
                 for extension in [".mp4",".mov",".wmv",".flv",".avi",".mkv"]:
                     if f.filename.lower().endswith(extension):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/"+f.filename
         else:
-            for extension in [".mp4",".mov",".wmv",".flv",".avi",".mkv"]:
+            for extension in [".mp4", ".mov", ".wmv", ".flv", ".avi", ".mkv"]:
                 if filelink.lower().endswith(extension):
                     r = requests.get(filelink, allow_redirects=True)
                     if filelink.find('/'):
-                        fileName = "downloads/"+filelink.rsplit('/', 1)[1]
-                    supported = True                
+                        fileName = "downloads/" + filelink.rsplit('/', 1)[1]
+                    supported = True
         if supported:
 
             async with ctx.typing():
@@ -797,11 +801,12 @@ class Convert(commands.Cog):
                     return
                 await outputtext.edit(content="`Converting video...`")
                 with open(os.devnull, "w") as devnull:
-                    output = subprocess.run(["ffmpeg","-y","-an","-i",fileName,"-vcodec", "libx264", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-level", "3","-s","852x480", '-vf',"scale=640:trunc(ow/a/2)*2","downloads/senpai_converted.mp4"],stdout=devnull)
+                    subprocess.run(["ffmpeg", "-y", "-an", "-i", fileName, "-vcodec", "libx264", "-pix_fmt", "yuv420p", "-profile:v", \
+                    "baseline", "-level", "3", "-s", "852x480", '-vf', "scale=640:trunc(ow/a/2)*2", "downloads/senpai_converted.mp4"], stdout=devnull)
 
                 await outputtext.edit(content="`Uploading Video...`")
                 if os.path.getsize("downloads/senpai_converted.mp4") < 8388119:
-                    await ctx.send(file=discord.File("downloads/senpai_converted.mp4"),reference=ctx.message)    
+                    await ctx.send(file=discord.File("downloads/senpai_converted.mp4"), reference=ctx.message)
                 else:
                     params = (
                         ('d', 'upload-tool'),
@@ -812,13 +817,13 @@ class Convert(commands.Cog):
                     }
                     response = requests.post('https://tmp.ninja/api.php', params=params, files=files)
                     await ctx.send("""Converted video link {hosted by `tmp.ninja`}
-                    """+response.content.decode("utf-8"),reference=ctx.message)
+                    """ + response.content.decode("utf-8"), reference=ctx.message)
                 os.remove("downloads/senpai_converted.mp4")
                 os.remove(fileName)
-                await outputtext.edit(content="`Done! Completed in "+str(round(time.time()-start_time,2))+" seconds`")
+                await outputtext.edit(content="`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
         else:
             return
-     
+  
 
 def setup(bot):
     bot.add_cog(Convert(bot))
