@@ -4,9 +4,9 @@ from discord.ext import commands
 from inspect import cleandoc
 
 
-class Assistance(commands.Cog):
+class General(commands.Cog):
     """
-    Commands that assist
+    General commands
     """
 
     def __init__(self, bot):
@@ -162,4 +162,4 @@ class Assistance(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Assistance(bot))
+    bot.add_cog(General(bot))

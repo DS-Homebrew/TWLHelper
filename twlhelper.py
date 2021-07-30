@@ -9,7 +9,7 @@ from utils.utils import create_error_embed
 intents = discord.Intents.default()
 
 cogs = [
-    'cogs.assistance',
+    'cogs.general',
     'cogs.wiki',
     'cogs.load',
 ]
