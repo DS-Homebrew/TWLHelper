@@ -149,19 +149,19 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @translate.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
-    async def ndsbootstrap(self, ctx, *, arg=""):
+    async def ndsbootstrap(self, ctx):
         embed = self.tlembed("nds-bootstrap")
         embed.url += "nds-bootstrap"  # Don't add .html, it breaks the link
         await ctx.send(embed=embed)
 
     @translate.command(aliases=["skins", "ds-homebrew.com", "website"])
-    async def wiki(self, ctx, *, arg=""):
+    async def wiki(self, ctx):
         embed = self.tlembed("DS-Homebrew Wiki")
         embed.url += "ds-homebrew-wiki"  # Don't add .html, it breaks the link
         await ctx.send(embed=embed)
 
     @translate.command(aliases=["dsicfwguide", "dsi.cfw.guide"])
-    async def dsiguide(self, ctx, *, arg=""):
+    async def dsiguide(self, ctx):
         embed = self.tlembed("DSi Guide")
         embed.url += "dsi-guide"  # Don't add .html, it breaks the link
         await ctx.send(embed=embed)
