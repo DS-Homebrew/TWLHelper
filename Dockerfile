@@ -1,14 +1,14 @@
-FROM python:3.9-slim
+FROM python:3.9-alpine
 LABEL org.opencontainers.image.source https://github.com/DS-Homebrew/TWLHelper
 ENV IS_DOCKER=1
 ENV PYTHONUNBUFFERED=1
 # ENV PYTHONDONTWRITEBYTECODE=1
 ENV HOME /home/twlhelper
-RUN useradd -m -d $HOME -s /bin/sh -u 2849 twlhelper
+RUN adduser -D -h $HOME -s /bin/sh -u 2849 twlhelper
 WORKDIR $HOME
 COPY ./requirements.txt .
-RUN pip install --no-compile --no-cache-dir -r requirements.txt
-RUN apt-get update && apt-get install -y imagemagick gifsicle ffmpeg
+RUN apk update && apk --no-cache add gcc musl-dev imagemagick gifsicle ffmpeg
+RUN python3 -m pip install --no-compile --no-cache-dir -r requirements.txt
 USER twlhelper
 ARG BRANCH="unknown"
 COPY . .
