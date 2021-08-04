@@ -26,38 +26,17 @@ class Convert(commands.Cog):
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def convert(self, ctx):
-        """Group of comamands that convert something to another
-
-        __Unlaunch Background__
-
-        `.convert unlaunchbg {link}`
-
-        Convert an image at `{link}` to an Unlaunch GIF file
-        Can also send an attachment instead of link
-
-        __Image Converter__
-
-        `.convert {format} {link}`
-
-        Formats : JPG, BMP, GIF, PNG
-
-        Converts image at {link} to {format}
-        Can also send an attachment instead of link
-
-        __Boxart Converter__
-
-        `.convert boxart {console} {link}`
-
-        Consoles : nds, ds, dsi, gba, gb, gbc, fds, nes, gen, md, sfc, ms, gg
-
-        Converts image at {link} to {console} boxart suitable for use with TWiLight Menu++
-
-
+        """
+        Group of comamands that convert images or videos to another format
         """
         await ctx.send_help(ctx.command)
 
-    @convert.command()
-    async def unlaunchbg(self, ctx, filelink=None):
+    @convert.command(name="unlaunch", aliases=["unlaunchbg"])
+    async def unlaunch_background(self, ctx, filelink=None):
+        """
+        Convert an attachment or linked image to an Unlaunch GIF file
+        """
+
         self.check_dir()
         supported = False
         if filelink is None:
@@ -69,7 +48,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
-
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
@@ -156,6 +137,9 @@ class Convert(commands.Cog):
 
     @convert.command()
     async def bmp(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, image to BMP
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -167,7 +151,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
-
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
@@ -212,6 +198,9 @@ class Convert(commands.Cog):
 
     @convert.command()
     async def png(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, image to PNG
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -223,7 +212,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
-
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
@@ -266,6 +257,9 @@ class Convert(commands.Cog):
 
     @convert.command()
     async def gif(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, image to GIF
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -277,7 +271,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
-
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
@@ -318,8 +314,11 @@ class Convert(commands.Cog):
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
 
-    @convert.command()
+    @convert.command(aliases=["jpg"])
     async def jpeg(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, image to JPEG
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -331,7 +330,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
-
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
@@ -376,10 +377,13 @@ class Convert(commands.Cog):
     @convert.group()
     async def boxart(self, ctx):
         if ctx.invoked_subcommand is None:
-            await ctx.send("That's not a valid `convert boxart` command, sir")
+            await ctx.send_help(ctx.command)
 
-    @boxart.command(aliases=["nds", "dsi"])
-    async def ds(self, ctx, filelink=None):
+    @boxart.command(name="nds", aliases=["dsi"])
+    async def ds_boxart(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, image to a DS Box Art
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -391,7 +395,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
-
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
@@ -439,8 +445,11 @@ class Convert(commands.Cog):
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
 
-    @boxart.command(aliases=["fds", "gbc", "gb"])
-    async def gba(self, ctx, filelink=None):
+    @boxart.command(name="gba", aliases=["fds", "gbc", "gb"])
+    async def gba_boxart(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, image to a GB, GBC, GBA or FDS Box Art
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -452,7 +461,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
-
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
@@ -499,8 +510,11 @@ class Convert(commands.Cog):
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
 
-    @boxart.command(aliases=["gen", "md", "sfc", "ms", "gg"])
-    async def nes(self, ctx, filelink=None):
+    @boxart.command(name="nes", aliases=["gen", "md", "sfc", "ms", "gg"])
+    async def nes_boxart(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, image to a NES, Super Famicom, GameGear, Master System, Mega Drive or Genesis Box Art
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -512,7 +526,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
-
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
@@ -560,8 +576,11 @@ class Convert(commands.Cog):
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
 
-    @boxart.command()
-    async def snes(self, ctx, filelink=None):
+    @boxart.command(name="snes")
+    async def snes_boxart(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, image to an SNES Box Art
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -573,7 +592,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
-
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
@@ -621,6 +642,9 @@ class Convert(commands.Cog):
 
     @convert.command()
     async def dsimenu(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, image to a TWLMenu++ DSi Menu Theme
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -632,7 +656,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
-
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
@@ -687,6 +713,9 @@ class Convert(commands.Cog):
 
     @convert.command()
     async def dsmp4(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, video to a MPEG4 Player for DSi Video
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -698,6 +727,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in [".mp4", ".mov", ".wmv", ".flv", ".avi", ".mkv"]:
                 if filelink.lower().endswith(extension):
@@ -740,6 +772,9 @@ class Convert(commands.Cog):
 
     @convert.command()
     async def video(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, video to MP4
+        """
         self.check_dir()
         supported = False
         if filelink is None:
@@ -751,6 +786,9 @@ class Convert(commands.Cog):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
                         fileName = "downloads/" + f.filename
+            else:
+                await ctx.send_help(ctx.command)
+                return
         else:
             for extension in [".mp4", ".mov", ".wmv", ".flv", ".avi", ".mkv"]:
                 if filelink.lower().endswith(extension):
