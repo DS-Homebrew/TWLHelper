@@ -102,7 +102,7 @@ class Convert(commands.Cog):
 
                     await outputtext.edit(content="`Converting to GIF...`")
                     try:
-                        proc = Popen(["convert", oldFileName, fileName], stdout=subprocess.PIPE)
+                        proc = Popen(["magick", "convert", oldFileName, fileName], stdout=subprocess.PIPE)
                         proc.wait()
                     except Exception:
                         error_message = traceback.format_exc()
@@ -120,7 +120,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`GIF colour mapped...`")
 
                     await outputtext.edit(content="`Resizing GIF...`")
-                    proc = Popen(["convert", fileName, "-resize", "256x192^", "-gravity", "center", "-extent", "256x192", fileName])
+                    proc = Popen(["magick", "convert", fileName, "-resize", "256x192^", "-gravity", "center", "-extent", "256x192", fileName])
                     proc.wait()
                     await outputtext.edit(contents="`GIF resized`")
 
@@ -190,9 +190,9 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converting to BMP...`")
                     newFileName = "senpai_converted_" + fileName + "_.bmp"
                     try:
-                        proc = Popen(["convert", fileName, newFileName])
+                        proc = Popen(["magick", "convert", fileName, newFileName])
                         proc.wait()
-                        proc = Popen(["convert", newFileName, "-define", "bmp:subtype=RGB565", newFileName])
+                        proc = Popen(["magick", "convert", newFileName, "-define", "bmp:subtype=RGB565", newFileName])
                         proc.wait()
                     except Exception:
                         await outputtext.edit(content="`Failed to convert to BMP`")
@@ -246,7 +246,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converting to PNG...`")
                     newFileName = "senpai_converted_" + fileName + "_.png"
                     try:
-                        proc = Popen(["convert", fileName, newFileName])
+                        proc = Popen(["magick", "convert", fileName, newFileName])
                         proc.wait()
                     except Exception:
                         await outputtext.edit(content="`Failed to convert to PNG`")
@@ -300,7 +300,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converting to GIF...`")
                     newFileName = "senpai_converted_" + fileName + "_.gif"
                     try:
-                        proc = Popen(["convert", fileName, newFileName])
+                        proc = Popen(["magick", "convert", fileName, newFileName])
                         proc.wait()
                     except Exception:
                         await outputtext.edit(content="`Failed to convert to GIF`")
@@ -355,7 +355,7 @@ class Convert(commands.Cog):
                     newFileName = "senpai_converted_" + fileName + "_.jpeg"
                     try:
 
-                        proc = Popen(["convert", fileName, newFileName])
+                        proc = Popen(["magick", "convert", fileName, newFileName])
                         proc.wait()
                     except Exception:
                         await outputtext.edit(content="`Failed to convert to JPEG`")
@@ -419,13 +419,13 @@ class Convert(commands.Cog):
                     print(oldFileName)
                     print(fileName)
 
-                    proc = Popen(["convert", oldFileName, fileName])
+                    proc = Popen(["magick", "convert", oldFileName, fileName])
                     proc.wait()
                     os.remove(oldFileName)
                     await outputtext.edit(content="`Converted to PNG`")
 
                 try:
-                    proc = Popen(["convert", fileName, "-resize", "128x115\!", fileName])
+                    proc = Popen(["magick", "convert", fileName, "-resize", "128x115\!", fileName])
                     proc.wait()
                 except Exception:
                     await outputtext.edit(content="`Failed to convert to PNG`")
@@ -479,13 +479,13 @@ class Convert(commands.Cog):
                     print(oldFileName)
                     print(fileName)
 
-                    proc = Popen(["convert", oldFileName, fileName])
+                    proc = Popen(["magick", "convert", oldFileName, fileName])
                     proc.wait()
                     os.remove(oldFileName)
                     await outputtext.edit(content="`Converted to PNG`")
 
                 try:
-                    proc = Popen(["convert", fileName, "-resize", "115x115\!", fileName])
+                    proc = Popen(["magick", "convert", fileName, "-resize", "115x115\!", fileName])
                     proc.wait()
                 except Exception:
                     await outputtext.edit(content="`Failed to convert to PNG`")
@@ -540,13 +540,13 @@ class Convert(commands.Cog):
                     print(oldFileName)
                     print(fileName)
 
-                    proc = Popen(["convert", oldFileName, fileName])
+                    proc = Popen(["magick", "convert", oldFileName, fileName])
                     proc.wait()
                     os.remove(oldFileName)
                     await outputtext.edit(content="`Converted to PNG`")
 
                 try:
-                    proc = Popen(["convert", fileName, "-resize", "84x115\!", fileName])
+                    proc = Popen(["magick", "convert", fileName, "-resize", "84x115\!", fileName])
                     proc.wait()
                 except Exception:
                     await outputtext.edit(content="`Failed to convert to PNG`")
@@ -605,7 +605,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converted to PNG`")
 
                 try:
-                    proc = Popen(["convert", fileName, "-resize", "158x115\!", fileName])
+                    proc = Popen(["magick", "convert", fileName, "-resize", "158x115\!", fileName])
                     proc.wait()
                 except Exception:
                     await outputtext.edit(content="`Failed to convert to PNG`")
@@ -655,7 +655,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converting to PNG...`")
                     newFileName = "senpai_converted_" + fileName + "_.png"
                     try:
-                        proc = Popen(["convert", fileName, newFileName])
+                        proc = Popen(["magick", "convert", fileName, newFileName])
                         proc.wait()
                         oldFileName = fileName
                         fileName = newFileName
@@ -672,7 +672,7 @@ class Convert(commands.Cog):
                 if int(identification[0]) > 208 or int(identification[1]) > 156:
                     await outputtext.edit(content="`Resizing image...`")
                     try:
-                        proc = Popen(["convert", fileName, "-resize", "208x156\!", fileName])
+                        proc = Popen(["magick", "convert", fileName, "-resize", "208x156\!", fileName])
                     except Exception:
                         await outputtext.edit(content="`Failed to resize`")
                         return
