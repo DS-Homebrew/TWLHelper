@@ -10,13 +10,15 @@
 There are currently two ways to run the bot:
 
 ### Docker:
-1. Just run `docker-compose up --build -d`.
+1. Just run `docker-compose up --build -d`
 
 ### Command line:
-1. Install the latest version of Python 3, at minimum 3.8, for your host.
-1. Install ImageMagick for your host. At this time, the code expects ImageMagick 6. Any other version is UNTESTED.
-1. Install Gifsicle and ffmpeg for your host.
-1. Run `pip install -r requirements.txt`.
+1. Install the following for your host:
+    - Python 3.8 or later (and its respective pip)
+    - Imagemagick 7 or later
+    - gifsicle 1.92 or later
+    - ffmpeg
+1. Run `pip install -r requirements.txt`
 1. Run the following command:
     - UNIX-based: `python3 twlhelper.py`
     - Windows: `py twlhelper.py`
