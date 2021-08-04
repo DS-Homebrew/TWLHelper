@@ -425,7 +425,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converted to PNG`")
 
                 try:
-                    proc = Popen(["magick", "convert", fileName, "-resize", "128x115\!", fileName])
+                    proc = Popen(["magick", "convert", fileName, "-resize", "128x115!", fileName])
                     proc.wait()
                 except Exception:
                     await outputtext.edit(content="`Failed to convert to PNG`")
@@ -485,7 +485,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converted to PNG`")
 
                 try:
-                    proc = Popen(["magick", "convert", fileName, "-resize", "115x115\!", fileName])
+                    proc = Popen(["magick", "convert", fileName, "-resize", "115x115!", fileName])
                     proc.wait()
                 except Exception:
                     await outputtext.edit(content="`Failed to convert to PNG`")
@@ -546,7 +546,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converted to PNG`")
 
                 try:
-                    proc = Popen(["magick", "convert", fileName, "-resize", "84x115\!", fileName])
+                    proc = Popen(["magick", "convert", fileName, "-resize", "84x115!", fileName])
                     proc.wait()
                 except Exception:
                     await outputtext.edit(content="`Failed to convert to PNG`")
@@ -605,7 +605,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converted to PNG`")
 
                 try:
-                    proc = Popen(["magick", "convert", fileName, "-resize", "158x115\!", fileName])
+                    proc = Popen(["magick", "convert", fileName, "-resize", "158x115!", fileName])
                     proc.wait()
                 except Exception:
                     await outputtext.edit(content="`Failed to convert to PNG`")
@@ -672,7 +672,7 @@ class Convert(commands.Cog):
                 if int(identification[0]) > 208 or int(identification[1]) > 156:
                     await outputtext.edit(content="`Resizing image...`")
                     try:
-                        proc = Popen(["magick", "convert", fileName, "-resize", "208x156\!", fileName])
+                        proc = Popen(["magick", "convert", fileName, "-resize", "208x156!", fileName])
                     except Exception:
                         await outputtext.edit(content="`Failed to resize`")
                         return
