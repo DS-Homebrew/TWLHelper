@@ -24,6 +24,30 @@ class Convert(commands.Cog):
             os.mkdir("senpai_converted_downloads")
         return
 
+    def ffmpeg_img(self, fileName, newFileName, crop, pixfmt, scale):
+        command = [
+            'ffmpeg',
+            '-y',
+            '-i',
+            fileName,
+        ]
+        if crop is not None or scale is not None:
+            command.append('-vf')
+            if crop is not None:
+                command.append('crop=' + crop)
+            if scale is not None:
+                command.append('crop=' + scale)
+        if pixfmt is not None:
+            command.append('-pix_fmt')
+            command.append(pixfmt)
+        command.append(newFileName)
+        try:
+            proc = Popen(command)
+            proc.wait()
+        except Exception:
+            return 1
+        return 0
+
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def convert(self, ctx):
         """
@@ -62,76 +86,71 @@ class Convert(commands.Cog):
         if supported:
             start_time = time.time()
             async with ctx.typing():
-                oldFileExists = False
-
                 outputtext = await ctx.send("`Downloading image...`")
-
                 try:
                     open(fileName, 'wb').write(r.content)
                 except Exception:
                     await outputtext.edit(content="`Failed to download image`")
                     return
                 await outputtext.edit(content="`Image downloaded...`")
-
                 if not (fileName.lower()).endswith('.gif'):
-
-                    oldFileName = fileName
-                    fileName = "downloads/senpai_converted_" + fileName[10:] + "_.gif"
-                    print(oldFileName)
-                    print(fileName)
-                    oldFileExists = True
-
                     await outputtext.edit(content="`Converting to GIF...`")
                     try:
-                        proc = Popen(["magick", "convert", oldFileName, fileName], stdout=subprocess.PIPE)
+                        proc = Popen(["ffmpeg", "-i", fileName, "-vf", "palettegen=max_colors=256", "_palette.png"])
+                        proc.wait()
+                    except Exception:
+                        await outputtext.edit(content="`Failed to convert to PNG for palette generation`")
+                        return
+                    try:
+                        proc = Popen(["ffmpeg", "-i", fileName, "-i", "_palette.png", "-filter_complex", "paletteuse", "_output.gif"])
+                        proc.wait()
+                    except Exception:
+                        await outputtext.edit(content="`Failed to convert to GIF`")
+                        return
+                    await outputtext.edit(content="`Converted to GIF...`")
+                else:
+                    try:
+                        proc = Popen(["cp", fileName, "_output.gif"])
                         proc.wait()
                     except Exception:
                         error_message = traceback.format_exc()
                         print(error_message)
-                        await outputtext.edit(content="`Failed to convert to GIF`")
-                        return
-
-                    await outputtext.edit(content="`Converted to GIF...`")
-
-                if fileName.endswith('.gif'):
-                    await outputtext.edit(content="`Colour Mapping GIF...`")
-
-                    proc = Popen(["gifsicle", fileName, "-O3", "--no-extensions", "-k", "24", "#0", "-o", fileName])
-                    proc.wait()
-                    await outputtext.edit(content="`GIF colour mapped...`")
-
-                    await outputtext.edit(content="`Resizing GIF...`")
-                    proc = Popen(["magick", "convert", fileName, "-resize", "256x192^", "-gravity", "center", "-extent", "256x192", fileName])
-                    proc.wait()
-                    await outputtext.edit(contents="`GIF resized`")
-
-                    await outputtext.edit(contents="`Optimising GIF size...`")
-                    warning = False
-
-                    if os.stat(fileName).st_size > 15000:
-                        while True:
-                            x = 0
-                            while x < 10:
-                                if os.stat(fileName).st_size > 15000:
-                                    proc = Popen(["gifsicle", fileName, "-O3", "--no-extensions", "--lossy=100", "-o", fileName])
-                                    proc.wait()
-                                    x = x + 1
-                                else:
-                                    break
-                                if x == 5:
-                                    warning = True
-                            break
-                    await outputtext.edit(contents="`GIF size optimised`")
-
-                    await outputtext.edit(contents="`Uploading GIF...`")
-                    await ctx.send(file=discord.File(fileName), reference=ctx.message)
-                    os.remove(fileName)
-                    if oldFileExists:
-                        os.remove(oldFileName)
-                    await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
-                    if warning:
-                        await ctx.send("`[Warning] : File size was not reduced to less than 15KiB.\n[Warning] : Converted GIF won't work with Unlaunch (try something less complicated)`")
+                        await outputtext.edit(content="`Failed to make a copy of GIF")
+                newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.gif"
+                await outputtext.edit(content="`Resizing GIF...`")
+                err = self.ffmpeg_img("_output.gif", newFileName, None, None, "256:192")
+                if err == 1:
+                    await outputtext.edit(content="`Failed to resize GIF`")
                     return
+                await outputtext.edit(content="`Resized GIF...`")
+                await outputtext.edit(content="`Colour Mapping GIF...`")
+                proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", "-k", "24", "#0", "-o", newFileName])
+                proc.wait()
+                await outputtext.edit(content="`GIF colour mapped...`")
+                await outputtext.edit(contents="`Optimising GIF size...`")
+                warning = False
+                if os.stat(newFileName).st_size > 15000:
+                    while True:
+                        x = 0
+                        while x < 10:
+                            if os.stat(newFileName).st_size > 15000:
+                                proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", "--lossy=100", "-o", newFileName])
+                                proc.wait()
+                                x = x + 1
+                            else:
+                                break
+                            if x == 5:
+                                warning = True
+                        break
+                await outputtext.edit(contents="`GIF size optimised`")
+                await outputtext.edit(contents="`Uploading GIF...`")
+                await ctx.send(file=discord.File(newFileName), reference=ctx.message)
+                os.remove(fileName)
+                os.remove(newFileName)
+                await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                if warning:
+                    await ctx.send("`[Warning] : File size was not reduced to less than 15KiB.\n[Warning] : Converted GIF won't work with Unlaunch (try something less complicated)`")
+                return
         else:
             await ctx.send("Unsupported image format, or URL does not end in " + supportedImage)
 
@@ -175,12 +194,8 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.bmp'):
                     await outputtext.edit(content="`Converting to BMP...`")
                     newFileName = "senpai_converted_" + fileName + "_.bmp"
-                    try:
-                        proc = Popen(["magick", "convert", fileName, newFileName])
-                        proc.wait()
-                        proc = Popen(["magick", "convert", newFileName, "-define", "bmp:subtype=RGB565", newFileName])
-                        proc.wait()
-                    except Exception:
+                    err = self.ffmpeg_img(fileName, newFileName, None, "RGB565", None)
+                    if err == 1:
                         await outputtext.edit(content="`Failed to convert to BMP`")
                         return
                     await outputtext.edit(content="`Converted to BMP`")
@@ -236,10 +251,8 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.png'):
                     await outputtext.edit(content="`Converting to PNG...`")
                     newFileName = "senpai_converted_" + fileName + "_.png"
-                    try:
-                        proc = Popen(["ffmpeg", "-i", fileName, newFileName])
-                        proc.wait()
-                    except Exception:
+                    err = self.ffmpeg_img(fileName, newFileName, None, None, None)
+                    if err == 1:
                         await outputtext.edit(content="`Failed to convert to PNG`")
                         return
                     await outputtext.edit(content="`Converted to PNG`")
@@ -354,11 +367,8 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.jpeg') and not fileName.endswith('.jpg'):
                     await outputtext.edit(content="`Converting to JPEG...`")
                     newFileName = "senpai_converted_" + fileName + "_.jpeg"
-                    try:
-
-                        proc = Popen(["magick", "convert", fileName, newFileName])
-                        proc.wait()
-                    except Exception:
+                    err = self.ffmpeg_img(fileName, newFileName, None, None, None)
+                    if err == 1:
                         await outputtext.edit(content="`Failed to convert to JPEG`")
                         return
                     await outputtext.edit(content="`Converted to JPEG`")
@@ -418,28 +428,18 @@ class Convert(commands.Cog):
                     return
 
                 await outputtext.edit(content="`Image downloaded...`")
-                if not fileName.endswith('.png'):
-                    await outputtext.edit(content="`Converting to PNG...`")
-                    oldFileName = fileName
-                    fileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
-                    print(oldFileName)
-                    print(fileName)
-
-                    proc = Popen(["magick", "convert", oldFileName, fileName])
-                    proc.wait()
-                    os.remove(oldFileName)
-                    await outputtext.edit(content="`Converted to PNG`")
-
-                try:
-                    proc = Popen(["magick", "convert", fileName, "-resize", "128x115!", fileName])
-                    proc.wait()
-                except Exception:
+                await outputtext.edit(content="`Converting to PNG...`")
+                newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
+                err = self.ffmpeg_img(fileName, newFileName, "128:115", None, None)
+                if err == 1:
                     await outputtext.edit(content="`Failed to convert to PNG`")
                     return
+                await outputtext.edit(content="`Converted to PNG`")
                 await outputtext.edit(content="`Uploading boxart...`")
-                await ctx.send(file=discord.File(fileName), reference=ctx.message)
+                await ctx.send(file=discord.File(newFileName), reference=ctx.message)
                 await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
                 os.remove(fileName)
+                os.remove(newFileName)
                 return
 
         else:
@@ -455,7 +455,6 @@ class Convert(commands.Cog):
         if filelink is None:
             if ctx.message.attachments:
                 f = ctx.message.attachments[0]
-
                 for extension in supportedImage:
                     if f.filename.lower().endswith(extension):
                         supported = True
@@ -481,30 +480,19 @@ class Convert(commands.Cog):
                 except Exception:
                     await outputtext.edit(content="`Failed to download image `")
                     return
-
                 await outputtext.edit(content="`Image downloaded...`")
                 if not fileName.endswith('.png'):
                     await outputtext.edit(content="`Converting to PNG...`")
-                    oldFileName = fileName
-                    fileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
-                    print(oldFileName)
-                    print(fileName)
-
-                    proc = Popen(["magick", "convert", oldFileName, fileName])
-                    proc.wait()
-                    os.remove(oldFileName)
-                    await outputtext.edit(content="`Converted to PNG`")
-
-                try:
-                    proc = Popen(["magick", "convert", fileName, "-resize", "115x115!", fileName])
-                    proc.wait()
-                except Exception:
-                    await outputtext.edit(content="`Failed to convert to PNG`")
-                    return
+                    newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
+                    err = self.ffmpeg_img(fileName, newFileName, "115:115", None, None)
+                    if err == 1:
+                        await outputtext.edit(content="`Failed to convert to PNG`")
+                        return
                 await outputtext.edit(content="`Uploading boxart...`")
-                await ctx.send(file=discord.File(fileName), reference=ctx.message)
+                await ctx.send(file=discord.File(newFileName), reference=ctx.message)
                 await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
                 os.remove(fileName)
+                os.remove(newFileName)
                 return
 
         else:
@@ -520,7 +508,6 @@ class Convert(commands.Cog):
         if filelink is None:
             if ctx.message.attachments:
                 f = ctx.message.attachments[0]
-
                 for extension in supportedImage:
                     if f.filename.lower().endswith(extension):
                         supported = True
@@ -536,43 +523,29 @@ class Convert(commands.Cog):
                     if filelink.find('/'):
                         fileName = "downloads/" + filelink.rsplit('/', 1)[1]
                     supported = True
-
         if supported:
             start_time = time.time()
             async with ctx.typing():
-
                 outputtext = await ctx.send("`Downloading image...`")
                 try:
                     open(fileName, 'wb').write(r.content)
                 except Exception:
                     await outputtext.edit(content="`Failed to download image `")
                     return
-
                 await outputtext.edit(content="`Image downloaded...`")
                 if not fileName.endswith('.png'):
                     await outputtext.edit(content="`Converting to PNG...`")
-                    oldFileName = fileName
-                    fileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
-                    print(oldFileName)
-                    print(fileName)
-
-                    proc = Popen(["magick", "convert", oldFileName, fileName])
-                    proc.wait()
-                    os.remove(oldFileName)
-                    await outputtext.edit(content="`Converted to PNG`")
-
-                try:
-                    proc = Popen(["magick", "convert", fileName, "-resize", "84x115!", fileName])
-                    proc.wait()
-                except Exception:
-                    await outputtext.edit(content="`Failed to convert to PNG`")
-                    return
+                    newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
+                    err = self.ffmpeg_img(fileName, newFileName, "84:115", None, None)
+                    if err == 1:
+                        await outputtext.edit(content="`Failed to convert to PNG`")
+                        return
                 await outputtext.edit(content="`Uploading boxart...`")
-                await ctx.send(file=discord.File(fileName), reference=ctx.message)
+                await ctx.send(file=discord.File(newFileName), reference=ctx.message)
                 await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
                 os.remove(fileName)
+                os.remove(newFileName)
                 return
-
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
 
@@ -602,41 +575,29 @@ class Convert(commands.Cog):
                     if filelink.find('/'):
                         fileName = "downloads/" + filelink.rsplit('/', 1)[1]
                     supported = True
-
         if supported:
             start_time = time.time()
             async with ctx.typing():
-
                 outputtext = await ctx.send("`Downloading image...`")
                 try:
                     open(fileName, 'wb').write(r.content)
                 except Exception:
                     await outputtext.edit(content="`Failed to download image `")
                     return
-
                 await outputtext.edit(content="`Image downloaded...`")
                 if not fileName.endswith('.png'):
                     await outputtext.edit(content="`Converting to PNG...`")
-                    oldFileName = fileName
-                    fileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
-                    print(oldFileName)
-                    print(fileName)
-
-                    os.remove(oldFileName)
-                    await outputtext.edit(content="`Converted to PNG`")
-
-                try:
-                    proc = Popen(["magick", "convert", fileName, "-resize", "158x115!", fileName])
-                    proc.wait()
-                except Exception:
-                    await outputtext.edit(content="`Failed to convert to PNG`")
-                    return
+                    newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
+                    err = self.ffmpeg_img(fileName, newFileName, "158:115", None, None)
+                    if err == 1:
+                        await outputtext.edit(content="`Failed to convert to PNG`")
+                        return
                 await outputtext.edit(content="`Uploading boxart...`")
-                await ctx.send(file=discord.File(fileName), reference=ctx.message)
+                await ctx.send(file=discord.File(newFileName), reference=ctx.message)
                 await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
                 os.remove(fileName)
+                os.remove(newFileName)
                 return
-
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
 
@@ -680,33 +641,15 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.png'):
                     await outputtext.edit(content="`Converting to PNG...`")
                     newFileName = "senpai_converted_" + fileName + "_.png"
-                    try:
-                        proc = Popen(["magick", "convert", fileName, newFileName])
-                        proc.wait()
-                        oldFileName = fileName
-                        fileName = newFileName
-                        os.remove(oldFileName)
-
-                    except Exception:
+                    err = self.ffmpeg_img(fileName, newFileName, "208:156", None, None)
+                    if err == 1:
                         await outputtext.edit(content="`Failed to convert to PNG`")
                         return
-                    await outputtext.edit(content="`Converted to PNG`")
-
-                process = Popen(["identify", fileName], stdout=subprocess.PIPE)
-                stdout = process.communicate()[0]
-                identification = ((stdout.decode("utf-8").split())[2]).split("x")
-                if int(identification[0]) > 208 or int(identification[1]) > 156:
-                    await outputtext.edit(content="`Resizing image...`")
-                    try:
-                        proc = Popen(["magick", "convert", fileName, "-resize", "208x156!", fileName])
-                    except Exception:
-                        await outputtext.edit(content="`Failed to resize`")
-                        return
-
                 await outputtext.edit(content="`Uploading DSi Menu image...`")
-                await ctx.send(file=discord.File(fileName), reference=ctx.message)
+                await ctx.send(file=discord.File(newFileName), reference=ctx.message)
                 await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
                 os.remove(fileName)
+                os.remove(newFileName)
                 return
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
@@ -738,7 +681,6 @@ class Convert(commands.Cog):
                         fileName = "downloads/" + filelink.rsplit('/', 1)[1]
                     supported = True
         if supported:
-
             async with ctx.typing():
                 start_time = time.time()
                 outputtext = await ctx.send("`Downloading video...`")
