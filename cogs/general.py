@@ -30,7 +30,7 @@ class General(commands.Cog):
         arg = arg.casefold()
         arglist = {x for x in arg.split() if x in self.systems}
 
-        if arg not in self.systems:
+        if not arglist:
             await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in self.systems])}.")
             return
 
