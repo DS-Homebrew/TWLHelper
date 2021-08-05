@@ -166,6 +166,34 @@ class General(commands.Cog):
         embed.url += "dsi-guide"  # Don't add .html, it breaks the link
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def color(self, ctx, *, arg=""):
+        """Shows conversions of a color from #RRGGBB, #RGB, RRR GGG BBB, and BGR15"""
+
+        arg = arg.replace("0x", "").replace("#", "")
+
+        if len(arg) == 6:  # #RRGGBB
+            rgb = (int(arg[0:2], 16), int(arg[2:4], 16), int(arg[4:6], 16))
+        elif len(arg) == 3:  # #RGB
+            rgb = (int(arg[0], 16) * 0x11, int(arg[1], 16) * 0x11, int(arg[2], 16) * 0x11)
+        elif len(arg.split()) == 3: # RRR GGG BBB
+            split = arg.split()
+            rgb = (max(min(int(split[0]), 0xFF), 0), max(min(int(split[1]), 0xFF), 0), max(min(int(split[2]), 0xFF), 0))
+        elif len(arg) == 4: # BGR15
+            bgr15 = int(arg, 16)
+            rgb = ((bgr15 & 0x1F) * 0xFF // 0x1F, ((bgr15 >> 5) & 0x1F) * 0xFF // 0x1F, ((bgr15 >> 10) & 0x1F) * 0xFF // 0x1F)
+        else:
+            await ctx.send_help(ctx.command)
+            return
+
+        embed = discord.Embed(title="Color conversions")
+        embed.color = rgb[0] << 0x10 | rgb[1] << 0x8 | rgb[2]
+        embed.add_field(name="Hex (HTML)", value=f"`#{rgb[0] << 0x10 | rgb[1] << 0x8 | rgb[2]:06X}`")
+        embed.add_field(name="RGB", value=f"`{rgb[0]} {rgb[1]} {rgb[2]}`")
+        bgr15 = rgb[0] * 0x1F // 0xFF | (rgb[1] * 0x1F // 0xFF) << 5 | (rgb[2] * 0x1F // 0xFF) << 10
+        embed.add_field(name="BGR15", value=f"`0x{bgr15:04X}` `0x{bgr15 | 1 << 15:04X}`")
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(General(bot))
