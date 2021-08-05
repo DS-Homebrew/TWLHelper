@@ -237,7 +237,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converting to PNG...`")
                     newFileName = "senpai_converted_" + fileName + "_.png"
                     try:
-                        proc = Popen(["magick", "convert", fileName, newFileName])
+                        proc = Popen(["ffmpeg", "-i", fileName, newFileName])
                         proc.wait()
                     except Exception:
                         await outputtext.edit(content="`Failed to convert to PNG`")
