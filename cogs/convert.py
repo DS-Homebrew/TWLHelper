@@ -93,39 +93,26 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Failed to download image`")
                     return
                 await outputtext.edit(content="`Image downloaded...`")
-                if not (fileName.lower()).endswith('.gif'):
-                    await outputtext.edit(content="`Converting to GIF...`")
-                    try:
-                        proc = Popen(["ffmpeg", "-i", fileName, "-vf", "palettegen=max_colors=256", "_palette.png"])
-                        proc.wait()
-                    except Exception:
-                        await outputtext.edit(content="`Failed to convert to PNG for palette generation`")
-                        return
-                    try:
-                        proc = Popen(["ffmpeg", "-i", fileName, "-i", "_palette.png", "-filter_complex", "paletteuse", "_output.gif"])
-                        proc.wait()
-                    except Exception:
-                        await outputtext.edit(content="`Failed to convert to GIF`")
-                        return
-                    await outputtext.edit(content="`Converted to GIF...`")
-                else:
-                    try:
-                        proc = Popen(["cp", fileName, "_output.gif"])
-                        proc.wait()
-                    except Exception:
-                        error_message = traceback.format_exc()
-                        print(error_message)
-                        await outputtext.edit(content="`Failed to make a copy of GIF")
                 newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.gif"
-                await outputtext.edit(content="`Resizing GIF...`")
-                err = self.ffmpeg_img("_output.gif", newFileName, None, None, "256:192")
-                if err == 1:
-                    await outputtext.edit(content="`Failed to resize GIF`")
+                await outputtext.edit(content="`Converting to GIF...`")
+                try:
+                    proc = Popen(["ffmpeg", "-i", fileName, "-vf", "crop='if(gt(iw,ih),ih*4/3,iw)':'if(gt(iw,ih),ih,iw*3/4)',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", newFileName])
+                    proc.wait()
+                except Exception:
+                    error_message = traceback.format_exc()
+                    print(error_message)
+                    await outputtext.edit(content="`Failed to convert to GIF`")
                     return
-                await outputtext.edit(content="`Resized GIF...`")
+                await outputtext.edit(content="`Converted to GIF...`")
                 await outputtext.edit(content="`Colour Mapping GIF...`")
-                proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", "-k", "24", "#0", "-o", newFileName])
-                proc.wait()
+                try:
+                    proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", "-k", "24", "#0", "-o", newFileName])
+                    proc.wait()
+                except Exception:
+                    error_message = traceback.format_exc()
+                    print(error_message)
+                    await outputtext.edit(content="`Failed to map GIF colour...`")
+                    return
                 await outputtext.edit(content="`GIF colour mapped...`")
                 await outputtext.edit(contents="`Optimising GIF size...`")
                 warning = False
