@@ -116,19 +116,13 @@ class Convert(commands.Cog):
                 await outputtext.edit(content="`GIF colour mapped...`")
                 await outputtext.edit(contents="`Optimising GIF size...`")
                 warning = False
+                x = 0
+                while x <= 300 and os.stat(newFileName).st_size > 15000:
+                    proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={x}", "-o", newFileName])
+                    proc.wait()
+                    x += 50
                 if os.stat(newFileName).st_size > 15000:
-                    while True:
-                        x = 0
-                        while x < 10:
-                            if os.stat(newFileName).st_size > 15000:
-                                proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", "--lossy=100", "-o", newFileName])
-                                proc.wait()
-                                x = x + 1
-                            else:
-                                break
-                            if x == 5:
-                                warning = True
-                        break
+                    warning = True
                 await outputtext.edit(contents="`GIF size optimised`")
                 await outputtext.edit(contents="`Uploading GIF...`")
                 await ctx.send(file=discord.File(newFileName), reference=ctx.message)
