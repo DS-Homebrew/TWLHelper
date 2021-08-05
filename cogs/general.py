@@ -176,10 +176,10 @@ class General(commands.Cog):
             rgb = (int(arg[0:2], 16), int(arg[2:4], 16), int(arg[4:6], 16))
         elif len(arg) == 3:  # #RGB
             rgb = (int(arg[0], 16) * 0x11, int(arg[1], 16) * 0x11, int(arg[2], 16) * 0x11)
-        elif len(arg.split()) == 3: # RRR GGG BBB
+        elif len(arg.split()) == 3:  # RRR GGG BBB
             split = arg.split()
             rgb = (max(min(int(split[0]), 0xFF), 0), max(min(int(split[1]), 0xFF), 0), max(min(int(split[2]), 0xFF), 0))
-        elif len(arg) == 4: # BGR15
+        elif len(arg) == 4:  # BGR15
             bgr15 = int(arg, 16)
             rgb = ((bgr15 & 0x1F) * 0xFF // 0x1F, ((bgr15 >> 5) & 0x1F) * 0xFF // 0x1F, ((bgr15 >> 10) & 0x1F) * 0xFF // 0x1F)
         else:
