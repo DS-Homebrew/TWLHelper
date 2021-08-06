@@ -40,14 +40,14 @@ class General(commands.Cog):
                 embed.set_author(name="Nintendo Homebrew & Plailect")
                 embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
                 embed.url = "https://3ds.hacks.guide/"
-                embed.description = "3DS Hacks Guide"
+                embed.description = "A complete guide to 3DS custom firmware, from stock to boot9strap"
                 await ctx.send(embed=embed)
                 continue
             if self.check_arg(x, ('wiiu',)):
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
                 embed.url = "https://wiiu.hacks.guide/"
-                embed.description = "Wii U Hacks Guide"
+                embed.description = "A guide collaboration between Nintendo Homebrew’s Helpers and Staff, from stock to CBHC custom firmware"
                 await ctx.send(embed=embed)
                 continue
             if self.check_arg(x, ('vwii',)):
@@ -60,16 +60,17 @@ class General(commands.Cog):
             if self.check_arg(x, ('switch', 'nx', 'ns')):
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
-                embed.url = "https://nh-server.github.io/switch-guide/"
-                embed.description = "Switch hacking guide"
+                embed.url = "https://switchgui.de/switch-guide/"
+                embed.description = "A guide collaboration between Nintendo Homebrew's Helpers and Staff, from stock to Atmosphere"
                 await ctx.send(embed=embed)
                 continue
             if self.check_arg(x, 'wii'):
                 embed.set_author(name="RiiConnect24")
                 embed.set_thumbnail(url="https://i.imgur.com/KI6IXmm.png")
                 embed.url = "https://wii.guide/"
-                embed.description = "Wii softmod guide"
+                embed.description = "The complete guide to modding your Nintendo Wii"
                 await ctx.send(embed=embed)
+                continue
             if self.check_arg(x, 'dsi'):
                 embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
                 embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
