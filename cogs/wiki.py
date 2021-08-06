@@ -231,6 +231,13 @@ class Wiki(commands.Cog):
         embed.description = "Connecting your DS⁽ⁱ⁾ to the Internet to play online"
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def emulators(self, ctx):
+        """Links to the emulator index page"""
+        embed = self.embed("Emulators on the DS")
+        embed.url += "ds-index/emulators.html"
+        embed.description = "A reference on Emulators on the DS"
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Wiki(bot))
