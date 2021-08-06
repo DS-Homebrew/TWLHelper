@@ -105,6 +105,16 @@ class General(commands.Cog):
         embed.description = "How to properly format your DSi's SD card"
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=["nanddump", "nandbackup"])
+    async def nand(self, ctx):
+        """Links to the NAND dumping guide"""
+        embed = discord.Embed(title="Dumping NAND")
+        embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
+        embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
+        embed.url = "https://dsi.cfw.guide/dumping-nand.html"
+        embed.description = "How to dump your DSi's NAND"
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def dump(self, ctx, arg=None):
         """How to dump games and data for CFW consoles"""
