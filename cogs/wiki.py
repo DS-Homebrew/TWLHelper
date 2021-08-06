@@ -193,7 +193,7 @@ class Wiki(commands.Cog):
 
     @commands.command(aliases=["forwarders", "forwarder", "twlforwarders"])
     async def ndsforwarders(self, ctx):
-        """Links to nds forwarders"""
+        """Links to the nds-bootstrap forwarder guide"""
         embed = self.embed("NDS Forwarder Guide")
         embed.url += "ds-index/forwarders.html"
         embed.description = "Creating forwarders for nds-bootstrap"
@@ -221,6 +221,14 @@ class Wiki(commands.Cog):
         embed = self.embed("DS⁽ⁱ⁾ Mode Hacking Info")
         embed.url += "community/discord-info.html"
         embed.description = "Information for the DS⁽ⁱ⁾ Mode Hacking Discord server"
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=["wi-fi"])
+    async def wifi(self, ctx):
+        """Links to the Wi-Fi tutorial"""
+        embed = self.embed("Connecting DS Games to the Internet")
+        embed.url += "ds-index/wifi.html"
+        embed.description = "Connecting your DS⁽ⁱ⁾ to the Internet to play online"
         await ctx.send(embed=embed)
 
 
