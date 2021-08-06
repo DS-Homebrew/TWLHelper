@@ -78,7 +78,7 @@ class Wiki(commands.Cog):
                 if arg.lower() in faq.lower() and "####" in faq.lower():
                     title = faq[5:]
                     embed.url += "?faq=" + self.web_name(title)
-                    embed.description = title + "\n\n" + self.read_to_next(faqpage, iter)
+                    embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
     @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
@@ -95,7 +95,7 @@ class Wiki(commands.Cog):
                 if arg.lower() in faq.lower() and "####" in faq.lower():
                     title = faq[5:]
                     embed.url += "?faq=" + self.web_name(title)
-                    embed.description = title + "\n\n" + self.read_to_next(faqpage, iter)
+                    embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
     @faq.command(aliases=["gbar2"])
@@ -112,7 +112,7 @@ class Wiki(commands.Cog):
                 if arg.lower() in faq.lower() and "####" in faq.lower():
                     title = faq[5:]
                     embed.url += "?faq=" + self.web_name(title)
-                    embed.description = title + "\n\n" + self.read_to_next(faqpage, iter)
+                    embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
     @faq.command(aliases=["hiya"])
