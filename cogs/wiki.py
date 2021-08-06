@@ -1,7 +1,7 @@
 import discord
+import requests
 
 from discord.ext import commands
-from .results import faqs
 
 
 class Wiki(commands.Cog):
@@ -35,6 +35,29 @@ class Wiki(commands.Cog):
                 out += "-"
         return out
 
+    def git_name(self, name):
+        name = name.lower()
+        url = "https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/"
+        if name == "twlmenu":
+            url += "twilightmenu/faq.md"
+        elif name == "ndsbs":
+            url += "nds-bootstrap/faq.md"
+        elif name == "gbar2":
+            url += "gbarunner2/faq.md"
+        return url
+
+    def read_to_next(self, file, iter):
+        line = file[iter]
+        out = ""
+        while "####" not in line:
+            out += '\n' + file[iter]
+            iter += 1
+            if iter < len(file):
+                line = file[iter]
+            else:
+                break
+        return out
+
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def faq(self, ctx):
         """Links to the FAQ for an application"""
@@ -47,10 +70,15 @@ class Wiki(commands.Cog):
         embed.url += "twilightmenu/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
-            for faq in faqs.twlmenu:
-                if arg.lower() in faq.lower():
-                    embed.url += "?faq=" + self.web_name(faq)
-                    embed.description = faq
+            page = requests.get(self.git_name("twlmenu")).text
+            faqpage = page.splitlines()
+            iter = 0
+            for faq in faqpage:
+                iter += 1
+                if arg.lower() in faq.lower() and "####" in faq.lower():
+                    title = faq[5:]
+                    embed.url += "?faq=" + self.web_name(title)
+                    embed.description = title + "\n\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
     @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
@@ -59,10 +87,15 @@ class Wiki(commands.Cog):
         embed.url += "nds-bootstrap/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
-            for faq in faqs.bootstrap:
-                if arg.lower() in faq.lower():
-                    embed.url += "?faq=" + self.web_name(faq)
-                    embed.description = faq
+            page = requests.get(self.git_name("ndsbs")).text
+            faqpage = page.splitlines()
+            iter = 0
+            for faq in faqpage:
+                iter += 1
+                if arg.lower() in faq.lower() and "####" in faq.lower():
+                    title = faq[5:]
+                    embed.url += "?faq=" + self.web_name(title)
+                    embed.description = title + "\n\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
     @faq.command(aliases=["gbar2"])
@@ -71,10 +104,15 @@ class Wiki(commands.Cog):
         embed.url += "gbarunner2/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
-            for faq in faqs.gbar2:
-                if arg.lower() in faq.lower():
-                    embed.url += "?faq=" + self.web_name(faq)
-                    embed.description = faq
+            page = requests.get(self.git_name("gbar2")).text
+            faqpage = page.splitlines()
+            iter = 0
+            for faq in faqpage:
+                iter += 1
+                if arg.lower() in faq.lower() and "####" in faq.lower():
+                    title = faq[5:]
+                    embed.url += "?faq=" + self.web_name(title)
+                    embed.description = title + "\n\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
     @faq.command(aliases=["hiya"])
