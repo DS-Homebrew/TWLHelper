@@ -238,13 +238,13 @@ class Wiki(commands.Cog):
         embed.url += "ds-index/emulators.html"
         embed.description = "A reference on Emulators on the DS"
         await ctx.send(embed=embed)
-
-    @commands.command()
-    async def retail(self, ctx):
-        """Links to the list of retail DS games"""
-        embed = self.embed("Retail Roms")
-        embed.url += "ds-index/retail-roms.html"
-        embed.description = "A reference on retail games for the Nintendo DS"
+        
+    @commands.command(aliases=["special", "specgames"]
+    async def specialgames"(self, ctx):
+        """Links to the list of special games"""
+        embed = self.embed("Special Games")
+        embed.url += "https://wiki.ds-homebrew.com/ds-index/special-games"
+        embed.description = "A list of ds games with special features"
         await ctx.send(embed=embed)
 
 
