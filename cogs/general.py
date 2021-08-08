@@ -197,6 +197,13 @@ class General(commands.Cog):
             await ctx.send_help(ctx.command)
             return
 
+        
+    @translate.command(aliases=["about", "botinfo"])
+    async def about(self, ctx):
+        embed = self.tlembed("About Page")
+        embed.url += "https://github.com/DS-Homebrew/TWLHelper" 
+        await ctx.send(embed=embed)
+
         embed = discord.Embed(title="Color conversions")
         embed.color = rgb[0] << 0x10 | rgb[1] << 0x8 | rgb[2]
         embed.add_field(name="Hex (HTML)", value=f"`#{rgb[0] << 0x10 | rgb[1] << 0x8 | rgb[2]:06X}`")
