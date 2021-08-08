@@ -207,7 +207,7 @@ class General(commands.Cog):
 
     @commands.command(aliases=["botinfo", "whoisthisbot"])
     async def about(self, ctx):
-        embed = self.embed("About TWLHelper")
+        embed = discord.Embed(title="About TWLHelper")
         embed.url = "https://github.com/DS-Homebrew/TWLHelper"
         embed.description = "TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot"
         await ctx.send(embed=embed)
