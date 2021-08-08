@@ -238,6 +238,14 @@ class Wiki(commands.Cog):
         embed.url += "ds-index/emulators.html"
         embed.description = "A reference on Emulators on the DS"
         await ctx.send(embed=embed)
+        
+      @commands.command()
+      async def(self, ctx):
+        """Links to info about the TWL Helper bot"""
+        embed = self.embed("About Page")
+        embed.url += "https://github.com/DS-Homebrew/TWLHelper"
+        embed.description = "About the TWL Helper bot"
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
