@@ -239,13 +239,14 @@ class Wiki(commands.Cog):
         embed.description = "A reference on Emulators on the DS"
         await ctx.send(embed=embed)
 
-            @commands.command()
+    @commands.command()
     async def retail(self, ctx):
         """Links to the list of retail DS games"""
         embed = self.embed("Retail Roms")
-        embed.url += "https://wiki.ds-homebrew.com/ds-index/retail-roms"
+        embed.url += "ds-index/retail-roms.html"
         embed.description = "A reference on retail games for the Nintendo DS"
         await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Wiki(bot))
