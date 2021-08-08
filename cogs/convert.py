@@ -687,7 +687,7 @@ class Convert(commands.Cog):
                     except Exception:
                         await outputtext.edit(content="`Failed to upload video`")
                         return
-                    if respone["success"] == True:   
+                    if response["success"]:   
                         await ctx.send("""Converted video link {hosted by `tmp.ninja`}
                         """ + response["files"][0]["url"], reference=ctx.message)
 
