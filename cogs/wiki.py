@@ -247,7 +247,7 @@ class Wiki(commands.Cog):
         embed.description = "A reference on retail DS games"
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["special", "specgames"]
+    @commands.command(aliases=["special", "specgames"])
     async def specialgames"(self, ctx):
         """Links to the list of special games"""
         embed = self.embed("Special Games")
