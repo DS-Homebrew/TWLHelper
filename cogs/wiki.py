@@ -248,7 +248,7 @@ class Wiki(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["special", "specgames"])
-    async def specialgames"(self, ctx):
+    async def specialgames(self, ctx):
         """Links to the list of special games"""
         embed = self.embed("Special Games")
         embed.url += "ds-index/special-games"
