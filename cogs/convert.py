@@ -678,16 +678,16 @@ class Convert(commands.Cog):
                 if os.path.getsize("downloads/senpai_converted.mp4") < 8388119:
                     await ctx.send(file=discord.File("downloads/senpai_converted.mp4"), reference=ctx.message)
                 else:
-                    
+
                     files = {
                         'files[]': ('senpai_converted.mp4', open("downloads/senpai_converted.mp4", 'rb')),
                     }
-                    try: 
+                    try:
                         response = json.loads(requests.post('https://tmp.ninja/api.php', files=files).content)
                     except Exception:
                         await outputtext.edit(content="`Failed to upload video`")
                         return
-                    if response["success"]:   
+                    if response["success"]:
                         await ctx.send("""Converted video link {hosted by `tmp.ninja`}
                         """ + response["files"][0]["url"], reference=ctx.message)
 
