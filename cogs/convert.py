@@ -6,6 +6,7 @@ import requests
 import os
 import traceback
 import time
+import json
 
 supportedImage = [".bmp", ".gif", ".gif87", ".ico",
     ".icon", ".jpe", ".jpeg", ".jpg", ".jps", ".png"]
@@ -677,16 +678,19 @@ class Convert(commands.Cog):
                 if os.path.getsize("downloads/senpai_converted.mp4") < 8388119:
                     await ctx.send(file=discord.File("downloads/senpai_converted.mp4"), reference=ctx.message)
                 else:
-                    params = (
-                        ('d', 'upload-tool'),
-                    )
 
                     files = {
-                        'file': ('senpai_converted.mp4', open("downloads/senpai_converted.mp4", 'rb')),
+                        'files[]': ('senpai_converted.mp4', open("downloads/senpai_converted.mp4", 'rb')),
                     }
-                    response = requests.post('https://tmp.ninja/api.php', params=params, files=files)
-                    await ctx.send("""Converted video link {hosted by `tmp.ninja`}
-                    """ + response.content.decode("utf-8"), reference=ctx.message)
+                    try:
+                        response = json.loads(requests.post('https://tmp.ninja/api.php', files=files).content)
+                    except Exception:
+                        await outputtext.edit(content="`Failed to upload video`")
+                        return
+                    if response["success"]:
+                        await ctx.send("""Converted video link {hosted by `tmp.ninja`}
+                        """ + response["files"][0]["url"], reference=ctx.message)
+
                 os.remove("downloads/senpai_converted.mp4")
                 os.remove(fileName)
                 await outputtext.edit(content="`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
