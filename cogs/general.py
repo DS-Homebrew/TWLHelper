@@ -205,6 +205,11 @@ class General(commands.Cog):
         embed.add_field(name="BGR15", value=f"`0x{bgr15:04X}` `0x{bgr15 | 1 << 15:04X}`")
         await ctx.send(embed=embed)
 
-
+    @translate.command(aliases=["about", "botinfo", "whoisthisbot"])
+    async def about (self, ctx):
+        embed = self.tlembed("About")
+        embed.url += "dhttps://github.com/DS-Homebrew/TWLHelper"  #If your reading this (and not lifehacker) then i should mention this is my third attempt
+        await ctx.send(embed=embed)
+       
 def setup(bot):
     bot.add_cog(General(bot))
