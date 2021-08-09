@@ -665,6 +665,7 @@ class Convert(commands.Cog):
         if supported:
             async with ctx.typing():
                 start_time = time.time()
+                size_large = False
                 outputtext = await ctx.send("`Downloading video...`")
                 print(outputtext)
                 try:
@@ -678,24 +679,12 @@ class Convert(commands.Cog):
                 if os.path.getsize("downloads/senpai_converted.mp4") < 8388119:
                     await ctx.send(file=discord.File("downloads/senpai_converted.mp4"), reference=ctx.message)
                 else:
-
-                    files = {
-                        'files[]': ('senpai_converted.mp4', open("downloads/senpai_converted.mp4", 'rb')),
-                    }
-                    await outputtext.edit(content="`Uploading Video...`")
-                    try:
-                        print("Uploading.")
-                        response = json.loads(requests.post('https://tmp.ninja/upload.php', files=files).content)
-                    except Exception:
-                        await outputtext.edit(content="`Failed to upload video`")
-                        return
-                    if response["success"]:
-                        await ctx.send("""Converted video link {hosted by `tmp.ninja`}
-                        """ + response["files"][0]["url"], reference=ctx.message)
-
+                    size_large = True
+                    await outputtext.edit(content="`Converted video is too large! Cannot send video.`")
                 os.remove("downloads/senpai_converted.mp4")
                 os.remove(fileName)
-                await outputtext.edit(content="`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                if not size_large:
+                    await outputtext.edit(content="`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
         else:
             return
 
@@ -729,6 +718,7 @@ class Convert(commands.Cog):
 
             async with ctx.typing():
                 start_time = time.time()
+                size_large = False
                 outputtext = await ctx.send("`Downloading video...`")
                 print(outputtext)
                 try:
@@ -744,19 +734,12 @@ class Convert(commands.Cog):
                 if os.path.getsize("downloads/senpai_converted.mp4") < 8388119:
                     await ctx.send(file=discord.File("downloads/senpai_converted.mp4"), reference=ctx.message)
                 else:
-                    params = (
-                        ('d', 'upload-tool'),
-                    )
-
-                    files = {
-                        'file': ('senpai_converted.mp4', open("downloads/senpai_converted.mp4", 'rb')),
-                    }
-                    response = requests.post('https://tmp.ninja/upload.php', params=params, files=files)
-                    await ctx.send("""Converted video link {hosted by `tmp.ninja`}
-                    """ + response.content.decode("utf-8"), reference=ctx.message)
+                    size_large = True
+                    await outputtext.edit(content="`Converted video is too large! Cannot send video.`")
                 os.remove("downloads/senpai_converted.mp4")
                 os.remove(fileName)
-                await outputtext.edit(content="`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                if not size_large:
+                    await outputtext.edit(content="`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
         else:
             return
 
