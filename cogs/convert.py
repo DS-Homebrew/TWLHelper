@@ -683,7 +683,8 @@ class Convert(commands.Cog):
                         'files[]': ('senpai_converted.mp4', open("downloads/senpai_converted.mp4", 'rb')),
                     }
                     try:
-                        response = json.loads(requests.post('https://tmp.ninja/api.php', files=files).content)
+                        print("Uploading.")
+                        response = json.loads(requests.post('https://tmp.ninja/upload.php', files=files).content)
                     except Exception:
                         await outputtext.edit(content="`Failed to upload video`")
                         return
