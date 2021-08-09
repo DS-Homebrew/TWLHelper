@@ -682,6 +682,7 @@ class Convert(commands.Cog):
                     files = {
                         'files[]': ('senpai_converted.mp4', open("downloads/senpai_converted.mp4", 'rb')),
                     }
+                    await outputtext.edit(content="`Uploading Video...`")
                     try:
                         print("Uploading.")
                         response = json.loads(requests.post('https://tmp.ninja/upload.php', files=files).content)
@@ -750,7 +751,7 @@ class Convert(commands.Cog):
                     files = {
                         'file': ('senpai_converted.mp4', open("downloads/senpai_converted.mp4", 'rb')),
                     }
-                    response = requests.post('https://tmp.ninja/api.php', params=params, files=files)
+                    response = requests.post('https://tmp.ninja/upload.php', params=params, files=files)
                     await ctx.send("""Converted video link {hosted by `tmp.ninja`}
                     """ + response.content.decode("utf-8"), reference=ctx.message)
                 os.remove("downloads/senpai_converted.mp4")
