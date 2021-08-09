@@ -175,6 +175,33 @@ class Wiki(commands.Cog):
         embed.description = "How to install hiyaCFW on the DSi"
         await ctx.send(embed=embed)
 
+    @commands.group(invoke_without_command=True, case_insensitive=True)
+    async def uninstall(self, ctx):
+        """Links and/or information on uninstalling apps"""
+        await ctx.send_help(ctx.command)
+
+    @uninstall.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
+    async def twilight_uninstall(self, ctx, *, arg=""):
+        systems = ("3ds", "dsi", "ds")
+        embed = self.embed("TWiLight Menu++ Uninstall Guide")
+        embed.url += "twilightmenu/uninstalling"
+        embed.description = "How to uninstall TWiLight Menu++"
+        if arg != "":
+            if self.check_arg(arg, ("3ds",)):
+                embed.url += "-3ds"
+                embed.description += " on the 3DS"
+            elif self.check_arg(arg, ("dsi",)):
+                embed.url += "-ds"
+                embed.description += " on the DSi"
+            elif self.check_arg(arg, ("flashcard", "flashcart", "ds")):
+                embed.url += "-ds"
+                embed.description += " on flashcards"
+        else:
+            await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in systems])}.")
+            return
+        embed.url += ".html"
+        await ctx.send(embed=embed)
+
     @commands.command(aliases=["ds-index"])
     async def dsindex(self, ctx):
         """Links to the DS index"""
