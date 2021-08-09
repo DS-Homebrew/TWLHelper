@@ -6,7 +6,7 @@ import requests
 import os
 import traceback
 import time
-import json
+# import json
 
 supportedImage = [".bmp", ".gif", ".gif87", ".ico",
     ".icon", ".jpe", ".jpeg", ".jpg", ".jps", ".png"]
