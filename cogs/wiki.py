@@ -270,7 +270,7 @@ class Wiki(commands.Cog):
     async def retail(self, ctx):
         """Links to the list of retail DS games"""
         embed = self.embed("Retail ROMs")
-        embed.url += "ds-index/retail-roms"
+        embed.url += "ds-index/retail-roms.html"
         embed.description = "A reference on retail DS games"
         await ctx.send(embed=embed)
 
@@ -278,7 +278,7 @@ class Wiki(commands.Cog):
     async def specialgames(self, ctx):
         """Links to the list of special games"""
         embed = self.embed("Special Games")
-        embed.url += "ds-index/special-games"
+        embed.url += "ds-index/special-games.html"
         embed.description = "A list of DS games with special features"
         await ctx.send(embed=embed)
 
@@ -287,7 +287,7 @@ class Wiki(commands.Cog):
     async def unlaunchbg(self, ctx):
         """Links to a guide to changing Unlaunch background"""
         embed = self.embed("Custom Unlaunch Backgrounds")
-        embed.url += "twilightmenu/custom-unlaunch-backgrounds.html"
+        embed.url += "twilightmenu/custom-unlaunch-backgrounds.htmlr"
         embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
         await ctx.send(embed=embed)
 
