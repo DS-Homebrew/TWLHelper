@@ -38,7 +38,6 @@ class TWLHelper(commands.Bot):
 
     async def on_ready(self):
         print("TWLHelper ready.")
-        await self.change_presence(status=discord.Status.online, activity=discord.Game(settings.STATUS))
 
     async def on_command_error(self, ctx: commands.Context, exc: commands.CommandInvokeError):
         author: discord.Member = ctx.author
@@ -91,7 +90,9 @@ class TWLHelper(commands.Bot):
 def main():
     intents = discord.Intents(guilds=True, members=True, bans=True, messages=True)
 
-    bot = TWLHelper(settings.PREFIX, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot", allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents, case_insensitive=True)
+    bot = TWLHelper(settings.PREFIX, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot",
+                    allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents,
+                    case_insensitive=True, status=discord.Status.online, activity=discord.Game(settings.STATUS))
     bot.help_command = embedHelp()
     print('Starting TWLHelper...')
     bot.load_cogs()
