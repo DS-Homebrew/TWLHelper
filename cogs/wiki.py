@@ -25,6 +25,13 @@ class Wiki(commands.Cog):
         embed.url = "https://wiki.ds-homebrew.com/"
         return embed
 
+    def skin_embed(self, title):
+        embed = discord.Embed(title=title)
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://skins.ds-homebrew.com/"
+        return embed
+
     def web_name(self, name):
         name = name.lower()
         out = ""
@@ -290,6 +297,18 @@ class Wiki(commands.Cog):
         embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
         await ctx.send(embed=embed)
 
+    @commands.group(invoke_without_command=True, case_insensitive=True)
+    async def skins(self, ctx):
+        """Links and/or information on installing apps"""
+        await ctx.send_help(ctx.command)
+
+    @skins.command(name="unlaunch")
+    async def unlaunch_skin(self, ctx):
+        """Links to the Unlaunch skins page"""
+        embed = self.skin_embed("Unlaunch Backgrounds")
+        embed.url += "unlaunch/"
+        embed.description = "Custom backgrounds for Unlaunch"
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Wiki(bot))
