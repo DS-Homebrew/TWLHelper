@@ -310,14 +310,6 @@ class Wiki(commands.Cog):
         embed.description = "Custom backgrounds for Unlaunch"
         await ctx.send(embed=embed)
 
-    @skins.command(name="unlaunch")
-    async def unlaunch_skin(self, ctx):
-        """Links to the Unlaunch skins page"""
-        embed = self.skin_embed("Unlaunch Backgrounds")
-        embed.url += "unlaunch/"
-        embed.description = "Custom backgrounds for Unlaunch"
-        await ctx.send(embed=embed)
-
     @skins.command(name="dsi", aliases=["dsimenu"])
     async def dsimenu_skin(self, ctx):
         embed = self.skin_embed("DSi Menu Skins")
@@ -326,7 +318,7 @@ class Wiki(commands.Cog):
         await ctx.send(embed=embed)
 
     @skins.command(name="3ds", aliases=["3dsmenu"])
-    async def dsimenu_skin(self, ctx):
+    async def 3dsmenu_skin(self, ctx):
         embed = self.skin_embed("3DS Menu Skins")
         embed.url += "nintendo-3ds/"
         embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
