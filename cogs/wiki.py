@@ -310,5 +310,35 @@ class Wiki(commands.Cog):
         embed.description = "Custom backgrounds for Unlaunch"
         await ctx.send(embed=embed)
 
+    @skins.command(name="unlaunch")
+    async def unlaunch_skin(self, ctx):
+        """Links to the Unlaunch skins page"""
+        embed = self.skin_embed("Unlaunch Backgrounds")
+        embed.url += "unlaunch/"
+        embed.description = "Custom backgrounds for Unlaunch"
+        await ctx.send(embed=embed)
+
+    @skins.command(name="dsi", aliases=["dsimenu"])
+    async def dsimenu_skin(self, ctx):
+        embed = self.skin_embed("DSi Menu Skins")
+        embed.url += "nintendo-dsi/"
+        embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
+        await ctx.send(embed=embed)
+
+    @skins.command(name="3ds", aliases=["3dsmenu"])
+    async def dsimenu_skin(self, ctx):
+        embed = self.skin_embed("3DS Menu Skins")
+        embed.url += "nintendo-3ds/"
+        embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
+        await ctx.send(embed=embed)
+
+    @skins.command(name="r4", aliases=["r4theme"])
+    async def r4menu_skin(self, ctx):
+        embed = self.skin_embed("R4 Original Menu Skins")
+        embed.url += "r4-original/"
+        embed.description = "Custom skins for TWiLight Menu++'s R4 Original Menu theme"
+        await ctx.send(embed=embed)
+
+
 def setup(bot):
     bot.add_cog(Wiki(bot))
