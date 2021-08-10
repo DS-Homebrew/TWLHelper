@@ -283,5 +283,13 @@ class Wiki(commands.Cog):
         await ctx.send(embed=embed)
 
 
+    @commands.command()
+    async def unlaunchbg(self, ctx):
+        """Links to a guide to changing Unlaunch background"""
+        embed = self.embed("Custom Unlaunch Backgrounds")
+        embed.url += "twilightmenu/custom-unlaunch-backgrounds.html"
+        embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
+        await ctx.send(embed=embed)
+
 def setup(bot):
     bot.add_cog(Wiki(bot))
