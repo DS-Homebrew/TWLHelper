@@ -191,7 +191,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`You asked me to convert a BMP into a ... BMP`")
                     return
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @convert.command()
     async def png(self, ctx, filelink=None):
@@ -248,7 +248,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`You asked me to convert a PNG into a ... PNG`")
                     return
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @convert.command()
     async def gif(self, ctx, filelink=None):
@@ -291,7 +291,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converting to GIF...`")
                     newFileName = "senpai_converted_" + fileName + "_.gif"
                     try:
-                        proc = Popen(["magick", "convert", fileName, newFileName])
+                        proc = Popen(["ffmpeg", "-i", fileName, "-vf", "flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", newFileName])
                         proc.wait()
                     except Exception:
                         await outputtext.edit(content="`Failed to convert to GIF`")
@@ -307,7 +307,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`You asked me to convert a GIF into a ... GIF`")
                     return
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @convert.command(aliases=["jpg"])
     async def jpeg(self, ctx, filelink=None):
@@ -364,7 +364,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`You asked me to convert a JPEG into a ... JPEG`")
                     return
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @convert.group()
     async def boxart(self, ctx):
@@ -425,7 +425,7 @@ class Convert(commands.Cog):
                 return
 
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @boxart.command(name="gba", aliases=["fds", "gbc", "gb"])
     async def gba_boxart(self, ctx, filelink=None):
@@ -478,7 +478,7 @@ class Convert(commands.Cog):
                 return
 
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @boxart.command(name="nes", aliases=["gen", "md", "sfc", "ms", "gg"])
     async def nes_boxart(self, ctx, filelink=None):
@@ -529,7 +529,7 @@ class Convert(commands.Cog):
                 os.remove(newFileName)
                 return
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @boxart.command(name="snes")
     async def snes_boxart(self, ctx, filelink=None):
@@ -581,7 +581,7 @@ class Convert(commands.Cog):
                 os.remove(newFileName)
                 return
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @convert.command()
     async def dsimenu(self, ctx, filelink=None):
@@ -634,7 +634,7 @@ class Convert(commands.Cog):
                 os.remove(newFileName)
                 return
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + supportedImage + "`")
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @convert.command()
     async def dsmp4(self, ctx, filelink=None):
