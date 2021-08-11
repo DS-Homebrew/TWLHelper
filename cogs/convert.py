@@ -293,7 +293,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converting to GIF...`")
                     newFileName = "senpai_converted_" + fileName + "_.gif"
                     try:
-                        proc = Popen(["ffmpeg", "-i", fileName, "-vf", "flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", newFileName])
+                        proc = Popen(["ffmpeg", "-i", fileName, "-vf", "split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", newFileName])
                         proc.wait()
                     except Exception:
                         await outputtext.edit(content="`Failed to convert to GIF`")
