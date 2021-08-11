@@ -690,7 +690,7 @@ class Convert(commands.Cog):
         else:
             return
 
-    @convert.command()
+    @convert.command(aliases=["mp4"])
     async def video(self, ctx, filelink=None):
         """
         Converts an attached, or linked, video to MP4
