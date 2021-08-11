@@ -8,8 +8,10 @@ import traceback
 import time
 # import json
 
-supportedImage = [".bmp", ".gif", ".gif87", ".ico",
-    ".icon", ".jpe", ".jpeg", ".jpg", ".jps", ".png"]
+supportedImage = [".bmp", ".gif", ".gif87", ".ico", ".icon",
+    ".jpe", ".jpeg", ".jpg", ".jp2", ".jps", ".png", ".apng",
+    ".tiff", ".pbm", ".webp", ".webm", ".mpg", ".3gp",
+    ".mp4", ".mov", ".wmv", ".flv", ".avi", ".mkv"]
 
 
 class Convert(commands.Cog):
@@ -647,7 +649,7 @@ class Convert(commands.Cog):
             if ctx.message.attachments:
                 f = ctx.message.attachments[0]
 
-                for extension in [".mp4", ".mov", ".wmv", ".flv", ".avi", ".mkv"]:
+                for extension in supportedImage:
                     if f.filename.lower().endswith(extension):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
@@ -656,7 +658,7 @@ class Convert(commands.Cog):
                 await ctx.send_help(ctx.command)
                 return
         else:
-            for extension in [".mp4", ".mov", ".wmv", ".flv", ".avi", ".mkv"]:
+            for extension in supportedImage:
                 if filelink.lower().endswith(extension):
                     r = requests.get(filelink, allow_redirects=True)
                     if filelink.find('/'):
@@ -699,7 +701,7 @@ class Convert(commands.Cog):
             if ctx.message.attachments:
                 f = ctx.message.attachments[0]
 
-                for extension in [".mp4", ".mov", ".wmv", ".flv", ".avi", ".mkv"]:
+                for extension in supportedImage:
                     if f.filename.lower().endswith(extension):
                         supported = True
                         r = requests.get(f.url, allow_redirects=True)
@@ -708,7 +710,7 @@ class Convert(commands.Cog):
                 await ctx.send_help(ctx.command)
                 return
         else:
-            for extension in [".mp4", ".mov", ".wmv", ".flv", ".avi", ".mkv"]:
+            for extension in supportedImage:
                 if filelink.lower().endswith(extension):
                     r = requests.get(filelink, allow_redirects=True)
                     if filelink.find('/'):
