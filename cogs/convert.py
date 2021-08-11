@@ -97,7 +97,7 @@ class Convert(commands.Cog):
                 newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.gif"
                 await outputtext.edit(content="`Converting to GIF...`")
                 try:
-                    proc = Popen(["ffmpeg", "-i", fileName, "-vf", "crop='if(gt(iw,ih),ih*4/3,iw)':'if(gt(iw,ih),ih,iw*3/4)',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", newFileName])
+                    proc = Popen(["ffmpeg", "-i", fileName, "-vf", "crop='if(gte(ih,iw*3/4),iw,ih)':'if(gte(ih,iw*3/4),iw*3/4,ih*3/4)',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", newFileName])
                     proc.wait()
                 except Exception:
                     error_message = traceback.format_exc()
