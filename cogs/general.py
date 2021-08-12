@@ -24,18 +24,17 @@ class General(commands.Cog):
             return True
         return False
 
-    @commands.command()
-    async def guide(self, ctx, *, arg=""):
+    @commands.command(require_var_positional=True)
+    async def guide(self, ctx, *guides) -> None:
         """Links to the recommended guides"""
-        arg = arg.casefold()
-        arglist = {x for x in arg.split() if x in self.systems}
+        guides = {x.lower() for x in guides if x.lower() in self.systems}
 
-        if not arglist:
+        if not guides:
             await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in self.systems])}.")
             return
 
         embed = discord.Embed(title="Guide")
-        for x in arglist:
+        for x in guides:
             if self.check_arg(x, '3ds'):
                 embed.set_author(name="Nintendo Homebrew & Plailect")
                 embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
