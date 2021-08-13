@@ -192,7 +192,7 @@ class General(commands.Cog):
             rgb = (max(min(int(split[0]), 0xFF), 0), max(min(int(split[1]), 0xFF), 0), max(min(int(split[2]), 0xFF), 0))
         elif len(arg) == 4:  # BGR15
             bgr15 = int(arg, 16)
-            rgb = ((bgr15 & 0x1F) * 0xFF // 0x1F, ((bgr15 >> 5) & 0x1F) * 0xFF // 0x1F, ((bgr15 >> 10) & 0x1F) * 0xFF // 0x1F)
+            rgb = (round((bgr15 & 0x1F) * 0xFF / 0x1F), round(((bgr15 >> 5) & 0x1F) * 0xFF / 0x1F), round(((bgr15 >> 10) & 0x1F) * 0xFF / 0x1F))
         else:
             await ctx.send_help(ctx.command)
             return
@@ -201,7 +201,7 @@ class General(commands.Cog):
         embed.color = rgb[0] << 0x10 | rgb[1] << 0x8 | rgb[2]
         embed.add_field(name="Hex (HTML)", value=f"`#{rgb[0] << 0x10 | rgb[1] << 0x8 | rgb[2]:06X}`")
         embed.add_field(name="RGB", value=f"`{rgb[0]} {rgb[1]} {rgb[2]}`")
-        bgr15 = rgb[0] * 0x1F // 0xFF | (rgb[1] * 0x1F // 0xFF) << 5 | (rgb[2] * 0x1F // 0xFF) << 10
+        bgr15 = round(rgb[0] * 0x1F / 0xFF) | round(rgb[1] * 0x1F / 0xFF) << 5 | round(rgb[2] * 0x1F / 0xFF) << 10
         embed.add_field(name="BGR15", value=f"`0x{bgr15:04X}` `0x{bgr15 | 1 << 15:04X}`")
         await ctx.send(embed=embed)
 
