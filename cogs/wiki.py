@@ -37,19 +37,13 @@ class Wiki(commands.Cog):
 
     def git_name(self, name):
         name = name.lower()
-        url = "https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/"
-        if name == "twlmenu":
-            url += "twilightmenu/faq.md"
-        elif name == "ndsbs":
-            url += "nds-bootstrap/faq.md"
-        elif name == "gbar2":
-            url += "gbarunner2/faq.md"
+        url = "https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/" + name + "/faq.md"
         return url
 
     def read_to_next(self, file, iter):
         line = file[iter]
         out = ""
-        while "####" not in line:
+        while "#### " not in line:
             out += '\n' + file[iter]
             iter += 1
             if iter < len(file):
@@ -70,12 +64,12 @@ class Wiki(commands.Cog):
         embed.url += "twilightmenu/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
-            page = requests.get(self.git_name("twlmenu")).text
+            page = requests.get(self.git_name("twilightmenu")).text
             faqpage = page.splitlines()
             iter = 0
             for faq in faqpage:
                 iter += 1
-                if arg.lower() in faq.lower() and "####" in faq.lower():
+                if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
                     embed.url += "?faq=" + self.web_name(title)
                     embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
@@ -87,12 +81,12 @@ class Wiki(commands.Cog):
         embed.url += "nds-bootstrap/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
-            page = requests.get(self.git_name("ndsbs")).text
+            page = requests.get(self.git_name("nds-bootstrap")).text
             faqpage = page.splitlines()
             iter = 0
             for faq in faqpage:
                 iter += 1
-                if arg.lower() in faq.lower() and "####" in faq.lower():
+                if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
                     embed.url += "?faq=" + self.web_name(title)
                     embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
@@ -104,22 +98,32 @@ class Wiki(commands.Cog):
         embed.url += "gbarunner2/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg != "":
-            page = requests.get(self.git_name("gbar2")).text
+            page = requests.get(self.git_name("gbarunner2")).text
             faqpage = page.splitlines()
             iter = 0
             for faq in faqpage:
                 iter += 1
-                if arg.lower() in faq.lower() and "####" in faq.lower():
+                if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
                     embed.url += "?faq=" + self.web_name(title)
                     embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
     @faq.command(aliases=["hiya"])
-    async def hiyacfw(self, ctx):
-        embed = self.embed("hiyaCFW Troubleshooting")
-        embed.url += "hiyacfw/troubleshooting.html"
-        embed.description = "Troubleshooting"
+    async def hiyacfw(self, ctx, *, arg=""):
+        embed = self.embed("hiyaCFW FAQ")
+        embed.url += "hiyacfw/faq.html"
+        embed.description = "Frequently Asked Questions & Troubleshooting"
+        if arg != "":
+            page = requests.get(self.git_name("hiyacfw")).text
+            faqpage = page.splitlines()
+            iter = 0
+            for faq in faqpage:
+                iter += 1
+                if arg.lower() in faq.lower() and "#### " in faq.lower():
+                    title = faq[5:]
+                    embed.url += "?faq=" + self.web_name(title)
+                    embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
