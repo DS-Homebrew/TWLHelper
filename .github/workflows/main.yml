@@ -70,7 +70,6 @@ jobs:
         with:
           command: |
             ./reboot_bot.sh
-            exit
           host: ${{ secrets.SSH_HOST }}
           user: twlhelper
           key: ${{ secrets.SSH_PRIVATE_KEY}}
