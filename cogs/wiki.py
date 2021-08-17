@@ -25,11 +25,11 @@ class Wiki(commands.Cog):
         embed.url = "https://wiki.ds-homebrew.com/"
         return embed
 
-    def skin_embed(self, title):
+    def skin_embed(self, title, extension):
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://skins.ds-homebrew.com/"
+        embed.url = "https://skins.ds-homebrew.com/" + extension + "/"
         return embed
 
     def web_name(self, name):
@@ -305,29 +305,25 @@ class Wiki(commands.Cog):
     @skins.command(name="unlaunch")
     async def skin_unlaunch(self, ctx):
         """Links to the Unlaunch skins page"""
-        embed = self.skin_embed("Unlaunch Backgrounds")
-        embed.url += "unlaunch/"
+        embed = self.skin_embed("Unlaunch Backgrounds", "unlaunch")
         embed.description = "Custom backgrounds for Unlaunch"
         await ctx.send(embed=embed)
 
     @skins.command(name="dsi", aliases=["dsimenu"])
     async def skin_dsimenu(self, ctx):
-        embed = self.skin_embed("DSi Menu Skins")
-        embed.url += "nintendo-dsi/"
+        embed = self.skin_embed("DSi Menu Skins", "nintendo-dsi")
         embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
         await ctx.send(embed=embed)
 
     @skins.command(name="3ds", aliases=["3dsmenu"])
     async def skin_3dsmenu(self, ctx):
-        embed = self.skin_embed("3DS Menu Skins")
-        embed.url += "nintendo-3ds/"
+        embed = self.skin_embed("3DS Menu Skins", "nintendo-3ds")
         embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
         await ctx.send(embed=embed)
 
     @skins.command(name="r4", aliases=["r4theme"])
     async def skin_r4menu(self, ctx):
-        embed = self.skin_embed("R4 Original Menu Skins")
-        embed.url += "r4-original/"
+        embed = self.skin_embed("R4 Original Menu Skins", "r4-original")
         embed.description = "Custom skins for TWiLight Menu++'s R4 Original Menu theme"
         await ctx.send(embed=embed)
 
