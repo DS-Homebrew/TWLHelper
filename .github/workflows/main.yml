@@ -79,11 +79,12 @@ jobs:
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
       - name: Run on server
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_HOST }}
+          ssh -tt -i ~/.ssh/id_rsa ${{ secrets.SSH_HOST }}
           cd TWLHelper
           git pull
           kill -9 $(cat twlhelper.pid)
           nohup ./twlhelper.py & echo $! > twlhelper.pid
+          exit
       - name: Send webhook on failure
         if: ${{ failure() }}
         continue-on-error: true
