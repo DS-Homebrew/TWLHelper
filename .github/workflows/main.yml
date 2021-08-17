@@ -3,7 +3,6 @@ name: 'Docker image build'
 on:
   push:
     branches: main
-  workflow_dispatch:
 
 jobs:
   build:
@@ -81,6 +80,8 @@ jobs:
       - name: Run on server
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_HOST }}
+          cd TWLHelper
+          git pull
           kill -9 $(cat twlhelper.pid)
           nohup ./twlhelper.py & echo $! > twlhelper.pid
       - name: Send webhook on failure
