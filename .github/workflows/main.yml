@@ -77,16 +77,11 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-      - name: Pull on server
-        run: docker-compose -f docker-compose-prod.yml pull
-        env:
-          DOCKER_HOST: ${{ secrets.SSH_HOST }}
-          COMPOSE_PARAMIKO_SSH: '1'
       - name: Run on server
-        run: docker-compose -f docker-compose-prod.yml up -d
-        env:
-          DOCKER_HOST: ${{ secrets.SSH_HOST }}
-          COMPOSE_PARAMIKO_SSH: '1'
+        run: |
+          ssh -i $SSH_PRIVATE_KEY {{ secrets.SSH_HOST }}
+          kill -9 $(cat twlhelper.pid)
+          nohup ./twlhelper.py & echo $! > twlhelper.pid
       - name: Send webhook on failure
         if: ${{ failure() }}
         continue-on-error: true
