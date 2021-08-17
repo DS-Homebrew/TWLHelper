@@ -1,5 +1,6 @@
 import discord
 import requests
+import re
 
 from discord.ext import commands
 
@@ -43,14 +44,14 @@ class Wiki(commands.Cog):
     def read_to_next(self, file, iter):
         line = file[iter]
         out = ""
-        while "#### " not in line:
+        while "#### " not in line or "#####" in line:
             out += '\n' + file[iter]
             iter += 1
             if iter < len(file):
                 line = file[iter]
             else:
                 break
-        return out
+        return re.sub("##### (.*)", "**\\1**", out)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def faq(self, ctx):
