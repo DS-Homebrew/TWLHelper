@@ -69,10 +69,8 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            cd TWLHelper
-            git pull
-            kill -9 $(cat twlhelper.pid)
-            nohup ./twlhelper.py & echo $! > twlhelper.pid
+            ./reboot_bot.sh
+            exit
           host: ${{ secrets.SSH_HOST }}
           user: twlhelper
           key: ${{ secrets.SSH_PRIVATE_KEY}}
