@@ -79,7 +79,7 @@ jobs:
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
       - name: Run on server
         run: |
-          ssh -i $SSH_PRIVATE_KEY {{ secrets.SSH_HOST }}
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_HOST }}
           kill -9 $(cat twlhelper.pid)
           nohup ./twlhelper.py & echo $! > twlhelper.pid
       - name: Send webhook on failure
