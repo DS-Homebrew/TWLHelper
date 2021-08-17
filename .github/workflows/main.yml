@@ -65,26 +65,17 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-# https://stackoverflow.com/questions/60477061/github-actions-how-to-deploy-to-remote-server-using-ssh/60479844#60479844
-      - name: Create SSH key
-        run: |
-          mkdir -p ~/.ssh/
-          chmod 700 ~/.ssh/
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-        shell: bash
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-      - name: Run on server
-        run: |
-          ssh -tt -i ~/.ssh/id_rsa ${{ secrets.SSH_HOST }}
-          cd TWLHelper
-          git pull
-          kill -9 $(cat twlhelper.pid)
-          nohup ./twlhelper.py & echo $! > twlhelper.pid
-          exit
+      - name: Reboot TWLHelper
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            cd TWLHelper
+            git pull
+            kill -9 $(cat twlhelper.pid)
+            nohup ./twlhelper.py & echo $! > twlhelper.pid
+          host: ${{ secrets.SSH_HOST }}
+          user: twlhelper
+          key: ${{ secrets.SSH_PRIVATE_KEY}}
       - name: Send webhook on failure
         if: ${{ failure() }}
         continue-on-error: true
