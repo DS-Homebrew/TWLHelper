@@ -3,6 +3,8 @@ import discord
 from discord.ext import commands
 from inspect import cleandoc
 
+from utils.utils import check_arg
+
 
 class General(commands.Cog):
     """
@@ -18,13 +20,7 @@ class General(commands.Cog):
         embed.description = cleandoc(text)
         await ctx.send(embed=embed)
 
-    def check_arg(self, message, arg):
-        message = message.lower()
-        if message in arg:
-            return True
-        return False
-
-    @commands.command(require_var_positional=True)
+    @commands.command()
     async def guide(self, ctx, *guides) -> None:
         """Links to the recommended guides"""
         guides = {x.lower() for x in guides if x.lower() in self.systems}
@@ -35,42 +31,42 @@ class General(commands.Cog):
 
         embed = discord.Embed(title="Guide")
         for x in guides:
-            if self.check_arg(x, '3ds'):
+            if check_arg(x, '3ds'):
                 embed.set_author(name="Nintendo Homebrew & Plailect")
                 embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
                 embed.url = "https://3ds.hacks.guide/"
                 embed.description = "A complete guide to 3DS custom firmware, from stock to boot9strap"
                 await ctx.send(embed=embed)
                 continue
-            if self.check_arg(x, ('wiiu',)):
+            if check_arg(x, ('wiiu',)):
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
                 embed.url = "https://wiiu.hacks.guide/"
                 embed.description = "A guide collaboration between Nintendo Homebrew’s Helpers and Staff, from stock to CBHC custom firmware"
                 await ctx.send(embed=embed)
                 continue
-            if self.check_arg(x, ('vwii',)):
+            if check_arg(x, ('vwii',)):
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/FclGzNz.png")
                 embed.url = "https://wiiu.hacks.guide/#/vwii-modding"
                 embed.description = "vWii modding guide"
                 await ctx.send(embed=embed)
                 continue
-            if self.check_arg(x, ('switch', 'nx', 'ns')):
+            if check_arg(x, ('switch', 'nx', 'ns')):
                 embed.set_author(name="Nintendo Homebrew")
                 embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
                 embed.url = "https://switchgui.de/switch-guide/"
                 embed.description = "A guide collaboration between Nintendo Homebrew's Helpers and Staff, from stock to Atmosphere"
                 await ctx.send(embed=embed)
                 continue
-            if self.check_arg(x, 'wii'):
+            if check_arg(x, 'wii'):
                 embed.set_author(name="RiiConnect24")
                 embed.set_thumbnail(url="https://i.imgur.com/KI6IXmm.png")
                 embed.url = "https://wii.guide/"
                 embed.description = "The complete guide to modding your Nintendo Wii"
                 await ctx.send(embed=embed)
                 continue
-            if self.check_arg(x, 'dsi'):
+            if check_arg(x, 'dsi'):
                 embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
                 embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
                 embed.url = "https://dsi.cfw.guide/"
@@ -124,14 +120,14 @@ class General(commands.Cog):
             await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in systems])}.")
             return
 
-        if self.check_arg(arg, '3ds'):
+        if check_arg(arg, '3ds'):
             embed = discord.Embed(title="GodMode9 Dump Guide")
             embed.set_author(name="Nintendo Homebrew & Plailect", url="https://3ds.hacks.guide/dumping-titles-and-game-cartridges")
             embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
             embed.url = "https://3ds.hacks.guide/dumping-titles-and-game-cartridges.html"
             embed.description = "How to dump Cartridges and Files on a 3DS using GodMode9"
             await ctx.send(embed=embed)
-        elif self.check_arg(arg, 'dsi'):
+        elif check_arg(arg, 'dsi'):
             embed = discord.Embed(title="GodMode9i Dump Guide")
             embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking", url="https://dsi.cfw.guide/dumping-game-cards")
             embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
