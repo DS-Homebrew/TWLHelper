@@ -62,9 +62,8 @@ def is_staff():
 
 def check_arg(argument: str, arg) -> bool:
     """Helper util to check if an argument is in a sequence.
-    
+
     Returns a boolean indicator if the argument was found in the supplied sequence"""
     if argument.lower() in arg:
         return True
     return False
-
