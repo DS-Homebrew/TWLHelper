@@ -109,7 +109,7 @@ class Convert(commands.Cog):
                 await outputtext.edit(content="`Converted to GIF...`")
                 await outputtext.edit(content="`Colour Mapping GIF...`")
                 try:
-                    proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", "-k", "24", "#0", "-o", newFileName])
+                    proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", "-k31", "#0", "-o", newFileName])
                     proc.wait()
                 except Exception:
                     error_message = traceback.format_exc()
@@ -121,7 +121,7 @@ class Convert(commands.Cog):
                 warning = False
                 x = 0
                 while x <= 300 and os.stat(newFileName).st_size > 15000:
-                    proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={x}", "-o", newFileName])
+                    proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={x}", "-k31", "-o", newFileName])
                     proc.wait()
                     x += 50
                 if os.stat(newFileName).st_size > 15000:
