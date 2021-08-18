@@ -293,17 +293,23 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Converting to GIF...`")
                     newFileName = "senpai_converted_" + fileName + "_.gif"
                     try:
-                        proc = Popen(["ffmpeg", "-i", fileName, "-vf", "split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", newFileName])
+                        proc = Popen(["ffmpeg", "-i", fileName, "-vf", "palettegen", "downloads/palette.png"])
+                        proc.wait()
+                        proc = Popen(["ffmpeg", "-i", fileName, "-i", "downloads/palette.png", "-filter_complex", "paletteuse", newFileName])
                         proc.wait()
                     except Exception:
                         await outputtext.edit(content="`Failed to convert to GIF`")
                         return
                     await outputtext.edit(content="`Converted to GIF`")
                     await outputtext.edit(content="`Uploading GIF...`")
-                    await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                    await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                    if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
+                        await ctx.send(file=discord.File(newFileName), reference=ctx.message)
+                        await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                    else:
+                        await outputtext.edit(content="`Converted GIF is too large! Cannot send GIF.`")
                     os.remove(fileName)
                     os.remove(newFileName)
+                    os.remove("downloads/palette.png")
                     return
                 else:
                     await outputtext.edit(content="`You asked me to convert a GIF into a ... GIF`")
