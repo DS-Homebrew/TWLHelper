@@ -65,14 +65,6 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-      - name: Reboot TWLHelper
-        uses: fifsky/ssh-action@master
-        with:
-          command: |
-            ./reboot_bot.sh
-          host: ${{ secrets.SSH_HOST }}
-          user: twlhelper
-          key: ${{ secrets.SSH_PRIVATE_KEY}}
       - name: Send webhook on failure
         if: ${{ failure() }}
         continue-on-error: true
