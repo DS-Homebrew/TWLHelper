@@ -1,3 +1,4 @@
+# send_dm_message & command_signature are taken from Kurisu
 #
 # Copyright (C) 2020 Nintendo Homebrew
 #
@@ -20,7 +21,7 @@ from discord.ext import commands
 
 
 async def send_dm_message(member: discord.Member, message: str, ctx: commands.Context = None, **kwargs) -> bool:
-    """A helper method for sending a message to a member's DMs.
+    """A helper function for sending a message to a member's DMs.
 
     Returns a boolean indicating success of the DM
     and notifies of the failure if ctx is supplied."""
@@ -34,7 +35,7 @@ async def send_dm_message(member: discord.Member, message: str, ctx: commands.Co
 
 
 def command_signature(command, *, prefix=".") -> str:
-    """Helper method for a command signature
+    """Helper function for a command signature
 
     Parameters
     -----------
@@ -57,3 +58,12 @@ def is_staff():
     def predicate(ctx):
         return any((role.id in settings.staff_roles or role.name in settings.staff_roles) for role in ctx.message.author.roles) if not ctx.author == ctx.guild.owner else True
     return commands.check(predicate)
+
+
+def check_arg(argument: str, arg) -> bool:
+    """Helper util to check if an argument is in a sequence.
+
+    Returns a boolean indicator if the argument was found in the supplied sequence"""
+    if argument.lower() in arg:
+        return True
+    return False

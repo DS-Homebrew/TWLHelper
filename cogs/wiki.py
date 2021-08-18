@@ -4,6 +4,8 @@ import re
 
 from discord.ext import commands
 
+from utils.utils import check_arg
+
 
 class Wiki(commands.Cog):
     """
@@ -12,12 +14,6 @@ class Wiki(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-
-    def check_arg(self, message, arg):
-        message = message.lower()
-        if message in arg:
-            return True
-        return False
 
     def embed(self, title):
         embed = discord.Embed(title=title)
@@ -138,13 +134,13 @@ class Wiki(commands.Cog):
         embed.url += "twilightmenu/updating"
         embed.description = "How to update TWiLight Menu++"
         if arg != "":
-            if self.check_arg(arg, ("3ds",)):
+            if check_arg(arg, ("3ds",)):
                 embed.url += "-3ds"
                 embed.description += " on the 3DS"
-            elif self.check_arg(arg, ("dsi",)):
+            elif check_arg(arg, ("dsi",)):
                 embed.url += "-dsi"
                 embed.description += " on the DSi"
-            elif self.check_arg(arg, ("flashcard", "flashcart", "ds")):
+            elif check_arg(arg, ("flashcard", "flashcart", "ds")):
                 embed.url += "-flashcard"
                 embed.description += " on flashcards"
         embed.url += ".html"
@@ -161,13 +157,13 @@ class Wiki(commands.Cog):
         embed.url += "twilightmenu/installing"
         embed.description = "How to install TWiLight Menu++"
         if arg != "":
-            if self.check_arg(arg, ("3ds",)):
+            if check_arg(arg, ("3ds",)):
                 embed.url += "-3ds"
                 embed.description += " on the 3DS"
-            elif self.check_arg(arg, ("dsi",)):
+            elif check_arg(arg, ("dsi",)):
                 embed.url += "-dsi"
                 embed.description += " on the DSi"
-            elif self.check_arg(arg, ("flashcard", "flashcart", "ds")):
+            elif check_arg(arg, ("flashcard", "flashcart", "ds")):
                 embed.url += "-flashcard"
                 embed.description += " on flashcards"
         embed.url += ".html"
@@ -192,13 +188,13 @@ class Wiki(commands.Cog):
         embed.url += "twilightmenu/uninstalling"
         embed.description = "How to uninstall TWiLight Menu++"
         if arg != "":
-            if self.check_arg(arg, ("3ds",)):
+            if check_arg(arg, ("3ds",)):
                 embed.url += "-3ds"
                 embed.description += " on the 3DS"
-            elif self.check_arg(arg, ("dsi",)):
+            elif check_arg(arg, ("dsi",)):
                 embed.url += "-ds"
                 embed.description += " on the DSi"
-            elif self.check_arg(arg, ("flashcard", "flashcart", "ds")):
+            elif check_arg(arg, ("flashcard", "flashcart", "ds")):
                 embed.url += "-ds"
                 embed.description += " on flashcards"
         else:
