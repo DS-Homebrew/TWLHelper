@@ -16,7 +16,7 @@
 # load.py
 # .speak from blah.py
 
-
+import discord
 from discord.ext import commands
 from utils.utils import is_staff
 
