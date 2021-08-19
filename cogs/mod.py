@@ -75,9 +75,6 @@ class Mod(commands.Cog):
     @is_staff()
     @commands.command()
     async def speak(self, ctx, channel: discord.TextChannel, *, inp):
-        if channel.id in self.speak_blacklist:
-            await ctx.send(f'You cannot send a message to {channel.mention}.')
-            return
         await channel.send(inp, allowed_mentions=discord.AllowedMentions(everyone=True, roles=True))
 
 
