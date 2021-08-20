@@ -12,15 +12,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# load.py
+# .speak from blah.py
 
-
+import discord
 from discord.ext import commands
 from utils.utils import is_staff
 
 
-class Load(commands.Cog):
+class Mod(commands.Cog):
     """
-    Load commands.
+    Moderator-only commands.
     """
     def __init__(self, bot):
         self.bot = bot
@@ -69,6 +72,11 @@ class Load(commands.Cog):
         except Exception as e:
             await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
 
+    @is_staff()
+    @commands.command()
+    async def speak(self, ctx, channel: discord.TextChannel, *, inp):
+        await channel.send(inp, allowed_mentions=discord.AllowedMentions(everyone=True, roles=True))
+
 
 def setup(bot):
-    bot.add_cog(Load(bot))
+    bot.add_cog(Mod(bot))

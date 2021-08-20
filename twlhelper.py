@@ -12,7 +12,7 @@ intents = discord.Intents.default()
 cogs = [
     'cogs.general',
     'cogs.wiki',
-    'cogs.load',
+    'cogs.mod',
     'cogs.convert',
 ]
 

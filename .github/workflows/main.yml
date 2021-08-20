@@ -16,7 +16,7 @@ jobs:
           webhook_id: ${{ secrets.WEBHOOK_ID }}
           webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
           message: |
-            Starting build for commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }}) by ${{ github.actor }}
+            Starting build for commit <https://github.com/${{ github.repository }}/commit/${{ github.sha }}> by ${{ github.actor }}
             >>> ${{ github.event.head_commit.message }}
       - name: Checkout
         uses: actions/checkout@v2
@@ -57,7 +57,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/ds-homebrew/dsi-hacking-bot:latest
+          tags: ghcr.io/ds-homebrew/twlhelper:latest
           build-args: |
             COMMIT=${{ github.sha }}
             BRANCH=${{ github.ref }}
@@ -65,7 +65,6 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-
       - name: Send webhook on failure
         if: ${{ failure() }}
         continue-on-error: true
@@ -74,7 +73,7 @@ jobs:
           webhook_id: ${{ secrets.WEBHOOK_ID }}
           webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
           message: |
-            Failed to build [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+            Failed to build <https://github.com/${{ github.repository }}/commit/${{ github.sha }}>
       - name: Send webhook on cancellation
         if: ${{ cancelled() }}
         continue-on-error: true
@@ -83,4 +82,4 @@ jobs:
           webhook_id: ${{ secrets.WEBHOOK_ID }}
           webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
           message: |
-            Cancelled build for [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+            Cancelled build for <https://github.com/${{ github.repository }}/commit/${{ github.sha }}>
