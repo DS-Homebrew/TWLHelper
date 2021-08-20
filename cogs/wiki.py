@@ -1,5 +1,6 @@
 import discord
 import requests
+import json
 
 from discord.ext import commands
 
@@ -25,11 +26,20 @@ class Wiki(commands.Cog):
         embed.url = "https://wiki.ds-homebrew.com/"
         return embed
 
-    def skin_embed(self, title, extension):
+    def skin_embed(self, title, extension, skin=""):
+        unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/twlmenu-skins.unistore").json()
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://skins.ds-homebrew.com/" + extension + "/"
+        if extension == "nintendo-dsi":
+            embed.url = "https://skins.ds-homebrew.com/" + extension + "/"
+            if skin != "":
+                for skinid in unistore["storeContent"]:
+                    if skinid["info"]["title"].find(skin) != -1:
+                        embed.title = skinid["info"]["title"]
+                        embed.description = skinid["info"]["description"]
+                        embed.url += self.web_name(skinid["info"]["title"])
+                        break
         return embed
 
     def web_name(self, name):
