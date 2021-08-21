@@ -67,7 +67,7 @@ class Wiki(commands.Cog):
             iconname = "3ds"
             embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
         embed.url = "https://skins.ds-homebrew.com/" + self.web_name(extension) + "/"
-        if skin != "":
+        if skin != "" and extension != "Unlaunch":
             for skinid in unistore["storeContent"]:
                 if skinid["info"]["title"].lower().find(skin.lower()) != -1 and skinid["info"]["console"] == extension:
                     embed.set_author(name=skinid["info"]["author"])
