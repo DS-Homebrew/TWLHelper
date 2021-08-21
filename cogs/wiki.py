@@ -1,9 +1,9 @@
 import discord
 import requests
 import re
+import urllib
 
 from discord.ext import commands
-
 from utils.utils import check_arg
 
 
@@ -50,31 +50,27 @@ class Wiki(commands.Cog):
         return embed
 
     async def skin_embed(self, ctx, title, extension, skin=""):
-        unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/twlmenu-skins.unistore").json()
+        unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/docs/data/full.json").json()
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        iconname = ""
         if extension == "Unlaunch":
             embed.description = "Custom backgrounds for Unlaunch"
         elif extension == "Nintendo DSi":
-            iconname = "dsi"
             embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
         elif extension == "R4 Original":
-            iconname = "r4"
             embed.description = "Custom skins for TWiLight Menu++'s R4 Original Menu theme"
         elif extension == "Nintendo 3DS":
-            iconname = "3ds"
             embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
         embed.url = "https://skins.ds-homebrew.com/" + self.web_name(extension) + "/"
         if skin != "" and extension != "Unlaunch":
-            for skinid in unistore["storeContent"]:
-                if skinid["info"]["title"].lower().find(skin.lower()) != -1 and skinid["info"]["console"] == extension:
-                    embed.set_author(name=skinid["info"]["author"])
-                    embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/" + iconname + ".png")
-                    embed.title = skinid["info"]["title"]
-                    embed.description = skinid["info"]["description"]
-                    embed.url += self.web_name(skinid["info"]["title"])
+            for skinid in unistore:
+                if skinid["title"].lower().find(skin.lower()) != -1 and skinid["console"] == extension:
+                    embed.set_author(name=skinid["author"])
+                    embed.set_thumbnail(url=skinid["icon"])
+                    embed.title = skinid["title"]
+                    embed.description = skinid["description"]
+                    embed.url += self.web_name(skinid["title"])
                     await ctx.send(embed=embed)
                     return
             await ctx.send("Skin '" + skin + "' cannot be found. Please try again.")
