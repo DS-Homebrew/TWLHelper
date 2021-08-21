@@ -1,5 +1,6 @@
 import discord
 import requests
+import re
 
 from discord.ext import commands
 from utils.utils import web_name
@@ -11,6 +12,15 @@ class UniStore(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def searchdb(self, query, id):
+        # regex escape
+        query = re.sub(r"([-\/\\^$*+?.()|[\]{}])", r"\\\1", query)
+        # make fuzzy
+        query = re.sub(r"(\\?.)", r"\1.*", query) # put .* between everything
+        query = re.sub(r"\-|_| ", r"[-_ ]", query) # make - _ and space the same
+        # try match
+        return len(re.findall(query, id["title"], flags=re.IGNORECASE)) > 0
+
     async def udb_embed(self, ctx, title, app=""):
         unistore = requests.get("https://raw.githubusercontent.com/Universal-Team/db/master/docs/data/full.json").json()
         embed = discord.Embed(title=title)
@@ -20,7 +30,7 @@ class UniStore(commands.Cog):
         embed.url = "https://db.universal-team.net/"
         if app != "":
             for appid in unistore:
-                if appid["title"].lower().find(app.lower()) != -1:
+                if self.searchdb(app, appid):
                     embed.set_author(name=appid["author"])
                     embed.set_thumbnail(url=appid["icon"])
                     embed.title = appid["title"]
@@ -56,7 +66,7 @@ class UniStore(commands.Cog):
                     embed.url += web_name(skinid["title"])
                     await ctx.send(embed=embed)
                     return
-            await ctx.send("Skin '" + skin + "' cannot be found. Please try again.")
+            await ctx.send("Skin cannot be found. Please try again.")
             return
         await ctx.send(embed=embed)
 
