@@ -1,7 +1,6 @@
 import discord
 import requests
 import re
-import urllib
 
 from discord.ext import commands
 from utils.utils import check_arg
