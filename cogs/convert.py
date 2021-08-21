@@ -27,7 +27,7 @@ class Convert(commands.Cog):
             os.mkdir("senpai_converted_downloads")
         return
 
-    def ffmpeg_img(self, fileName, newFileName, crop, pixfmt, scale):
+    def ffmpeg_img(self, fileName, newFileName, crop=None, pixfmt=None, scale=None):
         command = [
             'ffmpeg',
             '-y',
@@ -39,7 +39,7 @@ class Convert(commands.Cog):
             if crop is not None:
                 command.append('crop=' + crop)
             if scale is not None:
-                command.append('crop=' + scale)
+                command.append(f"crop='if(gte(ih,iw*3/4),iw,if(gte(iw,ih*4/3),ih*4/3,ih))':'if(gte(ih,iw*3/4),iw*3/4,if(gte(iw,ih*4/3),ih,ih*3/4))',scale={scale}:flags=lanczos")
         if pixfmt is not None:
             command.append('-pix_fmt')
             command.append(pixfmt)
@@ -178,14 +178,17 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.bmp'):
                     await outputtext.edit(content="`Converting to BMP...`")
                     newFileName = "senpai_converted_" + fileName + "_.bmp"
-                    err = self.ffmpeg_img(fileName, newFileName, None, "RGB565", None)
+                    err = self.ffmpeg_img(fileName, newFileName, pixfmt="rgb565")
                     if err == 1:
                         await outputtext.edit(content="`Failed to convert to BMP`")
                         return
                     await outputtext.edit(content="`Converted to BMP`")
                     await outputtext.edit(content="`Uploading BMP...`")
-                    await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                    await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                    if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
+                        await ctx.send(file=discord.File(newFileName), reference=ctx.message)
+                        await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                    else:
+                        await outputtext.edit(content="`Converted image is too large! Cannot send image.`")
                     os.remove(fileName)
                     os.remove(newFileName)
                     return
@@ -235,7 +238,7 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.png'):
                     await outputtext.edit(content="`Converting to PNG...`")
                     newFileName = "senpai_converted_" + fileName + "_.png"
-                    err = self.ffmpeg_img(fileName, newFileName, None, None, None)
+                    err = self.ffmpeg_img(fileName, newFileName)
                     if err == 1:
                         await outputtext.edit(content="`Failed to convert to PNG`")
                         return
@@ -357,7 +360,7 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.jpeg') and not fileName.endswith('.jpg'):
                     await outputtext.edit(content="`Converting to JPEG...`")
                     newFileName = "senpai_converted_" + fileName + "_.jpeg"
-                    err = self.ffmpeg_img(fileName, newFileName, None, None, None)
+                    err = self.ffmpeg_img(fileName, newFileName)
                     if err == 1:
                         await outputtext.edit(content="`Failed to convert to JPEG`")
                         return
@@ -420,7 +423,7 @@ class Convert(commands.Cog):
                 await outputtext.edit(content="`Image downloaded...`")
                 await outputtext.edit(content="`Converting to PNG...`")
                 newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
-                err = self.ffmpeg_img(fileName, newFileName, "128:115", None, None)
+                err = self.ffmpeg_img(fileName, newFileName, scale="128:115")
                 if err == 1:
                     await outputtext.edit(content="`Failed to convert to PNG`")
                     return
@@ -474,7 +477,7 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.png'):
                     await outputtext.edit(content="`Converting to PNG...`")
                     newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
-                    err = self.ffmpeg_img(fileName, newFileName, "115:115", None, None)
+                    err = self.ffmpeg_img(fileName, newFileName, scale="115:115")
                     if err == 1:
                         await outputtext.edit(content="`Failed to convert to PNG`")
                         return
@@ -526,7 +529,7 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.png'):
                     await outputtext.edit(content="`Converting to PNG...`")
                     newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
-                    err = self.ffmpeg_img(fileName, newFileName, "84:115", None, None)
+                    err = self.ffmpeg_img(fileName, newFileName, scale="84:115")
                     if err == 1:
                         await outputtext.edit(content="`Failed to convert to PNG`")
                         return
@@ -578,7 +581,7 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.png'):
                     await outputtext.edit(content="`Converting to PNG...`")
                     newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
-                    err = self.ffmpeg_img(fileName, newFileName, "158:115", None, None)
+                    err = self.ffmpeg_img(fileName, newFileName, scale="158:115")
                     if err == 1:
                         await outputtext.edit(content="`Failed to convert to PNG`")
                         return
@@ -631,7 +634,7 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.png'):
                     await outputtext.edit(content="`Converting to PNG...`")
                     newFileName = "senpai_converted_" + fileName + "_.png"
-                    err = self.ffmpeg_img(fileName, newFileName, "208:156", None, None)
+                    err = self.ffmpeg_img(fileName, newFileName, scale="208:156")
                     if err == 1:
                         await outputtext.edit(content="`Failed to convert to PNG`")
                         return
