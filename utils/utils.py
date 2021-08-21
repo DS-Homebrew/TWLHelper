@@ -68,6 +68,7 @@ def check_arg(argument: str, arg) -> bool:
         return True
     return False
 
+
 def web_name(name):
     name = name.lower()
     out = ""

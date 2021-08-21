@@ -14,13 +14,6 @@ class Wiki(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def embed(self, title):
-        embed = discord.Embed(title=title)
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://wiki.ds-homebrew.com/"
-        return embed
-
     def git_name(self, name):
         name = name.lower()
         url = "https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/" + name + "/faq.md"

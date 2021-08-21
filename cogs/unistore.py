@@ -1,6 +1,5 @@
 import discord
 import requests
-import re
 
 from discord.ext import commands
 from utils.utils import web_name
@@ -64,7 +63,6 @@ class UniStore(commands.Cog):
     @commands.command(aliases=["universaldb"])
     async def udb(self, ctx, app=""):
         await self.udb_embed(ctx, "Universal-DB", app)
-
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def skins(self, ctx):
