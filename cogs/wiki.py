@@ -16,32 +16,6 @@ class Wiki(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def embed(self, title):
-        embed = discord.Embed(title=title)
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://wiki.ds-homebrew.com/"
-        return embed
-
-    def skin_embed(self, title, extension, skin=""):
-        unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/twlmenu-skins.unistore").json()
-        embed = discord.Embed(title=title)
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        if extension == "nintendo-dsi":
-            embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
-            embed.url = "https://skins.ds-homebrew.com/" + extension + "/"
-            if skin != "":
-                for skinid in unistore["storeContent"]:
-                    if skinid["info"]["title"].lower().find(skin.lower()) != -1:
-                        embed.set_author(name=skinid["info"]["author"])
-                        embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/_nds/TWiLightMenu/dsimenu/themes/meta/" + urllib.parse.quote(skinid["info"]["title"]) + "/icon.png")
-                        embed.title = skinid["info"]["title"]
-                        embed.description = skinid["info"]["description"]
-                        embed.url += self.web_name(skinid["info"]["title"])
-                        break
-        return embed
-
     def web_name(self, name):
         name = name.lower()
         out = ""
@@ -68,6 +42,45 @@ class Wiki(commands.Cog):
             else:
                 break
         return re.sub("##### (.*)", "**\\1**", out)
+
+    def embed(self, title):
+        embed = discord.Embed(title=title)
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/"
+        return embed
+
+    async def skin_embed(self, ctx, title, extension, skin=""):
+        unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/twlmenu-skins.unistore").json()
+        embed = discord.Embed(title=title)
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        iconname = ""
+        if extension == "Unlaunch":
+            embed.description = "Custom backgrounds for Unlaunch"
+        elif extension == "Nintendo DSi":
+            iconname = "dsi"
+            embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
+        elif extension == "R4 Original":
+            iconname = "r4"
+            embed.description = "Custom skins for TWiLight Menu++'s R4 Original Menu theme"
+        elif extension == "Nintendo 3DS":
+            iconname = "3ds"
+            embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
+        embed.url = "https://skins.ds-homebrew.com/" + self.web_name(extension) + "/"
+        if skin != "":
+            for skinid in unistore["storeContent"]:
+                if skinid["info"]["title"].lower().find(skin.lower()) != -1 and skinid["info"]["console"] == extension:
+                    embed.set_author(name=skinid["info"]["author"])
+                    embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/" + iconname + ".png")
+                    embed.title = skinid["info"]["title"]
+                    embed.description = skinid["info"]["description"]
+                    embed.url += self.web_name(skinid["info"]["title"])
+                    await ctx.send(embed=embed)
+                    return
+            await ctx.send("Skin '" + skin + "' cannot be found. Please try again.")
+            return
+        await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def faq(self, ctx):
@@ -317,28 +330,21 @@ class Wiki(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @skins.command(name="unlaunch")
-    async def skin_unlaunch(self, ctx):
+    async def skin_unlaunch(self, ctx, skin=""):
         """Links to the Unlaunch skins page"""
-        embed = self.skin_embed("Unlaunch Backgrounds", "unlaunch")
-        embed.description = "Custom backgrounds for Unlaunch"
-        await ctx.send(embed=embed)
-
+        await self.skin_embed(ctx, "Unlaunch Backgrounds", "Unlaunch", skin)
+        
     @skins.command(name="dsi", aliases=["dsimenu"])
     async def skin_dsimenu(self, ctx, skin=""):
-        embed = self.skin_embed("DSi Menu Skins", "nintendo-dsi", skin)
-        await ctx.send(embed=embed)
+        await self.skin_embed(ctx, "DSi Menu Skins", "Nintendo DSi", skin)
 
     @skins.command(name="3ds", aliases=["3dsmenu"])
-    async def skin_3dsmenu(self, ctx):
-        embed = self.skin_embed("3DS Menu Skins", "nintendo-3ds")
-        embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
-        await ctx.send(embed=embed)
+    async def skin_3dsmenu(self, ctx, skin=""):
+        await self.skin_embed(ctx, "3DS Menu Skins", "Nintendo 3DS", skin)
 
     @skins.command(name="r4", aliases=["r4theme"])
-    async def skin_r4menu(self, ctx):
-        embed = self.skin_embed("R4 Original Menu Skins", "r4-original")
-        embed.description = "Custom skins for TWiLight Menu++'s R4 Original Menu theme"
-        await ctx.send(embed=embed)
+    async def skin_r4menu(self, ctx, skin=""):
+        await self.skin_embed(ctx, "R4 Original Menu Skins", "R4 Original", skin)
 
 
 def setup(bot):
