@@ -1,7 +1,6 @@
 import discord
 import requests
 import re
-import json
 import urllib
 
 from discord.ext import commands
