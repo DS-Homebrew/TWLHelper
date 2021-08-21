@@ -2,6 +2,7 @@ import discord
 import requests
 import re
 import json
+import urllib
 
 from discord.ext import commands
 
@@ -29,10 +30,13 @@ class Wiki(commands.Cog):
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         if extension == "nintendo-dsi":
+            embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
             embed.url = "https://skins.ds-homebrew.com/" + extension + "/"
             if skin != "":
                 for skinid in unistore["storeContent"]:
-                    if skinid["info"]["title"].find(skin) != -1:
+                    if skinid["info"]["title"].lower().find(skin.lower()) != -1:
+                        embed.set_author(name=skinid["info"]["author"])
+                        embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/_nds/TWiLightMenu/dsimenu/themes/meta/" + urllib.parse.quote(skinid["info"]["title"]) + "/icon.png")
                         embed.title = skinid["info"]["title"]
                         embed.description = skinid["info"]["description"]
                         embed.url += self.web_name(skinid["info"]["title"])
@@ -321,9 +325,8 @@ class Wiki(commands.Cog):
         await ctx.send(embed=embed)
 
     @skins.command(name="dsi", aliases=["dsimenu"])
-    async def skin_dsimenu(self, ctx):
-        embed = self.skin_embed("DSi Menu Skins", "nintendo-dsi")
-        embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
+    async def skin_dsimenu(self, ctx, skin=""):
+        embed = self.skin_embed("DSi Menu Skins", "nintendo-dsi", skin)
         await ctx.send(embed=embed)
 
     @skins.command(name="3ds", aliases=["3dsmenu"])
