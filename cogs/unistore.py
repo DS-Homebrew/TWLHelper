@@ -17,7 +17,7 @@ class UniStore(commands.Cog):
         query = re.sub(r"([-\/\\^$*+?.()|[\]{}])", r"\\\1", query)
         # make fuzzy
         query = re.sub(r"(\\?.)", r"\1.*", query) # put .* between everything
-        query = re.sub(r"\-|_| ", r"[-_ ]", query) # make - _ and space the same
+        query = re.sub(r"\\-|_| ", r"[-_ ]", query) # make - _ and space the same
         # try match
         return len(re.findall(query, id["title"], flags=re.IGNORECASE)) > 0
 
@@ -58,7 +58,7 @@ class UniStore(commands.Cog):
         embed.url = "https://skins.ds-homebrew.com/" + web_name(extension) + "/"
         if skin != "":
             for skinid in unistore:
-                if skinid["title"].lower().find(skin.lower()) != -1 and skinid["console"] == extension:
+                if self.searchdb(skin, skinid) and skinid["console"] == extension:
                     embed.set_author(name=skinid["author"])
                     embed.set_thumbnail(url=skinid["icon"])
                     embed.title = skinid["title"]
