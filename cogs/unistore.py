@@ -32,7 +32,7 @@ class UniStore(commands.Cog):
             for appid in unistore:
                 if self.searchdb(app, appid):
                     embed.set_author(name=appid["author"])
-                    embed.set_thumbnail(url=appid["icon"])
+                    embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else None)))
                     embed.title = appid["title"]
                     embed.description = appid["description"]
                     embed.url += appid["systems"][0].lower() + "/" + web_name(appid["title"])
