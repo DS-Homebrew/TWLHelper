@@ -1,7 +1,6 @@
 import discord
 import requests
 import re
-import urllib
 
 from discord.ext import commands
 
@@ -333,7 +332,7 @@ class Wiki(commands.Cog):
     async def skin_unlaunch(self, ctx, skin=""):
         """Links to the Unlaunch skins page"""
         await self.skin_embed(ctx, "Unlaunch Backgrounds", "Unlaunch", skin)
-        
+
     @skins.command(name="dsi", aliases=["dsimenu"])
     async def skin_dsimenu(self, ctx, skin=""):
         await self.skin_embed(ctx, "DSi Menu Skins", "Nintendo DSi", skin)
