@@ -73,9 +73,7 @@ class UniStore(commands.Cog):
     @commands.command(aliases=["universaldb"])
     async def udb(self, ctx, *args):
         """Links to Universal-DB and/or one of the apps"""
-        app = ""
-        for arg in args:
-            app += arg
+        app = "".join(args)
         await self.udb_embed(ctx, "Universal-DB", app)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
@@ -86,30 +84,22 @@ class UniStore(commands.Cog):
     @skins.command(name="unlaunch")
     async def skin_unlaunch(self, ctx, *args):
         """Links to the Unlaunch skins page"""
-        skin = ""
-        for arg in args:
-            skin += arg
+        skin = "".join(args)
         await self.skin_embed(ctx, "Unlaunch Backgrounds", "Unlaunch", skin)
 
     @skins.command(name="dsi", aliases=["dsimenu"])
     async def skin_dsimenu(self, ctx, *args):
-        skin = ""
-        for arg in args:
-            skin += arg
+        skin = "".join(args)
         await self.skin_embed(ctx, "DSi Menu Skins", "Nintendo DSi", skin)
 
     @skins.command(name="3ds", aliases=["3dsmenu"])
     async def skin_3dsmenu(self, ctx, *args):
-        skin = ""
-        for arg in args:
-            skin += arg
+        skin = "".join(args)
         await self.skin_embed(ctx, "3DS Menu Skins", "Nintendo 3DS", skin)
 
     @skins.command(name="r4", aliases=["r4theme"])
     async def skin_r4menu(self, ctx, *args):
-        skin = ""
-        for arg in args:
-            skin += arg
+        skin = "".join(args)
         await self.skin_embed(ctx, "R4 Original Menu Skins", "R4 Original", skin)
 
 
