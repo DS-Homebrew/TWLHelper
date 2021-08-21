@@ -67,3 +67,13 @@ def check_arg(argument: str, arg) -> bool:
     if argument.lower() in arg:
         return True
     return False
+
+def web_name(name):
+    name = name.lower()
+    out = ""
+    for letter in name:
+        if letter in "abcdefghijklmnopqrstuvwxyz0123456789-_.":
+            out += letter
+        elif letter == " ":
+            out += "-"
+    return out

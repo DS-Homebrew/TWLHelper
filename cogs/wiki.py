@@ -3,7 +3,7 @@ import requests
 import re
 
 from discord.ext import commands
-from utils.utils import check_arg
+from utils.utils import check_arg, web_name
 
 
 class Wiki(commands.Cog):
@@ -14,15 +14,12 @@ class Wiki(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def web_name(self, name):
-        name = name.lower()
-        out = ""
-        for letter in name:
-            if letter in "abcdefghijklmnopqrstuvwxyz0123456789-_.":
-                out += letter
-            elif letter == " ":
-                out += "-"
-        return out
+    def embed(self, title):
+        embed = discord.Embed(title=title)
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/"
+        return embed
 
     def git_name(self, name):
         name = name.lower()
@@ -95,7 +92,7 @@ class Wiki(commands.Cog):
                 iter += 1
                 if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
-                    embed.url += "?faq=" + self.web_name(title)
+                    embed.url += "?faq=" + web_name(title)
                     embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
@@ -112,7 +109,7 @@ class Wiki(commands.Cog):
                 iter += 1
                 if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
-                    embed.url += "?faq=" + self.web_name(title)
+                    embed.url += "?faq=" + web_name(title)
                     embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
@@ -129,7 +126,7 @@ class Wiki(commands.Cog):
                 iter += 1
                 if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
-                    embed.url += "?faq=" + self.web_name(title)
+                    embed.url += "?faq=" + web_name(title)
                     embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
@@ -146,7 +143,7 @@ class Wiki(commands.Cog):
                 iter += 1
                 if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
-                    embed.url += "?faq=" + self.web_name(title)
+                    embed.url += "?faq=" + web_name(title)
                     embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
