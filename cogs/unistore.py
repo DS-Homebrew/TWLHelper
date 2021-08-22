@@ -1,6 +1,8 @@
 import discord
 import requests
 import re
+import math
+import random
 
 from discord.ext import commands
 from utils.utils import web_name
@@ -21,29 +23,43 @@ class UniStore(commands.Cog):
         # try match
         return len(re.findall(query, id["title"], flags=re.IGNORECASE)) > 0
 
-    async def udb_embed(self, ctx, title, app=""):
+    def udbembed(self, embed, appid):
+        embed.title = appid["title"]
+        embed.color = int(appid['color'][1:], 16)
+        embed.set_author(name=appid["author"], icon_url=appid["avatar"] if "avatar" in appid else discord.Embed.Empty)
+        embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else discord.Embed.Empty)))
+        embed.description = appid["description"]
+        embed.url += appid["systems"][0].lower() + "/" + web_name(appid["title"])
+        return embed
+
+    async def udbparse(self, ctx, app="", israndom=0):
         unistore = requests.get("https://raw.githubusercontent.com/Universal-Team/db/master/docs/data/full.json").json()
-        embed = discord.Embed(title=title)
+        embed = discord.Embed(title="Universal-DB")
         embed.set_author(name="Universal-Team")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
         embed.description = "A database of DS and 3DS homebrew"
         embed.url = "https://db.universal-team.net/"
+        if israndom == 1:
+            await ctx.send(embed=self.udbembed(embed, unistore[math.floor(random.random() * len(unistore))]))
+            return
         if app != "":
             for appid in unistore:
                 if self.searchdb(app, appid):
-                    embed.title = appid["title"]
-                    embed.color = int(appid['color'][1:], 16)
-                    embed.set_author(name=appid["author"], icon_url=appid["avatar"] if "avatar" in appid else discord.Embed.Empty)
-                    embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else discord.Embed.Empty)))
-                    embed.description = appid["description"]
-                    embed.url += appid["systems"][0].lower() + "/" + web_name(appid["title"])
-                    await ctx.send(embed=embed)
+                    await ctx.send(embed=self.udbembed(embed, appid))
                     return
             await ctx.send("App cannot be found. Please try again.")
             return
         await ctx.send(embed=embed)
 
-    async def skin_embed(self, ctx, title, extension, skin=""):
+    def skinembed(self, embed, skinid):
+        embed.set_author(name=skinid["author"], icon_url=skinid["avatar"] if "avatar" in skinid else discord.Embed.Empty)
+        embed.set_thumbnail(url=skinid["icon"])
+        embed.title = skinid["title"]
+        embed.description = skinid["description"]
+        embed.url += web_name(skinid["title"])
+        return embed
+
+    async def skinparse(self, ctx, title, extension, skin=""):
         unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/docs/data/full.json").json()
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew Wiki")
@@ -60,12 +76,7 @@ class UniStore(commands.Cog):
         if skin != "":
             for skinid in unistore:
                 if self.searchdb(skin, skinid) and skinid["console"] == extension:
-                    embed.set_author(name=skinid["author"], icon_url=skinid["avatar"] if "avatar" in skinid else discord.Embed.Empty)
-                    embed.set_thumbnail(url=skinid["icon"])
-                    embed.title = skinid["title"]
-                    embed.description = skinid["description"]
-                    embed.url += web_name(skinid["title"])
-                    await ctx.send(embed=embed)
+                    await ctx.send(embed=self.skinembed(embed, skinid))
                     return
             await ctx.send("Skin cannot be found. Please try again.")
             return
@@ -73,9 +84,13 @@ class UniStore(commands.Cog):
 
     @commands.command(aliases=["universaldb"])
     async def udb(self, ctx, *args):
-        """Links to Universal-DB and/or one of the apps"""
-        app = "".join(args)
-        await self.udb_embed(ctx, "Universal-DB", app)
+        """Links to Universal-DB and/or one of the apps\n
+        Usage: """
+        if args[0] == "-r":
+            await self.udbparse(ctx, israndom=1)
+        else:
+            app = "".join(args)
+            await self.udbparse(ctx, app)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def skins(self, ctx):
@@ -86,22 +101,22 @@ class UniStore(commands.Cog):
     async def skin_unlaunch(self, ctx, *args):
         """Links to the Unlaunch skins page"""
         skin = "".join(args)
-        await self.skin_embed(ctx, "Unlaunch Backgrounds", "Unlaunch", skin)
+        await self.skinparse(ctx, "Unlaunch Backgrounds", "Unlaunch", skin)
 
     @skins.command(name="dsi", aliases=["dsimenu"])
     async def skin_dsimenu(self, ctx, *args):
         skin = "".join(args)
-        await self.skin_embed(ctx, "DSi Menu Skins", "Nintendo DSi", skin)
+        await self.skinparse(ctx, "DSi Menu Skins", "Nintendo DSi", skin)
 
     @skins.command(name="3ds", aliases=["3dsmenu"])
     async def skin_3dsmenu(self, ctx, *args):
         skin = "".join(args)
-        await self.skin_embed(ctx, "3DS Menu Skins", "Nintendo 3DS", skin)
+        await self.skinparse(ctx, "3DS Menu Skins", "Nintendo 3DS", skin)
 
     @skins.command(name="r4", aliases=["r4theme"])
     async def skin_r4menu(self, ctx, *args):
         skin = "".join(args)
-        await self.skin_embed(ctx, "R4 Original Menu Skins", "R4 Original", skin)
+        await self.skinparse(ctx, "R4 Original Menu Skins", "R4 Original", skin)
 
 
 def setup(bot):
