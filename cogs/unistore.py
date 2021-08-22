@@ -33,7 +33,9 @@ class UniStore(commands.Cog):
         return embed
 
     async def udbparse(self, ctx, app="", israndom=0):
-        unistore = requests.get("https://raw.githubusercontent.com/Universal-Team/db/master/docs/data/full.json").json()
+        unistore = None
+        if israndom == 1 and app != "":
+            unistore = requests.get("https://raw.githubusercontent.com/Universal-Team/db/master/docs/data/full.json").json()
         embed = discord.Embed(title="Universal-DB")
         embed.set_author(name="Universal-Team")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
@@ -60,7 +62,6 @@ class UniStore(commands.Cog):
         return embed
 
     async def skinparse(self, ctx, title, extension, skin=""):
-        unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/docs/data/full.json").json()
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew")
         if extension == "Unlaunch":
@@ -77,6 +78,7 @@ class UniStore(commands.Cog):
             embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
         embed.url = "https://skins.ds-homebrew.com/" + web_name(extension) + "/"
         if skin != "":
+            unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/docs/data/full.json").json()
             for skinid in unistore:
                 if self.searchdb(skin, skinid) and skinid["console"] == extension:
                     await ctx.send(embed=self.skinembed(embed, skinid))
