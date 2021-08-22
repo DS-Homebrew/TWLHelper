@@ -89,7 +89,7 @@ class UniStore(commands.Cog):
     async def udb(self, ctx, *args):
         """Links to Universal-DB and/or one of the apps\n
         Usage: """
-        if args[0] == "-r":
+        if args and args[0] == "-r":
             await self.udbparse(ctx, israndom=1)
         else:
             app = "".join(args)
