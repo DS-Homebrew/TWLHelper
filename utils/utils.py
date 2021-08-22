@@ -73,8 +73,8 @@ def web_name(name):
     name = name.lower()
     out = ""
     for letter in name:
-        if letter in "abcdefghijklmnopqrstuvwxyz0123456789-_.":
+        if letter in "abcdefghijklmnopqrstuvwxyz0123456789-_":
             out += letter
-        elif letter == " ":
+        elif letter in ". ":
             out += "-"
     return out
