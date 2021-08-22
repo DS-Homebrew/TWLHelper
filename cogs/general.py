@@ -91,7 +91,7 @@ class General(commands.Cog):
         embed.description = "How to install Unlaunch on the DSi"
         await ctx.send(embed=embed)
 
-    @commands.command(alias=["sd-card-setup", "sdformat"])
+    @commands.command(aliases=["sd-card-setup", "sdformat"])
     async def formatsd(self, ctx):
         """Formatting your SD card"""
         embed = discord.Embed(title="SD Card Setup")
