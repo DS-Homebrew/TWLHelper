@@ -61,7 +61,10 @@ class UniStore(commands.Cog):
         embed.url += web_name(skinid["title"])
         return embed
 
-    async def skinparse(self, ctx, title, extension, skin=""):
+    async def skinparse(self, ctx, title, extension, skin="", israndom=0):
+        unistore = None
+        if skin != "" or israndom == 1:
+            unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/docs/data/full.json").json()
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew")
         if extension == "Unlaunch":
@@ -77,8 +80,11 @@ class UniStore(commands.Cog):
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/3ds.png")
             embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
         embed.url = "https://skins.ds-homebrew.com/" + web_name(extension) + "/"
+        if israndom == 1:
+            unistore = [item for item in unistore if item["console"] == extension]
+            await ctx.send(embed=self.skinembed(embed, unistore[math.floor(random.random() * len(unistore))]))
+            return
         if skin != "":
-            unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/docs/data/full.json").json()
             for skinid in unistore:
                 if self.searchdb(skin, skinid) and skinid["console"] == extension:
                     await ctx.send(embed=self.skinembed(embed, skinid))
@@ -110,23 +116,43 @@ class UniStore(commands.Cog):
     @skins.command(name="unlaunch")
     async def skin_unlaunch(self, ctx, *args):
         """Links to the Unlaunch skins page"""
-        skin = "".join(args)
-        await self.skinparse(ctx, "Unlaunch Backgrounds", "Unlaunch", skin)
+        title = "Unlaunch Backgrounds"
+        extension = "Unlaunch"
+        if args and args[0] == "-r":
+            await self.skinparse(ctx, title, extension, israndom=1)
+        else:
+            skin = "".join(args)
+            await self.skinparse(ctx, title, extension, skin)
 
     @skins.command(name="dsi", aliases=["dsimenu"])
     async def skin_dsimenu(self, ctx, *args):
-        skin = "".join(args)
-        await self.skinparse(ctx, "DSi Menu Skins", "Nintendo DSi", skin)
+        title = "DSi Menu Skins"
+        extension = "Nintendo DSi"
+        if args and args[0] == "-r":
+            await self.skinparse(ctx, title, extension, israndom=1)
+        else:
+            skin = "".join(args)
+            await self.skinparse(ctx, title, extension, skin)
 
     @skins.command(name="3ds", aliases=["3dsmenu"])
     async def skin_3dsmenu(self, ctx, *args):
-        skin = "".join(args)
-        await self.skinparse(ctx, "3DS Menu Skins", "Nintendo 3DS", skin)
+        title = "3DS Menu Skins"
+        extension = "Nintendo 3DS"
+        if args and args[0] == "-r":
+            await self.skinparse(ctx, title, extension, israndom=1)
+        else:
+            skin = "".join(args)
+            await self.skinparse(ctx, title, extension, skin)
 
     @skins.command(name="r4", aliases=["r4theme"])
     async def skin_r4menu(self, ctx, *args):
-        skin = "".join(args)
-        await self.skinparse(ctx, "R4 Original Menu Skins", "R4 Original", skin)
+        title = "R4 Original Menu Skins"
+        extension = "R4 Original"
+        if args and args[0] == "-r":
+            await self.skinparse(ctx, title, extension, israndom=1)
+        else:
+            skin = "".join(args)
+            await self.skinparse(ctx, title, extension, skin)
 
 
 def setup(bot):
