@@ -62,15 +62,18 @@ class UniStore(commands.Cog):
     async def skinparse(self, ctx, title, extension, skin=""):
         unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/docs/data/full.json").json()
         embed = discord.Embed(title=title)
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.set_author(name="DS-Homebrew")
         if extension == "Unlaunch":
+            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
             embed.description = "Custom backgrounds for Unlaunch"
         elif extension == "Nintendo DSi":
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/dsi.png")
             embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
         elif extension == "R4 Original":
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/r4.png")
             embed.description = "Custom skins for TWiLight Menu++'s R4 Original Menu theme"
         elif extension == "Nintendo 3DS":
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/3ds.png")
             embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
         embed.url = "https://skins.ds-homebrew.com/" + web_name(extension) + "/"
         if skin != "":
