@@ -180,12 +180,9 @@ class Wiki(commands.Cog):
             if check_arg(arg, ("3ds",)):
                 embed.url += "-3ds"
                 embed.description += " on the 3DS"
-            elif check_arg(arg, ("dsi",)):
+            elif check_arg(arg, ("dsi", "flashcard", "flashcart", "ds")):
                 embed.url += "-ds"
-                embed.description += " on the DSi"
-            elif check_arg(arg, ("flashcard", "flashcart", "ds")):
-                embed.url += "-ds"
-                embed.description += " on flashcards"
+                embed.description += " on the DSi and/or flashcards"
         else:
             await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in systems])}.")
             return
