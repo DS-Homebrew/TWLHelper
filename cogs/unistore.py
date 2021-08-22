@@ -31,9 +31,10 @@ class UniStore(commands.Cog):
         if app != "":
             for appid in unistore:
                 if self.searchdb(app, appid):
-                    embed.set_author(name=appid["author"])
-                    embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else None)))
                     embed.title = appid["title"]
+                    embed.color = int(appid['color'][1:], 16)
+                    embed.set_author(name=appid["author"], icon_url=appid["avatar"] if "avatar" in appid else discord.Embed.Empty)
+                    embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else discord.Embed.Empty)))
                     embed.description = appid["description"]
                     embed.url += appid["systems"][0].lower() + "/" + web_name(appid["title"])
                     await ctx.send(embed=embed)
@@ -59,7 +60,7 @@ class UniStore(commands.Cog):
         if skin != "":
             for skinid in unistore:
                 if self.searchdb(skin, skinid) and skinid["console"] == extension:
-                    embed.set_author(name=skinid["author"])
+                    embed.set_author(name=skinid["author"], icon_url=skinid["avatar"] if "avatar" in skinid else discord.Embed.Empty)
                     embed.set_thumbnail(url=skinid["icon"])
                     embed.title = skinid["title"]
                     embed.description = skinid["description"]
