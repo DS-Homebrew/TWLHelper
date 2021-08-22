@@ -32,9 +32,9 @@ class UniStore(commands.Cog):
         embed.url += appid["systems"][0].lower() + "/" + web_name(appid["title"])
         return embed
 
-    async def udbparse(self, ctx, app="", israndom=0):
+    async def udbparse(self, ctx, app="", israndom=False):
         unistore = None
-        if israndom == 1 or app != "":
+        if israndom or app != "":
             unistore = requests.get("https://raw.githubusercontent.com/Universal-Team/db/master/docs/data/full.json").json()
         embed = discord.Embed(title="Universal-DB")
         embed.set_author(name="Universal-Team")
@@ -61,9 +61,9 @@ class UniStore(commands.Cog):
         embed.url += web_name(skinid["title"])
         return embed
 
-    async def skinparse(self, ctx, title, extension, skin="", israndom=0):
+    async def skinparse(self, ctx, title, extension, skin="", israndom=False):
         unistore = None
-        if skin != "" or israndom == 1:
+        if skin != "" or israndom:
             unistore = requests.get("https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/docs/data/full.json").json()
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew")
@@ -99,7 +99,7 @@ class UniStore(commands.Cog):
         To show a random app: `udb [-r]`
         To search for an app: `udb [search parameter]`"""
         if args and args[0] == "-r":
-            await self.udbparse(ctx, israndom=1)
+            await self.udbparse(ctx, israndom=True)
         else:
             app = "".join(args)
             await self.udbparse(ctx, app)
@@ -124,7 +124,7 @@ class UniStore(commands.Cog):
         title = "Unlaunch Backgrounds"
         extension = "Unlaunch"
         if args and args[0] == "-r":
-            await self.skinparse(ctx, title, extension, israndom=1)
+            await self.skinparse(ctx, title, extension, israndom=True)
         else:
             skin = "".join(args)
             await self.skinparse(ctx, title, extension, skin)
@@ -137,7 +137,7 @@ class UniStore(commands.Cog):
         title = "DSi Menu Skins"
         extension = "Nintendo DSi"
         if args and args[0] == "-r":
-            await self.skinparse(ctx, title, extension, israndom=1)
+            await self.skinparse(ctx, title, extension, israndom=True)
         else:
             skin = "".join(args)
             await self.skinparse(ctx, title, extension, skin)
@@ -150,7 +150,7 @@ class UniStore(commands.Cog):
         title = "3DS Menu Skins"
         extension = "Nintendo 3DS"
         if args and args[0] == "-r":
-            await self.skinparse(ctx, title, extension, israndom=1)
+            await self.skinparse(ctx, title, extension, israndom=True)
         else:
             skin = "".join(args)
             await self.skinparse(ctx, title, extension, skin)
@@ -163,7 +163,7 @@ class UniStore(commands.Cog):
         title = "R4 Original Menu Skins"
         extension = "R4 Original"
         if args and args[0] == "-r":
-            await self.skinparse(ctx, title, extension, israndom=1)
+            await self.skinparse(ctx, title, extension, israndom=True)
         else:
             skin = "".join(args)
             await self.skinparse(ctx, title, extension, skin)
