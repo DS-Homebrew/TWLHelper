@@ -94,8 +94,13 @@ class UniStore(commands.Cog):
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def skins(self, ctx):
-        """Links and/or information on installing apps"""
-        await ctx.send_help(ctx.command)
+        """Links to a database of TWiLight Menu++ skins and Unlaunch backgrounds"""
+        embed = discord.Embed(title="Skins")
+        embed.set_author(name="DS-Homebrew")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.description = "A collection of skins for TWiLight Menu++ from DS-Homebrew/twlmenu-extras on GitHub"
+        embed.url = "https://skins.ds-homebrew.com/"
+        await ctx.send(embed=embed)
 
     @skins.command(name="unlaunch")
     async def skin_unlaunch(self, ctx, *args):
