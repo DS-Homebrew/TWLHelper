@@ -140,37 +140,29 @@ class General(commands.Cog):
         """Links to Crowdin projects"""
         await ctx.send_help(ctx.command)
 
-    def tlembed(self, title):
+    async def tlembed(self, ctx, title, extension):
         embed = discord.Embed(title=title + " Crowdin Project")
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://support.crowdin.com/assets/logos/crowdin-white-symbol.png")
         embed.description = "Help translate " + title + " on Crowdin."
-        embed.url = "https://crowdin.com/project/"
-        return embed
+        embed.url = "https://crowdin.com/project/" + extension
+        await ctx.send(embed=embed)
 
     @translate.command(aliases=["twlmenu", "twl", "twilightmenu"])
     async def twilight(self, ctx):
-        embed = self.tlembed("TWiLight Menu++")
-        embed.url += "TwilightMenu"  # Don't add .html, it breaks the link
-        await ctx.send(embed=embed)
+        await self.tlembed(ctx, "TWiLight Menu++", "TwilightMenu")
 
     @translate.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
     async def ndsbootstrap(self, ctx):
-        embed = self.tlembed("nds-bootstrap")
-        embed.url += "nds-bootstrap"  # Don't add .html, it breaks the link
-        await ctx.send(embed=embed)
+        await self.tlembed(ctx, "nds-bootstrap", "nds-bootstrap")
 
     @translate.command(aliases=["skins", "ds-homebrew.com", "website"])
     async def wiki(self, ctx):
-        embed = self.tlembed("DS-Homebrew Wiki")
-        embed.url += "ds-homebrew-wiki"  # Don't add .html, it breaks the link
-        await ctx.send(embed=embed)
+        await self.tlembed(ctx, "DS-Homebrew Wiki", "ds-homebrew-wiki")
 
     @translate.command(aliases=["dsicfwguide", "dsi.cfw.guide"])
     async def dsiguide(self, ctx):
-        embed = self.tlembed("DSi Guide")
-        embed.url += "dsi-guide"  # Don't add .html, it breaks the link
-        await ctx.send(embed=embed)
+        await self.tlembed(ctx, "DSi Guide", "dsi-guide")
 
     @commands.command()
     async def color(self, ctx, *, arg=""):
