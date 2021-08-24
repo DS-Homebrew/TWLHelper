@@ -59,10 +59,12 @@ class Convert(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @convert.command(name="unlaunch", aliases=["unlaunchbg"])
-    async def unlaunch_background(self, ctx, filelink=None):
+    async def unlaunch_background(self, ctx, *args):
         """
         Convert an attachment or linked image to an Unlaunch GIF file
         """
+
+        filelink = next((arg for arg in args if arg.startswith("http")), None)
 
         self.check_dir()
         supported = False
@@ -109,7 +111,7 @@ class Convert(commands.Cog):
                 await outputtext.edit(content="`Converted to GIF...`")
                 await outputtext.edit(content="`Colour Mapping GIF...`")
                 try:
-                    proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", "-k31", "#0", "-o", newFileName])
+                    proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", "-k31", "#0", "-f" if "-dither" in args else "", "-o", newFileName])
                     proc.wait()
                 except Exception:
                     error_message = traceback.format_exc()
