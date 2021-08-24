@@ -277,6 +277,44 @@ class Wiki(commands.Cog):
         embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
         await ctx.send(embed=embed)
 
+    @commands.group(invoke_without_command=True, case_insensitive=True)
+    async def bios(self, ctx):
+        await ctx.send_help(ctx.command)
+
+    @bios.command()
+    async def gba(self, ctx, arg=""):
+        embed = self.embed("GBA BIOS Info")
+        embed.url += "gbarunner2/bios.html"
+        embed.description = "Information on the GBA BIOS and how to dump it"
+        if arg == "nds" or arg == "gba" or arg == "flashcard" or arg == "flashcart":
+            embed.title = "Dumping GBA BIOS from a DS"
+            embed.description = "Also dump from a GBA"
+            embed.url = "https://glazedbelmont.github.io/gbabiosdump/#gameboy-advance-sp-micro-ds-ds-lite.html"
+            embed.set_author(name="GlaZed Belmont")
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/GlaZedBelmont/GlaZedBelmont.github.io/master/img/glazed.png")
+        elif arg == "3ds":
+            embed.title = "Dumping GBA BIOS from a 3DS"
+            embed.description = "Tutorial to dump a GBA BIOS from a 3DS VC title"
+            embed.url = "https://glazedbelmont.github.io/gbabiosdump/#virtual-console-title-from-a-3ds.html"
+            embed.set_author(name="GlaZed Belmont")
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/GlaZedBelmont/GlaZedBelmont.github.io/master/img/glazed.png")
+        elif arg == "wii" or arg == "linkcable":
+            embed.title = "Dumping GBA BIOS from a Wii"
+            embed.description = "How to dump a GBA BIOS from a Wii or GameCube"
+            embed.url = "https://github.com/FIX94/gba-link-cable-dumper"
+            embed.set_author(name="FIX94")
+            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/12349638?v=4")
+        await ctx.send(embed=embed)
+
+    @bios.command()
+    async def nds(self, ctx):
+        embed = discord.Embed(title="Dumping NDS BIOS")
+        embed.set_author(name="Arisotura")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/1311867?v=4")
+        embed.url = "http://melonds.kuribo64.net/faq.php"
+        embed.description = "How to dump the NDS BIOS from a DS, DSi or 3DS"
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Wiki(bot))
