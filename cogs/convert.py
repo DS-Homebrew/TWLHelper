@@ -111,7 +111,10 @@ class Convert(commands.Cog):
                 await outputtext.edit(content="`Converted to GIF...`")
                 await outputtext.edit(content="`Colour Mapping GIF...`")
                 try:
-                    proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", "-k31", "#0", "-f" if "-dither" in args else "", "-o", newFileName])
+                    gifsicle_args = ["gifsicle", newFileName, "-O3", "--no-extensions", "-k31", "#0", "-o", newFileName]
+                    if "-dither" in args:
+                        gifsicle_args.append("-f")
+                    proc = Popen(gifsicle_args)
                     proc.wait()
                 except Exception:
                     error_message = traceback.format_exc()
