@@ -121,52 +121,44 @@ class UniStore(commands.Cog):
         """Links to the Unlaunch backgrounds page.\n
         To show a random background: `skins unlaunch [-r]`
         To search for a background: `skins unlaunch [search parameter]`"""
-        title = "Unlaunch Backgrounds"
-        extension = "Unlaunch"
         if args and args[0] == "-r":
-            await self.skinparse(ctx, title, extension, israndom=True)
+            await self.skinparse(ctx, "Unlaunch Backgrounds", "Unlaunch", israndom=True)
         else:
             skin = "".join(args)
-            await self.skinparse(ctx, title, extension, skin)
+            await self.skinparse(ctx, "Unlaunch Backgrounds", "Unlaunch", skin)
 
     @skins.command(name="dsi", aliases=["dsimenu"])
     async def skin_dsimenu(self, ctx, *args):
         """Links to the DSi Menu skins page.\n
         To show a random skin: `skins dsi [-r]`
         To search for a background: `s`kins dsi [search parameter]`"""
-        title = "DSi Menu Skins"
-        extension = "Nintendo DSi"
         if args and args[0] == "-r":
-            await self.skinparse(ctx, title, extension, israndom=True)
+            await self.skinparse(ctx, "DSi Menu Skins", "Nintendo DSi", israndom=True)
         else:
             skin = "".join(args)
-            await self.skinparse(ctx, title, extension, skin)
+            await self.skinparse(ctx, "DSi Menu Skins", "Nintendo DSi", skin)
 
     @skins.command(name="3ds", aliases=["3dsmenu"])
     async def skin_3dsmenu(self, ctx, *args):
         """Links to the 3DS Menu skins page.\n
         To show a random skin: `skins 3ds [-r]`
         To search for a background: `skins 3ds [search parameter]`"""
-        title = "3DS Menu Skins"
-        extension = "Nintendo 3DS"
         if args and args[0] == "-r":
-            await self.skinparse(ctx, title, extension, israndom=True)
+            await self.skinparse(ctx, "3DS Menu Skins", "Nintendo 3DS", israndom=True)
         else:
             skin = "".join(args)
-            await self.skinparse(ctx, title, extension, skin)
+            await self.skinparse(ctx, "3DS Menu Skins", "Nintendo 3DS", skin)
 
     @skins.command(name="r4", aliases=["r4theme"])
     async def skin_r4menu(self, ctx, *args):
         """Links to the R4 Original Menu skins page.\n
         To show a random skin: `skins r4 [-r]`
         To search for a background: `skins r4 [search parameter]`"""
-        title = "R4 Original Menu Skins"
-        extension = "R4 Original"
         if args and args[0] == "-r":
-            await self.skinparse(ctx, title, extension, israndom=True)
+            await self.skinparse(ctx, "R4 Original Menu Skins", "R4 Original", israndom=True)
         else:
             skin = "".join(args)
-            await self.skinparse(ctx, title, extension, skin)
+            await self.skinparse(ctx, "R4 Original Menu Skins", "R4 Original", skin)
 
 
 def setup(bot):
