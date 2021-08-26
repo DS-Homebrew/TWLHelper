@@ -33,7 +33,7 @@ class General(commands.Cog):
         for x in guides:
             if check_arg(x, '3ds'):
                 embed.set_author(name="Nintendo Homebrew & Plailect")
-                embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
+                embed.set_thumbnail(url="https://nintendohomebrew.com/assets/img/nhplai.png")
                 embed.url = "https://3ds.hacks.guide/"
                 embed.description = "A complete guide to 3DS custom firmware, from stock to boot9strap"
                 await ctx.send(embed=embed)
@@ -123,7 +123,7 @@ class General(commands.Cog):
         if check_arg(arg, '3ds'):
             embed = discord.Embed(title="GodMode9 Dump Guide")
             embed.set_author(name="Nintendo Homebrew & Plailect")
-            embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
+            embed.set_thumbnail(url="https://nintendohomebrew.com/assets/img/nhplai.png")
             embed.url = "https://3ds.hacks.guide/dumping-titles-and-game-cartridges.html"
             embed.description = "How to dump Cartridges and Files on a 3DS using GodMode9"
             await ctx.send(embed=embed)
