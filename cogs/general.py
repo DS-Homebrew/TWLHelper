@@ -114,7 +114,7 @@ class General(commands.Cog):
     @commands.command()
     async def dump(self, ctx, arg=None):
         """How to dump games and data for CFW consoles"""
-        systems = ("3ds", "dsi")
+        systems = ("3ds", "dsi", "dsiware")
 
         if arg not in systems:
             await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in systems])}.")
@@ -122,17 +122,24 @@ class General(commands.Cog):
 
         if check_arg(arg, '3ds'):
             embed = discord.Embed(title="GodMode9 Dump Guide")
-            embed.set_author(name="Nintendo Homebrew & Plailect", url="https://3ds.hacks.guide/dumping-titles-and-game-cartridges")
+            embed.set_author(name="Nintendo Homebrew & Plailect")
             embed.set_thumbnail(url="https://nintendohomebrew.com/pics/nhplai.png")
             embed.url = "https://3ds.hacks.guide/dumping-titles-and-game-cartridges.html"
             embed.description = "How to dump Cartridges and Files on a 3DS using GodMode9"
             await ctx.send(embed=embed)
-        elif check_arg(arg, 'dsi'):
+        elif check_arg(arg, ('dsi',)):
             embed = discord.Embed(title="GodMode9i Dump Guide")
-            embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking", url="https://dsi.cfw.guide/dumping-game-cards")
+            embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
             embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
             embed.url = "https://dsi.cfw.guide/dumping-game-cards.html"
             embed.description = "How to dump cartridges on a Nintendo DSi using GodMode9i"
+            await ctx.send(embed=embed)
+        elif check_arg(arg, ('dsiware',)):
+            embed = discord.Embed(title="DSiWare Backups")
+            embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
+            embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
+            embed.url = "https://dsi.cfw.guide/dsiware-backups.html"
+            embed.description = "How to dump DSiWare on a Nintendo DSi using GodMode9i"
             await ctx.send(embed=embed)
 
     @commands.group(aliases=["crowdin"], invoke_without_command=True, case_insensitive=True)
