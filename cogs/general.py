@@ -77,8 +77,8 @@ class General(commands.Cog):
     async def twlfix(self, ctx):
         """Information on how to fix a broken TWL Partition"""
         await self.simple_embed(ctx, """
-                                If you are encountering black screen on a 3DS family console while using DS-mode applications, \
-                                use [TWLFix-CFW](https://github.com/MechanicalDragon0687/TWLFix-CFW/releases/) to fix it.
+                                Follow [TWLFix-CFW](https://github.com/MechanicalDragon0687/TWLFix-CFW/releases/).
+                                These instructions require that you **perform a system update** after running the app.
                                 """, title="Fix broken TWL")
 
     @commands.command()
