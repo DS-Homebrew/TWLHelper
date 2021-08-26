@@ -100,16 +100,6 @@ class Wiki(commands.Cog):
         embed = self.embed("hiyaCFW FAQ")
         embed.url += "hiyacfw/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
-        if arg != "":
-            page = requests.get(self.git_name("hiyacfw")).text
-            faqpage = page.splitlines()
-            iter = 0
-            for faq in faqpage:
-                iter += 1
-                if arg.lower() in faq.lower() and "#### " in faq.lower():
-                    title = faq[5:]
-                    embed.url += "?faq=" + web_name(title)
-                    embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
