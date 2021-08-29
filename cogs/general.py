@@ -82,6 +82,18 @@ class General(commands.Cog):
                                 """, title="Fix broken TWL")
 
     @commands.command()
+    async def twlversion(self, ctx):
+        """How to check your TWiLight Menu++ and nds-bootstrap version"""
+        embed = discord.Embed(title="How to Access TWiLight Menu++ Settings")
+        embed.description = "The way to access the TWiLight Menu++ settings varies between your configuration."
+        embed.add_field(name="DS Classic Menu", value=cleandoc("""Hit the button on the very bottom"""), inline=False)
+        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher themes using SELECT Menu", value=cleandoc("""Hit SELECT, then launch the Settings Applet (use the D-PAD to highlight options)"""), inline=False)
+        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher themes not using SELECT Menu", value=cleandoc("""Hitting SELECT will bring you to the DS Classic Menu"""), inline=False)
+        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Use the touch screen to touch the wrench"""), inline=False)
+        embed.add_field(name="R4 Original theme", value=cleandoc("""Hit START (if you’re in the file browser), then hit SELECT"""), inline=False)
+        await ctx.send(embed=embed)
+
+    @commands.command()
     async def unlaunch(self, ctx):
         """Installing Unlaunch"""
         embed = discord.Embed(title="Installing Unlaunch")
