@@ -84,13 +84,17 @@ class General(commands.Cog):
     @commands.command()
     async def twlversion(self, ctx):
         """How to check your TWiLight Menu++ and nds-bootstrap version"""
-        embed = discord.Embed(title="How to Access TWiLight Menu++ Settings")
-        embed.description = "The way to access the TWiLight Menu++ settings varies between your configuration."
+        embed = discord.Embed(title="How to check TWiLight Menu++ and nds-bootstrap version")
+        embed.description = "You will need to access TWiLight Menu++ settings.\nThe way to access the TWiLight Menu++ settings varies between your configuration."
         embed.add_field(name="DS Classic Menu", value=cleandoc("""Hit the button on the very bottom"""), inline=False)
         embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher themes using SELECT Menu", value=cleandoc("""Hit SELECT, then launch the Settings Applet (use the D-PAD to highlight options)"""), inline=False)
         embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher themes not using SELECT Menu", value=cleandoc("""Hitting SELECT will bring you to the DS Classic Menu"""), inline=False)
         embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Use the touch screen to touch the wrench"""), inline=False)
-        embed.add_field(name="R4 Original theme", value=cleandoc("""Hit START (if you’re in the file browser), then hit SELECT"""), inline=False)
+        embed.add_field(name="R4 Original theme", value=cleandoc("""Hit START (if you’re in the file browser), then hit SELECT\n\n
+                    After you launch TWiLight Menu++ settings, you will see TWiLight Menu++'s version at the bottom right of the top screen \
+                    and nds-bootstrap's version at the top of the top screen.
+                    """), inline=False)
+
         await ctx.send(embed=embed)
 
     @commands.command()
