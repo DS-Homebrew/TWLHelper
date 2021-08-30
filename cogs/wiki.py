@@ -266,6 +266,15 @@ class Wiki(commands.Cog):
         embed.url += "twilightmenu/custom-unlaunch-backgrounds.html"
         embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
         await ctx.send(embed=embed)
+        
+            @commands.command(aliases=["hiya", "hiyacfw"])
+    async def hiyacfw(self, ctx):
+        """Links to the HiyaCFW's Wiki Page"""
+        embed = self.embed("HiyaCFW")
+        embed.url += "https://wiki.ds-homebrew.com/hiyacfw/"
+        embed.description = "A Custom Firmware for the Nintendo DSi"
+        await ctx.send(embed=embed)
+        
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def bios(self, ctx):
