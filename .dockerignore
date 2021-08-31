@@ -1,8 +1,0 @@
-.git
-.github
-.gitignore
-.dockerignore
-*.yml
-Dockerfile
-settings.json
-settings.json.example

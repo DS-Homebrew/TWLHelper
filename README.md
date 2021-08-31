@@ -6,13 +6,6 @@
 1. Set your bot's token ID.
     - You will need to create a bot over at [Discord Developer Portal](https://discord.com/developers/applications).
 1. You can also set other arguments in `settings.json`, such as command prefix, account status, and moderator roles.
-
-There are currently two ways to run the bot:
-
-### Docker:
-1. Just run `docker-compose up --build -d`
-
-### Command line:
 1. Install the following for your host:
     - Python 3.8 or later (and its respective pip)
     - Imagemagick 7 or later
