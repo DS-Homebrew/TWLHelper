@@ -68,6 +68,9 @@ class TWLHelper(commands.Bot):
         elif isinstance(exc, commands.BadUnionArgument):
             await ctx.send(f'{author.mention} A bad argument was given: `{exc}`\n')
 
+        elif isinstance(exc, commands.BadLiteralArgument):
+            await ctx.send(f'{author.mention} A bad argument was given, expected one of {", ".join(exc.literals)}')
+
         elif isinstance(exc, commands.MissingRequiredArgument):
             await ctx.send(f'{author.mention} You are missing required argument {exc.param.name}.\n')
             await ctx.send_help(ctx.command)
