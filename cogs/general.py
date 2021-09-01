@@ -1,3 +1,5 @@
+from typing import Literal
+
 import discord
 
 from discord.ext import commands
@@ -128,29 +130,23 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def dump(self, ctx, arg=None):
+    async def dump(self, ctx, system: Literal['3ds', 'dsi', 'dsiware']):
         """How to dump games and data for CFW consoles"""
-        systems = ("3ds", "dsi", "dsiware")
-
-        if arg not in systems:
-            await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in systems])}.")
-            return
-
-        if check_arg(arg, '3ds'):
+        if check_arg(system, '3ds'):
             embed = discord.Embed(title="GodMode9 Dump Guide")
             embed.set_author(name="Nintendo Homebrew & Plailect")
             embed.set_thumbnail(url="https://nintendohomebrew.com/assets/img/nhplai.png")
             embed.url = "https://3ds.hacks.guide/dumping-titles-and-game-cartridges.html"
             embed.description = "How to dump Cartridges and Files on a 3DS using GodMode9"
             await ctx.send(embed=embed)
-        elif check_arg(arg, ('dsi',)):
+        elif check_arg(system, ('dsi',)):
             embed = discord.Embed(title="GodMode9i Dump Guide")
             embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
             embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
             embed.url = "https://dsi.cfw.guide/dumping-game-cards.html"
             embed.description = "How to dump cartridges on a Nintendo DSi using GodMode9i"
             await ctx.send(embed=embed)
-        elif check_arg(arg, ('dsiware',)):
+        elif check_arg(system, ('dsiware',)):
             embed = discord.Embed(title="DSiWare Backups")
             embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
             embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
