@@ -19,6 +19,13 @@ import discord
 import settings
 from discord.ext import commands
 
+__all__ = ("send_dm_message",
+           "command_signature",
+           "create_error_embed",
+           "is_staff",
+           "check_arg",
+           "web_name")
+
 
 async def send_dm_message(member: discord.Member, message: str, ctx: commands.Context = None, **kwargs) -> bool:
     """A helper function for sending a message to a member's DMs.
