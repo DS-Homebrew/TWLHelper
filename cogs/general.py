@@ -1,11 +1,9 @@
-from typing import Literal
-
 import discord
 
 from discord.ext import commands
 from inspect import cleandoc
 
-from utils.utils import check_arg
+from utils import check_arg, Literal
 
 
 class General(commands.Cog):
@@ -15,7 +13,6 @@ class General(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.systems = ("3ds", "wiiu", "vwii", "switch", "nx", "ns", "wii", "dsi")
 
     async def simple_embed(self, ctx, text, *, title="", color=discord.Color.default()):
         embed = discord.Embed(title=title, color=color)
@@ -23,14 +20,8 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def guide(self, ctx, *guides) -> None:
+    async def guide(self, ctx, *guides: Literal("3ds", "wiiu", "vwii", "switch", "nx", "ns", "wii", "dsi")) -> None:  # noqa
         """Links to the recommended guides"""
-        guides = {x.lower() for x in guides if x.lower() in self.systems}
-
-        if not guides:
-            await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in self.systems])}.")
-            return
-
         embed = discord.Embed(title="Guide")
         for x in guides:
             if check_arg(x, '3ds'):
@@ -126,7 +117,7 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def dump(self, ctx, system: Literal['3ds', 'dsi', 'dsiware']):
+    async def dump(self, ctx, system: Literal('3ds', 'dsi', 'dsiware')):  # noqa
         """How to dump games and data for CFW consoles"""
         if check_arg(system, '3ds'):
             embed = discord.Embed(title="GodMode9 Dump Guide")
