@@ -16,4 +16,4 @@ class Literal(commands.Converter):
         if largument in self.literals:
             return largument
         else:
-            raise commands.UserInputError(f"Expected one of {' '.join(self.literals)}.")
+            raise commands.BadArgument(f"Expected one of the following: {', '.join(self.literals)}.")

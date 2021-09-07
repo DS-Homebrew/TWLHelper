@@ -20,7 +20,7 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(require_var_positional=True)
-    async def guide(self, ctx, *guides: Literal("3ds", "wiiu", "vwii", "switch", "nx", "ns", "wii", "dsi")) -> None:
+    async def guide(self, ctx, *guides: Literal("3ds", "wiiu", "vwii", "switch", "nx", "ns", "wii", "dsi")) -> None:  # noqa
         """Links to the recommended guides"""
         embed = discord.Embed(title="Guide")
         for x in guides:
