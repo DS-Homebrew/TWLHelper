@@ -3,7 +3,7 @@ from discord.ext import commands
 __all__ = ("Literal",)
 
 
-class Literal:
+class Literal(commands.Converter):
     """Similar to typing.Literal except this is designed for lowercased literals.
 
     This also calls str.lower() on the argument during conversion.
