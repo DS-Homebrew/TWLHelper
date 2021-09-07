@@ -1,4 +1,4 @@
-# send_dm_message & command_signature are taken from Kurisu
+# send_dm_message, command_signature, error embeds taken from Kurisu
 #
 # Copyright (C) 2020 Nintendo Homebrew
 #
