@@ -122,7 +122,7 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Failed to map GIF colour...`")
                     return
                 await outputtext.edit(content="`GIF colour mapped...`")
-                await outputtext.edit(contents="`Optimising GIF size...`")
+                await outputtext.edit(content="`Optimising GIF size...`")
                 warning = False
                 x = 0
                 while x <= 300 and os.stat(newFileName).st_size > 15000:
@@ -131,8 +131,8 @@ class Convert(commands.Cog):
                     x += 50
                 if os.stat(newFileName).st_size > 15000:
                     warning = True
-                await outputtext.edit(contents="`GIF size optimised`")
-                await outputtext.edit(contents="`Uploading GIF...`")
+                await outputtext.edit(content="`GIF size optimised`")
+                await outputtext.edit(content="`Uploading GIF...`")
                 await ctx.send(file=discord.File(newFileName), reference=ctx.message)
                 os.remove(fileName)
                 os.remove(newFileName)
