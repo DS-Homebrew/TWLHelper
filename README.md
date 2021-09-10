@@ -8,7 +8,6 @@
 1. You can also set other arguments in `settings.json`, such as command prefix, account status, and moderator roles.
 1. Install the following for your host:
     - Python 3.8 or later (and its respective pip)
-    - Imagemagick 7 or later
     - gifsicle 1.92 or later
     - ffmpeg
 1. Run `pip install -r requirements.txt`
