@@ -267,6 +267,14 @@ class Wiki(commands.Cog):
         embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=['sfx'])
+    async def twlsfx(self, ctx):
+        """Links to a guide to custom TWiLight Menu SFX"""
+        embed = self.embed("DSi/3DS Skins - Custom SFX")
+        embed.url += "twilightmenu/custom-dsi-3ds-sfx.html"
+        embed.description = "How to use custom background music and sound effects in DSi and 3DS skins for TWiLight Menu++"
+        await ctx.send(embed=embed)
+
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def bios(self, ctx):
         await ctx.send_help(ctx.command)
