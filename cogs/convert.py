@@ -747,17 +747,59 @@ class Convert(commands.Cog):
                     subprocess.run(["ffmpeg", "-y", "-an", "-i", fileName, "-vcodec", "libx264", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-level", "3", "-s", "852x480", '-vf', "scale=640:trunc(ow/a/2)*2", "downloads/senpai_converted.mp4"], stdout=devnull)
 
                 await outputtext.edit(content="`Uploading Video...`")
-                if os.path.getsize("downloads/senpai_converted.mp4") < ctx.guild.filesize_limit:
-                    await ctx.send(file=discord.File("downloads/senpai_converted.mp4"), reference=ctx.message)
-                else:
+                if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize("downloads/senpai_converted.mp4") > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
                     size_large = True
                     await outputtext.edit(content="`Converted video is too large! Cannot send video.`")
+                else:
+                    await ctx.send(file=discord.File("downloads/senpai_converted.mp4"), reference=ctx.message)
                 os.remove("downloads/senpai_converted.mp4")
                 os.remove(fileName)
                 if not size_large:
                     await outputtext.edit(content="`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
         else:
             return
+
+    @convert.command(aliases=["bgm"])
+    async def twlbgm(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, audio file to TWiLight Menu's BGM format
+        """
+        self.check_dir()
+        if ctx.message.attachments:
+            f = ctx.message.attachments[0]
+            r = requests.get(f.url, allow_redirects=True)
+            fileName = "downloads/" + f.filename
+        elif filelink is not None:
+            r = requests.get(filelink, allow_redirects=True)
+            if filelink.find('/'):
+                fileName = "downloads/" + filelink.rsplit('/', 1)[1]
+        else:
+            await ctx.send_help(ctx.command)
+            return
+        async with ctx.typing():
+            start_time = time.time()
+            size_large = False
+            outputtext = await ctx.send("`Downloading audio...`")
+            print(outputtext)
+            try:
+                open(fileName, 'wb').write(r.content)
+            except Exception:
+                await outputtext.edit(content="`Failed to download audio`")
+                return
+            await outputtext.edit(content="`Converting audio...`")
+            with open(os.devnull, "w") as devnull:
+                subprocess.run(["ffmpeg", "-y", "-i", fileName, "-f", "s16le", "-acodec", "pcm_s16le", "-ac", "1", "-ar", "16k", "downloads/bgm.pcm.raw"], stdout=devnull)
+
+            await outputtext.edit(content="`Uploading BGM...`")
+            if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize("downloads/bgm.pcm.raw") > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
+                size_large = True
+                await outputtext.edit(content="`Converted BGM is too large! Cannot send BGM.`")
+            else:
+                await ctx.send(file=discord.File("downloads/bgm.pcm.raw"), reference=ctx.message)
+            os.remove("downloads/bgm.pcm.raw")
+            os.remove(fileName)
+            if not size_large:
+                await outputtext.edit(content="`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
 
 
 def setup(bot):
