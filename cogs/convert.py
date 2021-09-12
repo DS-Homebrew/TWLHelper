@@ -636,13 +636,12 @@ class Convert(commands.Cog):
                     await outputtext.edit(content="`Failed to download image `")
                     return
                 await outputtext.edit(content="`Image downloaded...`")
-                if not fileName.endswith('.png'):
-                    await outputtext.edit(content="`Converting to PNG...`")
-                    newFileName = "senpai_converted_" + fileName + "_.png"
-                    err = self.ffmpeg_img(fileName, newFileName, scale="208:156")
-                    if err == 1:
-                        await outputtext.edit(content="`Failed to convert to PNG`")
-                        return
+                await outputtext.edit(content="`Converting to PNG...`")
+                newFileName = "senpai_converted_" + fileName + "_.png"
+                err = self.ffmpeg_img(fileName, newFileName, scale="208:156")
+                if err == 1:
+                    await outputtext.edit(content="`Failed to convert to PNG`")
+                    return
                 await outputtext.edit(content="`Uploading DSi Menu image...`")
                 await ctx.send(file=discord.File(newFileName), reference=ctx.message)
                 await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
