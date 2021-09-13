@@ -66,6 +66,50 @@ class General(commands.Cog):
                 embed.description = "The complete guide to modding your Nintendo DSi"
                 await ctx.send(embed=embed)
 
+    @commands.group(invoke_without_command=True, case_insensitive=True)
+    async def install(self, ctx):
+        """Links and/or information on installing apps"""
+        await ctx.send_help(ctx.command)
+
+    @install.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
+    async def twilight_install(self, ctx, *, arg=""):
+        embed = discord.Embed(title="TWiLight Menu++ Installation Guide")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/installing"
+        embed.description = "How to install TWiLight Menu++"
+        if arg != "":
+            if check_arg(arg, ("3ds",)):
+                embed.url += "-3ds"
+                embed.description += " on the 3DS"
+            elif check_arg(arg, ("dsi",)):
+                embed.url += "-dsi"
+                embed.description += " on the DSi"
+            elif check_arg(arg, ("flashcard", "flashcart", "ds")):
+                embed.url += "-flashcard"
+                embed.description += " on flashcards"
+        embed.url += ".html"
+        await ctx.send(embed=embed)
+
+    @install.command(name="hiyacfw", aliases=["hiya"])
+    async def hiyacfw_install(self, ctx, *, arg=""):
+        embed = discord.Embed(title="hiyaCFW Installation Guide")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/hiyacfw/installing.html"
+        embed.description = "How to install hiyaCFW on the DSi"
+        await ctx.send(embed=embed)
+
+    @install.command(name="unlaunch")
+    async def unlaunch_install(self, ctx):
+        """Installing Unlaunch"""
+        embed = discord.Embed(title="Installing Unlaunch")
+        embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
+        embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
+        embed.url = "https://dsi.cfw.guide/installing-unlaunch.html"
+        embed.description = "How to install Unlaunch on the DSi"
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def twlfix(self, ctx):
         """Information on how to fix a broken TWL Partition"""
@@ -84,16 +128,6 @@ class General(commands.Cog):
         embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher themes not using SELECT Menu", value=cleandoc("""Hitting SELECT will bring you to the DS Classic Menu"""), inline=False)
         embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Use the touch screen to touch the wrench"""), inline=False)
         embed.add_field(name="R4 Original theme", value=cleandoc("""Hit START (if you’re in the file browser), then hit SELECT"""), inline=False)
-        await ctx.send(embed=embed)
-
-    @commands.command()
-    async def unlaunch(self, ctx):
-        """Installing Unlaunch"""
-        embed = discord.Embed(title="Installing Unlaunch")
-        embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
-        embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
-        embed.url = "https://dsi.cfw.guide/installing-unlaunch.html"
-        embed.description = "How to install Unlaunch on the DSi"
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["sd-card-setup", "sdformat"])

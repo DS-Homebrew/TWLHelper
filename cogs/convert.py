@@ -51,14 +51,7 @@ class Convert(commands.Cog):
             return 1
         return 0
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
-    async def convert(self, ctx):
-        """
-        Group of comamands that convert images or videos to another format
-        """
-        await ctx.send_help(ctx.command)
-
-    @convert.command(name="unlaunch", aliases=["unlaunchbg"])
+    @commands.command(name="unlaunch")
     async def unlaunch_background(self, ctx, *args):
         """
         Convert an attachment or linked image to an Unlaunch GIF file
@@ -143,7 +136,7 @@ class Convert(commands.Cog):
         else:
             await ctx.send("Unsupported image format, or URL does not end in " + ", ".join(supportedImage))
 
-    @convert.command()
+    @commands.command()
     async def bmp(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to BMP
@@ -203,7 +196,7 @@ class Convert(commands.Cog):
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
-    @convert.command()
+    @commands.command()
     async def png(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to PNG
@@ -260,7 +253,7 @@ class Convert(commands.Cog):
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
-    @convert.command()
+    @commands.command()
     async def gif(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to GIF
@@ -325,7 +318,7 @@ class Convert(commands.Cog):
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
-    @convert.command(aliases=["jpg"])
+    @commands.command(aliases=["jpg"])
     async def jpeg(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to JPEG
@@ -382,7 +375,7 @@ class Convert(commands.Cog):
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
-    @convert.group()
+    @commands.group()
     async def boxart(self, ctx):
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
@@ -599,7 +592,7 @@ class Convert(commands.Cog):
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
-    @convert.command()
+    @commands.command()
     async def dsimenu(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to a TWLMenu++ DSi Menu Theme
@@ -651,7 +644,7 @@ class Convert(commands.Cog):
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
-    @convert.command()
+    @commands.command()
     async def dsmp4(self, ctx, filelink=None):
         """
         Converts an attached, or linked, video to a MPEG4 Player for DSi Video
@@ -703,7 +696,7 @@ class Convert(commands.Cog):
         else:
             return
 
-    @convert.command(aliases=["mp4"])
+    @commands.command(aliases=["mp4"])
     async def video(self, ctx, filelink=None):
         """
         Converts an attached, or linked, video to MP4
@@ -758,7 +751,7 @@ class Convert(commands.Cog):
         else:
             return
 
-    @convert.command(aliases=["bgm"])
+    @commands.command(aliases=["bgm"])
     async def twlbgm(self, ctx, filelink=None):
         """
         Converts an attached, or linked, audio file to TWiLight Menu's BGM format

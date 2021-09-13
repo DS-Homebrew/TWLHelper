@@ -126,36 +126,6 @@ class Wiki(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
-    async def install(self, ctx):
-        """Links and/or information on installing apps"""
-        await ctx.send_help(ctx.command)
-
-    @install.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
-    async def twilight_install(self, ctx, *, arg=""):
-        embed = self.embed("TWiLight Menu++ Installation Guide")
-        embed.url += "twilightmenu/installing"
-        embed.description = "How to install TWiLight Menu++"
-        if arg != "":
-            if check_arg(arg, ("3ds",)):
-                embed.url += "-3ds"
-                embed.description += " on the 3DS"
-            elif check_arg(arg, ("dsi",)):
-                embed.url += "-dsi"
-                embed.description += " on the DSi"
-            elif check_arg(arg, ("flashcard", "flashcart", "ds")):
-                embed.url += "-flashcard"
-                embed.description += " on flashcards"
-        embed.url += ".html"
-        await ctx.send(embed=embed)
-
-    @install.command(name="hiyacfw", aliases=["hiya"])
-    async def hiyacfw_install(self, ctx, *, arg=""):
-        embed = self.embed("hiyaCFW Installation Guide")
-        embed.url += "hiyacfw/installing"
-        embed.description = "How to install hiyaCFW on the DSi"
-        await ctx.send(embed=embed)
-
-    @commands.group(invoke_without_command=True, case_insensitive=True)
     async def uninstall(self, ctx):
         """Links and/or information on uninstalling apps"""
         await ctx.send_help(ctx.command)
