@@ -234,11 +234,19 @@ class General(commands.Cog):
 
     @commands.command(aliases=["botinfo", "whoisthisbot"])
     async def about(self, ctx):
+        """About TWLHelper"""
         embed = discord.Embed(title="About TWLHelper")
         embed.set_author(name="DS-Homebrew")
         embed.url = "https://github.com/DS-Homebrew/TWLHelper"
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.description = "TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot"
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def sdroot(self, ctx):
+        """Image that shows what a root is"""
+        embed = discord.Embed()
+        embed.set_image(url="https://media.discordapp.net/attachments/489307733074640926/756947922804932739/wherestheroot.png")
         await ctx.send(embed=embed)
 
 
