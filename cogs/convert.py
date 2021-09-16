@@ -9,7 +9,7 @@ import time
 # import json
 
 supportedImage = [".bmp", ".gif", ".gif87", ".ico", ".icon",
-    ".jpe", ".jpeg", ".jpg", ".jp2", ".jps", ".png", ".apng",
+    ".jpe", ".jpeg", ".jpg", ".jfif", ".jp2", ".jps", ".png", ".apng",
     ".tiff", ".pbm", ".webp", ".webm", ".mpg", ".3gp",
     ".mp4", ".mov", ".wmv", ".flv", ".avi", ".mkv"]
 
