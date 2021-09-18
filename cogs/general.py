@@ -151,6 +151,16 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
+    async def vc(self, ctx):
+        """Links to the 3DS Virtual Console Inject guide"""
+        embed = discord.Embed(title="Virtual Console Injects for 3DS")
+        embed.set_author(name="Asdolo")
+        embed.set_thumbnail(url="https://i.imgur.com/rHa76XM.png")
+        embed.url = "https://3ds.eiphax.tech/nsui.html"
+        embed.description = "The recommended way to play old classics on your 3DS"
+        await ctx.send(embed=embed)
+
+    @commands.command()
     async def dump(self, ctx, system: Literal('3ds', 'dsi', 'dsiware')):  # noqa
         """How to dump games and data for CFW consoles"""
         if check_arg(system, '3ds'):
