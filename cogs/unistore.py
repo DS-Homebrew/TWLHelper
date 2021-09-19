@@ -28,7 +28,7 @@ class UniStore(commands.Cog):
         embed.color = int(appid['color'][1:], 16)
         embed.set_author(name=appid["author"], icon_url=appid["avatar"] if "avatar" in appid else discord.Embed.Empty)
         embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else discord.Embed.Empty)))
-        embed.description = appid["description"]
+        embed.description = appid["description"] if "description" in appid else discord.Embed.Empty
         embed.url += appid["systems"][0].lower() + "/" + web_name(appid["title"])
         return embed
 
