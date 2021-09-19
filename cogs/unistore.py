@@ -23,13 +23,15 @@ class UniStore(commands.Cog):
         # try match
         return len(re.findall(query, id["title"], flags=re.IGNORECASE)) > 0
 
-    def udbembed(self, embed, appid):
+    def uniembed(self, embed, appid, store):
         embed.title = appid["title"]
-        embed.color = int(appid['color'][1:], 16)
+        embed.color = int(appid['color'][1:], 16) if 'color' in appid else discord.Embed.Empty
         embed.set_author(name=appid["author"], icon_url=appid["avatar"] if "avatar" in appid else discord.Embed.Empty)
         embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else discord.Embed.Empty)))
         embed.description = appid["description"] if "description" in appid else discord.Embed.Empty
-        embed.url += appid["systems"][0].lower() + "/" + web_name(appid["title"])
+        if store == "udb":
+            embed.url += appid["systems"][0].lower() + "/"
+        embed.url += web_name(appid["title"])
         return embed
 
     async def udbparse(self, ctx, app="", israndom=False):
@@ -42,24 +44,16 @@ class UniStore(commands.Cog):
         embed.description = "A database of DS and 3DS homebrew"
         embed.url = "https://db.universal-team.net/"
         if israndom == 1:
-            await ctx.send(embed=self.udbembed(embed, unistore[math.floor(random.random() * len(unistore))]))
+            await ctx.send(embed=self.uniembed(embed, unistore[math.floor(random.random() * len(unistore))], "udb"))
             return
         if app != "":
             for appid in unistore:
                 if self.searchdb(app, appid):
-                    await ctx.send(embed=self.udbembed(embed, appid))
+                    await ctx.send(embed=self.uniembed(embed, appid, "udb"))
                     return
             await ctx.send("App cannot be found. Please try again.")
             return
         await ctx.send(embed=embed)
-
-    def skinembed(self, embed, skinid):
-        embed.set_author(name=skinid["author"], icon_url=skinid["avatar"] if "avatar" in skinid else discord.Embed.Empty)
-        embed.set_thumbnail(url=skinid["icon"])
-        embed.title = skinid["title"]
-        embed.description = skinid["description"]
-        embed.url += web_name(skinid["title"])
-        return embed
 
     async def skinparse(self, ctx, title, extension, skin="", israndom=False):
         unistore = None
@@ -82,12 +76,12 @@ class UniStore(commands.Cog):
         embed.url = "https://skins.ds-homebrew.com/" + web_name(extension) + "/"
         if israndom == 1:
             unistore = [item for item in unistore if item["console"] == extension]
-            await ctx.send(embed=self.skinembed(embed, unistore[math.floor(random.random() * len(unistore))]))
+            await ctx.send(embed=self.uniembed(embed, unistore[math.floor(random.random() * len(unistore))], "skin"))
             return
         if skin != "":
             for skinid in unistore:
                 if self.searchdb(skin, skinid) and skinid["console"] == extension:
-                    await ctx.send(embed=self.skinembed(embed, skinid))
+                    await ctx.send(embed=self.uniembed(embed, skinid, "skin"))
                     return
             await ctx.send("Skin cannot be found. Please try again.")
             return
