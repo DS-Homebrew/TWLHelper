@@ -248,9 +248,9 @@ class Wiki(commands.Cog):
     @commands.command()
     async def boxartguide(self, ctx):
         """Links to a guide to get Box Art"""
-        embed = self.embed("How to get Box Art")
+        embed = self.embed("How to Get Box Art")
         embed.url += "twilightmenu/how-to-get-box-art.html"
-        embed.description = "How to add Box Art to TWiLight Menu++"
+        embed.description = "How to add box art to TWiLight Menu++"
         await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
