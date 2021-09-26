@@ -31,6 +31,15 @@ jobs:
       - name: Check with flake8
         run: |
           flake8 . --ignore=E501,E722,E126,E128,W503,E121 --exclude=migrations
+      - name: Reboot TWLHelper
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            ./reboot.sh
+            exit
+          host: ${{ secrets.SSH_HOST }}
+          user: twlhelper
+          key: ${{ secrets.SSH_PRIVATE_KEY}}
       - name: Send webhook on failure
         if: ${{ failure() }}
         continue-on-error: true
