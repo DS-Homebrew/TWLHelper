@@ -35,14 +35,7 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            echo Rebooting bot...
-            cd TWLHelper
-            git pull
-            kill -9 $(cat twlhelper.pid)
-            pip install -r requirements.txt
-            nohup ./twlhelper.py & echo $! > twlhelper.pid
-            sleep 3
-            echo Success.
+            ./reboot.sh
             exit
           host: ${{ secrets.SSH_HOST }}
           user: twlhelper
