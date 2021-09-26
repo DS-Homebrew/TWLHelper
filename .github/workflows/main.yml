@@ -1,4 +1,4 @@
-name: 'Docker image build'
+name: 'Push to main'
 
 on:
   push:
