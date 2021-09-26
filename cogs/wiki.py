@@ -244,7 +244,7 @@ class Wiki(commands.Cog):
         embed.url += "twilightmenu/custom-dsi-3ds-sfx.html"
         embed.description = "How to use custom background music and sound effects in DSi and 3DS skins for TWiLight Menu++"
         await ctx.send(embed=embed)
-        
+
     @commands.command()
     async def boxartguide(self, ctx):
         """Links to a guide to get Box Art"""
