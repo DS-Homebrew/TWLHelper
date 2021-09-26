@@ -39,7 +39,7 @@ jobs:
             exit
           host: ${{ secrets.SSH_HOST }}
           user: twlhelper
-          key: ${{ secrets.SSH_PRIVATE_KEY}}
+          pass: ${{ secrets.SSH_PRIVATE_KEY}}
       - name: Send webhook on failure
         if: ${{ failure() }}
         continue-on-error: true
