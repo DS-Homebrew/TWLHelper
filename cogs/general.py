@@ -1,7 +1,10 @@
 import discord
+import requests
 
 from discord.ext import commands
 from inspect import cleandoc
+from datetime import datetime
+from pytz import timezone
 
 from utils import check_arg, Literal
 
@@ -18,6 +21,10 @@ class General(commands.Cog):
         embed = discord.Embed(title=title, color=color)
         embed.description = cleandoc(text)
         await ctx.send(embed=embed)
+
+    # this command is a part of Kurisu (https://github.com/nh-server/Kurisu)
+    def netinfo_parse_time(self, timestr):
+        return datetime.strptime(' '.join(timestr.split()), '%A, %B %d, %Y %I :%M %p').replace(tzinfo=timezone('US/Pacific'))
 
     @commands.command(require_var_positional=True)
     async def guide(self, ctx, *guides: Literal("3ds", "wiiu", "vwii", "switch", "nx", "ns", "wii", "dsi")) -> None:  # noqa
@@ -257,6 +264,48 @@ class General(commands.Cog):
         """Image that shows what a root is"""
         embed = discord.Embed()
         embed.set_image(url="https://media.discordapp.net/attachments/489307733074640926/756947922804932739/wherestheroot.png")
+        await ctx.send(embed=embed)
+
+    # this command is a part of Kurisu (https://github.com/nh-server/Kurisu)
+    @commands.command()
+    async def netinfo(self, ctx):
+        j = requests.get('https://www.nintendo.co.jp/netinfo/en_US/status.json?callback=getJSON', timeout=45).json()
+
+        now = datetime.now(timezone('US/Pacific'))
+
+        embed = discord.Embed(title="Network Maintenance Information / Online Status",
+                              url="https://www.nintendo.co.jp/netinfo/en_US/index.html",
+                              description="All times are US/Pacific.")
+        embed.set_footer(text=f"This information was last updated {now.strftime('%A, %B %d, %Y %I:%M %p')}.")
+
+        for status_type in ("operational_statuses", "temporary_maintenances"):
+            descriptor = "Maintenance" if status_type == "temporary_maintenances" else "Status"
+
+            for entry in j[status_type]:
+                if "platform" in entry:
+                    entry_desc = ', '.join(entry["platform"]).replace("nintendo", "Nintendo").replace("web", "Web")
+                else:
+                    entry_desc = 'No console specified.'
+
+                begin = datetime(year=2000, month=1, day=1, tzinfo=timezone('US/Pacific'))
+                end = datetime(year=2099, month=1, day=1, tzinfo=timezone('US/Pacific'))
+                if "begin" in entry:
+                    begin = self.netinfo_parse_time(entry["begin"])
+                    entry_desc += '\nBegins: ' + begin.strftime('%A, %B %d, %Y %I:%M %p')
+                if "end" in entry:
+                    end = self.netinfo_parse_time(entry["end"])
+                    entry_desc += '\nEnds: ' + end.strftime('%A, %B %d, %Y %I:%M %p')
+
+                if now < end:
+                    entry_name = "{} {}: {}".format(
+                        "Current" if begin <= now else "Upcoming",
+                        descriptor,
+                        entry["software_title"].replace(' <br />\r\n', ', ')
+                    )
+                    if "services" in entry:
+                        entry_name += ", " + ', '.join(entry["services"])
+                    embed.add_field(name=entry_name, value=entry_desc, inline=False)
+
         await ctx.send(embed=embed)
 
 
