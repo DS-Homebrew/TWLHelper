@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import discord
+import aiohttp
 import settings
 
 from discord.ext import commands
@@ -28,6 +29,23 @@ class embedHelp(commands.MinimalHelpCommand):
 
 
 class TWLHelper(commands.Bot):
+    def __init__(self, command_prefix, description):
+        intents = discord.Intents(guilds=True, members=True, bans=True, messages=True)
+        allowed_mentions = discord.AllowedMentions(everyone=False, roles=False)
+        activity = discord.Game(settings.STATUS)
+        status = discord.Status.online
+        super().__init__(
+            command_prefix=command_prefix,
+            description=description,
+            intents=intents,
+            allowed_mentions=allowed_mentions,
+            activity=activity,
+            status=status,
+            case_insensitive=True
+        )
+        self.session = aiohttp.ClientSession()
+
+
     def load_cogs(self):
         for cog in cogs:
             try:
@@ -92,11 +110,7 @@ class TWLHelper(commands.Bot):
 
 
 def main():
-    intents = discord.Intents(guilds=True, members=True, bans=True, messages=True)
-
-    bot = TWLHelper(settings.PREFIX, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot",
-                    allowed_mentions=discord.AllowedMentions(everyone=False, roles=False), intents=intents,
-                    case_insensitive=True, status=discord.Status.online, activity=discord.Game(settings.STATUS))
+    bot = TWLHelper(settings.PREFIX, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot")
     bot.help_command = embedHelp()
     print('Starting TWLHelper...')
     bot.load_cogs()
