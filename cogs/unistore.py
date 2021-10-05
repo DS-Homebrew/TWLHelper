@@ -33,24 +33,35 @@ class UniStore(commands.Cog):
             embed.url += appid["systems"][0].lower() + "/"
         embed.url += web_name(appid["title"])
         return embed
-
-    async def udbparse(self, ctx, app="", israndom=False):
-        unistore = None
-        if israndom or app != "":
-            unistore = requests.get("https://raw.githubusercontent.com/Universal-Team/db/master/docs/data/full.json").json()
+    
+    async def udbparse(self, ctx, search="", israndom=False):
+        app = None
+        r = None
+        if israndom or search != "":
+            if israndom:
+                r = requests.get("https://udb-api.lightsage.dev/random")
+            elif search != "":
+                r = requests.get("https://udb-api.lightsage.dev/search/" + search)
+            if r.status_code == 200:
+                app = r.json()
+            elif r.status_code == 422:
+                await ctx.send("HTTP 422: Validation error. Please try again later.")
+                return
+            else:
+                await ctx.send("Unknown response from API. Please try again later.")
+                return
         embed = discord.Embed(title="Universal-DB")
         embed.set_author(name="Universal-Team")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
         embed.description = "A database of DS and 3DS homebrew"
         embed.url = "https://db.universal-team.net/"
-        if israndom == 1:
-            await ctx.send(embed=self.uniembed(embed, unistore[math.floor(random.random() * len(unistore))], "udb"))
+        if israndom:
+            await ctx.send(embed=self.uniembed(embed, app[0], "udb"))
             return
-        if app != "":
-            for appid in unistore:
-                if self.searchdb(app, appid):
-                    await ctx.send(embed=self.uniembed(embed, appid, "udb"))
-                    return
+        if search != "":
+            if app["results"]:
+                await ctx.send(embed=self.uniembed(embed, app["results"][0], "udb"))
+                return
             await ctx.send("App cannot be found. Please try again.")
             return
         await ctx.send(embed=embed)
