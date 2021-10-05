@@ -45,7 +45,6 @@ class TWLHelper(commands.Bot):
         )
         self.session = aiohttp.ClientSession()
 
-
     def load_cogs(self):
         for cog in cogs:
             try:

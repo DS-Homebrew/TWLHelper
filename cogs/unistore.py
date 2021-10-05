@@ -41,12 +41,12 @@ class UniStore(commands.Cog):
                 r = await self.bot.session.get("https://udb-api.lightsage.dev/random")
             elif search != "":
                 r = await self.bot.session.get("https://udb-api.lightsage.dev/search/" + search)
-        if r.status == 200:
-            app = await r.json()
-        elif r.status == 422:
-            return await ctx.send("HTTP 422: Validation error. Please try again later.")
-        elif r.status != 200 or r.status != 422:
-            return await ctx.send("Unknown response from API. Please try again later.")
+            if r.status == 200:
+                app = await r.json()
+            elif r.status == 422:
+                return await ctx.send("HTTP 422: Validation error. Please try again later.")
+            else:
+                return await ctx.send("Unknown response from API. Please try again later.")
         embed = discord.Embed(title="Universal-DB")
         embed.set_author(name="Universal-Team")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
