@@ -117,6 +117,54 @@ class General(commands.Cog):
         embed.description = "How to install Unlaunch on the DSi"
         await ctx.send(embed=embed)
 
+    @commands.group(invoke_without_command=True, case_insensitive=True)
+    async def uninstall(self, ctx):
+        """Links and/or information on uninstalling apps"""
+        await ctx.send_help(ctx.command)
+
+    @uninstall.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
+    async def twilight_uninstall(self, ctx, *, arg=""):
+        """Uninstalling TWiLight Menu++.\n
+        Usage: .uninstall twilight [3ds, dsi, ds]"""
+        systems = ("3ds", "dsi", "ds")
+        embed = discord.Embed(title="TWiLight Menu++ Uninstall Guide")
+        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/uninstalling"
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.description = "How to uninstall TWiLight Menu++"
+        if arg != "":
+            if check_arg(arg, ("3ds",)):
+                embed.url += "-3ds"
+                embed.description += " on the 3DS"
+            elif check_arg(arg, ("dsi", "flashcard", "flashcart", "ds")):
+                embed.url += "-ds"
+                embed.description += " on the DSi and/or flashcards"
+        else:
+            await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in systems])}.")
+            return
+        embed.url += ".html"
+        await ctx.send(embed=embed)
+
+    @uninstall.command(name="unlaunch")
+    async def unlaunch_uninstall(self, ctx):
+        """Uninstalling Unlaunch"""
+        embed = discord.Embed(title="Uninstalling Unlaunch")
+        embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
+        embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
+        embed.url = "https://dsi.cfw.guide/uninstalling-unlaunch.html"
+        embed.description = "How to uninstall Unlaunch on the DSi"
+        await ctx.send(embed=embed)
+
+    @uninstall.command(name="hiyacfw", aliases=["hiya"])
+    async def hiyacfw_uninstall(self, ctx):
+        """Uninstalling hiyaCFW"""
+        embed = discord.Embed(title="Uninstalling hiyaCFW")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/hiyacfw/uninstalling.html"
+        embed.description = "How to uninstall hiyaCFW on the DSi"
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def twlfix(self, ctx):
         """Information on how to fix a broken TWL Partition"""
