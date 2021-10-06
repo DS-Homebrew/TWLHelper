@@ -61,13 +61,19 @@ class UniStore(commands.Cog):
         await ctx.send(embed=embed)
 
     async def skinparse(self, ctx, title, extension, skin="", israndom=False):
-        unistore = None
+        item = None
+        r = None
         if skin != "" or israndom:
-            async with self.bot.session.get("https://skins.ds-homebrew.com/data/full.json") as r:
-                if r.status == 200:
-                    unistore = await r.json()
-                else:
-                    return await ctx.send("Database is unavailable. Please try again later.")
+            if israndom:
+                r = await self.bot.session.get("https://twlmenu-extras.api.hansol.ca/random/" + extension)
+            elif skin != "":
+                r = await self.bot.session.get("https://twlmenu-extras.api.hansol.ca/search/" + extension + "/" + skin)
+            if r.status == 200:
+                item = await r.json()
+            elif r.status == 422:
+                return await ctx.send("HTTP 422: Validation error. Please try again later.")
+            else:
+                return await ctx.send("Unknown response from API. Please try again later.")
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew")
         if extension == "Unlaunch":
@@ -83,17 +89,12 @@ class UniStore(commands.Cog):
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/3ds.png")
             embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
         embed.url = "https://skins.ds-homebrew.com/" + web_name(extension) + "/"
-        if israndom == 1:
-            unistore = [item for item in unistore if item["console"] == extension]
-            await ctx.send(embed=self.uniembed(embed, unistore[math.floor(random.random() * len(unistore))], "skin"))
-            return
+        if israndom:
+            return await ctx.send(embed=self.uniembed(embed, item[0], "skin"))
         if skin != "":
-            for skinid in unistore:
-                if self.searchdb(skin, skinid) and skinid["console"] == extension:
-                    await ctx.send(embed=self.uniembed(embed, skinid, "skin"))
-                    return
-            await ctx.send("Skin cannot be found. Please try again.")
-            return
+            if item["results"]:
+                return await ctx.send(embed=self.uniembed(embed, item["results"][0], "skin"))
+            return await ctx.send("Skin cannot be found. Please try again.")
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["universaldb"])
