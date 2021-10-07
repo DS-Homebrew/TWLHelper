@@ -33,8 +33,8 @@ class Mod(commands.Cog):
             raise commands.NoPrivateMessage()
         return True
 
-    @is_staff()
     @commands.command()
+    @commands.check_any(commands.is_owner(), is_staff())
     async def load(self, ctx, *, module: str):
         """Loads a Cog."""
         try:
@@ -45,8 +45,8 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
 
-    @is_staff()
     @commands.command()
+    @commands.check_any(commands.is_owner(), is_staff())
     async def unload(self, ctx, *, module: str):
         """Unloads a Cog."""
         try:
@@ -60,8 +60,8 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
 
-    @is_staff()
     @commands.command(name='reload')
+    @commands.check_any(commands.is_owner(), is_staff())
     async def reload(self, ctx, *, module: str):
         """Reloads a Cog."""
         try:
@@ -72,8 +72,8 @@ class Mod(commands.Cog):
         except Exception as e:
             await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
 
-    @is_staff()
     @commands.command()
+    @commands.check_any(commands.is_owner(), is_staff())
     async def speak(self, ctx, channel: discord.TextChannel, *, inp):
         await channel.send(inp, allowed_mentions=discord.AllowedMentions(everyone=True, roles=True))
 
