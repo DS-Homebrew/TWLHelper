@@ -28,7 +28,8 @@ class General(commands.Cog):
 
     @commands.command(require_var_positional=True)
     async def guide(self, ctx, *guides: Literal("3ds", "wiiu", "vwii", "switch", "nx", "ns", "wii", "dsi")) -> None:  # noqa
-        """Links to the recommended guides"""
+        """Links to the recommended guides.
+        Usage: guide <3ds, wiiu, vwii, switch, wii, dsi>"""
         embed = discord.Embed(title="Guide")
         for x in guides:
             if check_arg(x, '3ds'):
@@ -217,7 +218,8 @@ class General(commands.Cog):
 
     @commands.command()
     async def dump(self, ctx, system: Literal('3ds', 'dsi', 'dsiware')):  # noqa
-        """How to dump games and data for CFW consoles"""
+        """How to dump games and data for CFW consoles.
+        Usage: dump <3ds, dsi, dsiware>"""
         if check_arg(system, '3ds'):
             embed = discord.Embed(title="GodMode9 Dump Guide")
             embed.set_author(name="Nintendo Homebrew & Plailect")
@@ -317,6 +319,7 @@ class General(commands.Cog):
     # this command is a part of Kurisu (https://github.com/nh-server/Kurisu)
     @commands.command()
     async def netinfo(self, ctx):
+        """Description of Nintendo Network status"""
         j = requests.get('https://www.nintendo.co.jp/netinfo/en_US/status.json?callback=getJSON', timeout=45).json()
 
         now = datetime.now(timezone('US/Pacific'))

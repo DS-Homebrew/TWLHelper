@@ -45,6 +45,8 @@ class Wiki(commands.Cog):
 
     @faq.command(name="twilight", aliases=["twl", "twlmenu", "twilightmenu"])
     async def twilight_faq(self, ctx, *, arg=""):
+        """TWiLight Menu Frequently Asked Questions.
+        Usage: faq twilight [search parameter]"""
         embed = self.embed("TWiLight Menu++ FAQ")
         embed.title = "TWiLight Menu++ FAQ"
         embed.url += "twilightmenu/faq.html"
@@ -63,6 +65,8 @@ class Wiki(commands.Cog):
 
     @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
     async def ndsbootstrap(self, ctx, *, arg=""):
+        """nds-bootstrap Frequently Asked Questions.
+        Usage: faq ndsbootstrap [search parameter]"""
         embed = self.embed("nds-bootstrap FAQ")
         embed.url += "nds-bootstrap/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
@@ -80,6 +84,8 @@ class Wiki(commands.Cog):
 
     @faq.command(aliases=["gbar2"])
     async def gbarunner2(self, ctx, *, arg=""):
+        """TWiLight Menu Frequently Asked Questions.
+        Usage: faq gbarunner2 [search parameter]"""
         embed = self.embed("GBARunner2 FAQ")
         embed.url += "gbarunner2/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
@@ -97,6 +103,8 @@ class Wiki(commands.Cog):
 
     @faq.command(aliases=["hiya"])
     async def hiyacfw(self, ctx, *, arg=""):
+        """TWiLight Menu Frequently Asked Questions.
+        This does not have a FAQ search function."""
         embed = self.embed("hiyaCFW FAQ")
         embed.url += "hiyacfw/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
@@ -109,6 +117,8 @@ class Wiki(commands.Cog):
 
     @update.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
     async def twilight_update(self, ctx, *, arg=""):
+        """TWiLight Menu update guide.
+        Usage: update twilight [3ds, dsi, ds]"""
         embed = self.embed("TWiLight Menu++ Update Guide")
         embed.url += "twilightmenu/updating"
         embed.description = "How to update TWiLight Menu++"
@@ -231,10 +241,13 @@ class Wiki(commands.Cog):
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def bios(self, ctx):
+        """BIOS info page"""
         await ctx.send_help(ctx.command)
 
     @bios.command()
     async def gba(self, ctx, arg=""):
+        """GBA BIOS Info/dump page.
+        Usage: bios gba [nds, gba, 3ds, wii]"""
         embed = self.embed("GBA BIOS Info")
         embed.url += "gbarunner2/bios.html"
         embed.description = "Information on the GBA BIOS and how to dump it"
@@ -260,6 +273,7 @@ class Wiki(commands.Cog):
 
     @bios.command()
     async def nds(self, ctx):
+        """NDS BIOS Dumping"""
         embed = discord.Embed(title="Dumping NDS BIOS")
         embed.set_author(name="Arisotura")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/1311867?v=4")
