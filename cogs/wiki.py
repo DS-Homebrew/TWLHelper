@@ -271,7 +271,7 @@ class Wiki(commands.Cog):
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/12349638?v=4")
         await ctx.send(embed=embed)
 
-    @bios.command()
+    @bios.command(aliases=["ds", "dsi"])
     async def nds(self, ctx):
         """NDS BIOS Dumping"""
         embed = discord.Embed(title="Dumping NDS BIOS")
