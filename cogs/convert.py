@@ -647,7 +647,7 @@ class Convert(commands.Cog):
     @commands.command()
     async def dsmp4(self, ctx, filelink=None):
         """
-        Converts an attached, or linked, video to a MPEG4 Player for DSi Video
+        Converts an attached, or linked, video to a DSi Video for MPEG4 Player
         """
         self.check_dir()
         supported = False
