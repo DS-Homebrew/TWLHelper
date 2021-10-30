@@ -5,6 +5,7 @@ from discord.ext import commands
 from inspect import cleandoc
 from datetime import datetime
 from pytz import timezone
+from urllib import parse
 
 from utils import check_arg, Literal
 
@@ -358,6 +359,33 @@ class General(commands.Cog):
                     embed.add_field(name=entry_name, value=entry_desc, inline=False)
 
         await ctx.send(embed=embed)
+
+    @commands.command()
+    async def gamebrew(self, ctx, *args):
+        """Searches for an app on GameBrew"""
+
+        if len(args) == 0:
+            embed = discord.Embed()
+            embed.title = "GameBrew"
+            embed.description = "A wiki dedicated to Video Game Homebrew."
+            embed.set_author(name="GameBrew", icon_url="https://www.gamebrew.org/images/logo3.png")
+            embed.url = "https://www.gamebrew.org/wiki/Main_Page"
+            return await ctx.send(embed=embed)
+
+        r = requests.get(f"https://www.gamebrew.org/api.php?action=opensearch&limit=1&namespace=0&format=json&redirects=resolve&search={parse.quote(' '.join(args))}")
+        if r.status_code != 200:
+            return await ctx.send(f"Error {r.status_code}! Failed to connect to GameBrew API")
+
+        apiData = r.json()
+
+        if len(apiData[1]) > 0:
+            embed = discord.Embed()
+            embed.title = apiData[1][0]
+            embed.set_author(name="GameBrew", icon_url="https://www.gamebrew.org/images/logo3.png")
+            embed.url = apiData[3][0]
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("App cannot be found. Please try again.")
 
 
 def setup(bot):
