@@ -317,6 +317,18 @@ class General(commands.Cog):
         embed.set_image(url="https://media.discordapp.net/attachments/489307733074640926/756947922804932739/wherestheroot.png")
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def sdlock(self, ctx):
+        """Disable write protection on an SD Card"""
+        embed = discord.Embed(title="Disable write protection on an SD Card")
+        embed.description = cleandoc("""
+                                     This switch on the SD Card should be facing upwards, as in this photo. Otherwise, \
+your device will refuse to write to it.
+                                     *If it is write locked, your console and other applications may behave unexpectedly.*
+                                     """)
+        embed.set_image(url="https://i.imgur.com/RvKjWcz.png")
+        await ctx.send(embed=embed)
+
     # this command is a part of Kurisu (https://github.com/nh-server/Kurisu)
     @commands.command()
     async def netinfo(self, ctx):
