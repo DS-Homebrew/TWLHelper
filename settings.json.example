@@ -8,5 +8,9 @@
     "MODERATOR": [
         "Da Master",
         "Admin"
-    ]
+    ],
+
+    "CHANNEL": {
+        "NINUPDATES": null
+    }
 }

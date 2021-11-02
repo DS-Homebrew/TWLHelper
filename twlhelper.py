@@ -15,7 +15,8 @@ cogs = [
     'cogs.wiki',
     'cogs.mod',
     'cogs.convert',
-    'cogs.unistore'
+    'cogs.unistore',
+    'cogs.rss'
 ]
 
 
