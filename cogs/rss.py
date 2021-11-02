@@ -36,18 +36,23 @@ class RSS(commands.Cog):
         digestnext = hashlib.sha256(raw_bytes).digest()
         if digestprev == digestnext:
             return
-
         f.close()
+
+        consoles = [
+            'Old3DS',
+            'New3DS'
+        ]
+
         f = open('ninupdates.xml', 'r')
         ninupdates_feed = feedparser.parse(raw_bytes)
         ninupdates_old = feedparser.parse(f.read())
         for entry in ninupdates_feed['entries']:
             system, ver = entry['title'].split()
-            if system == 'Switch':
+            if system not in consoles:
                 continue
             for entryold in ninupdates_old['entries']:
                 systemold, verold = entryold['title'].split()
-                if systemold == 'Switch':
+                if systemold not in consoles:
                     continue
                 elif system == systemold and ver != verold:
                     channel = self.bot.get_channel(settings.NINUPDATE)
