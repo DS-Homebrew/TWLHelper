@@ -8,9 +8,9 @@ from inspect import cleandoc
 
 import settings
 
+
 class RSS(commands.Cog):
     """RSS feeds"""
-
 
     def __init__(self, bot):
         self.bot = bot
