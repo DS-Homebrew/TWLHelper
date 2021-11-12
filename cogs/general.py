@@ -180,7 +180,7 @@ class General(commands.Cog):
         """How to access TWiLight Menu++ Settings"""
         embed = discord.Embed(title="How to access TWiLight Menu++ Settings")
         embed.description = "The way to access the TWiLight Menu++ settings varies between your configuration."
-        embed.add_field(name="DS Classic Menu", value=cleandoc("""Hit the button on the very bottom"""), inline=False)
+        embed.add_field(name="DS Classic Menu", value=cleandoc("""Hit the DS icon at the bottom of the lower screen"""), inline=False)
         embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher themes using SELECT Menu", value=cleandoc("""Hit SELECT, then launch the Settings Applet (use the D-PAD to highlight options)"""), inline=False)
         embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher themes not using SELECT Menu", value=cleandoc("""Hitting SELECT will bring you to the DS Classic Menu"""), inline=False)
         embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Use the touch screen to touch the wrench"""), inline=False)
