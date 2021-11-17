@@ -20,6 +20,11 @@ class Convert(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    async def cog_check(self, ctx):
+        if ctx.guild is None:
+            raise commands.NoPrivateMessage()
+        return True
+
     def check_dir(self):
         if not os.path.isdir("downloads"):
             os.mkdir("downloads")
