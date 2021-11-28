@@ -29,7 +29,10 @@ class Wiki(commands.Cog):
                 line = file[iter]
             else:
                 break
-        return re.sub("##### (.*)", "**\\1**", out)
+
+        out = re.sub("##### (.*)", "**\\1**", out)  # Change h5 to bold
+        out = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", out)  # Change kbd to inline code
+        return out
 
     def embed(self, title):
         embed = discord.Embed(title=title)
