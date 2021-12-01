@@ -195,16 +195,17 @@ class Wiki(commands.Cog):
                 return await ctx.send("Invalid rule number. Please try again.")
             page = requests.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/community/discord-rules.md").text
             numstr = str(num)
-            embed.title = "Rule " + numstr
+            embed.set_thumbnail(url=discord.Embed.Empty)
+            embed.set_author(name="")
+            embed.url = discord.Embed.Empty
             rulepage = page.splitlines()
             iter = 0
             rulenum = "### " + numstr
             for rule in rulepage:
                 iter += 1
                 if rulenum in rule.lower():
-                    title = rule[4:]
-                    embed.url += "#" + web_name(title)
-                    embed.description = "**" + title + "**" + "\n" + self.read_rule(rulepage, iter)
+                    embed.title = "Rule " + rule[4:]
+                    embed.description = self.read_rule(rulepage, iter)
                     break
         await ctx.send(embed=embed)
 
