@@ -3,6 +3,7 @@ import requests
 import re
 
 from discord.ext import commands
+from typing import Optional
 from utils.utils import check_arg, web_name
 
 
@@ -33,6 +34,19 @@ class Wiki(commands.Cog):
         out = re.sub("##### (.*)", "**\\1**", out)  # Change h5 to bold
         out = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", out)  # Change kbd to inline code
         return out
+
+    def read_rule(self, file, iter):
+        line = file[iter]
+        out = ""
+        iter += 1
+        while ("### " not in line and "## " not in line) or "####" in line:
+            out += '\n' + file[iter]
+            iter += 1
+            if iter < len(file):
+                line = file[iter]
+            else:
+                break
+        return re.sub("#### (.*)", "**\\1**", out)
 
     def embed(self, title):
         embed = discord.Embed(title=title)
@@ -171,11 +185,27 @@ class Wiki(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["serverrules", "discordrules"])
-    async def rules(self, ctx):
-        """Links to the DSi hardmod guide"""
+    async def rule(self, ctx, num: Optional[int]):
+        """Links to the server rules"""
         embed = self.embed("DS⁽ⁱ⁾ Mode Hacking Rules")
         embed.url += "community/discord-rules.html"
         embed.description = "The rules for the DS⁽ⁱ⁾ Mode Hacking Discord server"
+        if num:
+            if num < 0 or num > 12:
+                return await ctx.send("Invalid rule number. Please try again.")
+            page = requests.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/community/discord-rules.md").text
+            numstr = str(num)
+            embed.title = "Rule " + numstr
+            rulepage = page.splitlines()
+            iter = 0
+            rulenum = "### " + numstr
+            for rule in rulepage:
+                iter += 1
+                if rulenum in rule.lower():
+                    title = rule[4:]
+                    embed.url += "#" + web_name(title)
+                    embed.description = "**" + title + "**" + "\n" + self.read_rule(rulepage, iter)
+                    break
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["discordinfo"])
