@@ -11,15 +11,6 @@ class UniStore(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def searchdb(self, query, id):
-        # regex escape
-        query = re.sub(r"([-\/\\^$*+?.()|[\]{}])", r"\\\1", query)
-        # make fuzzy
-        query = re.sub(r"(\\?.)", r"\1.*", query)  # put .* between everything
-        query = re.sub(r"\\-|_| ", r"[-_ ]", query)  # make - _ and space the same
-        # try match
-        return len(re.findall(query, id["title"], flags=re.IGNORECASE)) > 0
-
     def uniembed(self, embed, appid, store):
         embed.title = appid["title"]
         embed.color = int(appid['color'][1:], 16) if 'color' in appid else discord.Embed.Empty
