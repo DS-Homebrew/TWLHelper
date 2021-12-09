@@ -1,5 +1,4 @@
 import discord
-import re
 
 from discord.ext import commands
 from utils.utils import web_name
