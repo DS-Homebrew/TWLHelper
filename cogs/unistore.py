@@ -35,7 +35,7 @@ class UniStore(commands.Cog):
                 return await ctx.send("HTTP 422: Validation error. Please try again later.")
             else:
                 return await ctx.send("Unknown response from API. Please try again later.")
-        embed = discord.Embed(title="Universal-DB")
+        embed = discord.Embed(title="Universal-DB", colour=discord.Colour.from_rgb(7, 47, 79))
         embed.set_author(name="Universal-Team")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
         embed.description = "A database of DS and 3DS homebrew"
