@@ -101,7 +101,7 @@ class Wiki(commands.Cog):
 
     @faq.command(aliases=["gbar2"])
     async def gbarunner2(self, ctx, *, arg=""):
-        """TWiLight Menu Frequently Asked Questions.
+        """GBARunner2 Frequently Asked Questions.
         Usage: faq gbarunner2 [search parameter]"""
         embed = self.embed("GBARunner2 FAQ")
         embed.url += "gbarunner2/faq.html"
@@ -118,9 +118,28 @@ class Wiki(commands.Cog):
                     embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
         await ctx.send(embed=embed)
 
+    @faq.command(aliases=["gm9i"])
+    async def godmode9i(self, ctx, *, arg=""):
+        """GodMode9i Frequently Asked Questions.
+        Usage: faq godmode9i [search parameter]"""
+        embed = self.embed("GodMode9i FAQ")
+        embed.url += "godmode9i/faq.html"
+        embed.description = "Frequently Asked Questions & Troubleshooting"
+        if arg != "":
+            page = requests.get(self.git_name("godmode9i")).text
+            faqpage = page.splitlines()
+            iter = 0
+            for faq in faqpage:
+                iter += 1
+                if arg.lower() in faq.lower() and "#### " in faq.lower():
+                    title = faq[5:]
+                    embed.url += "?faq=" + web_name(title)
+                    embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
+        await ctx.send(embed=embed)
+
     @faq.command(aliases=["hiya"])
     async def hiyacfw(self, ctx, *, arg=""):
-        """TWiLight Menu Frequently Asked Questions.
+        """hiyaCFW Frequently Asked Questions.
         This does not have a FAQ search function."""
         embed = self.embed("hiyaCFW FAQ")
         embed.url += "hiyacfw/faq.html"
