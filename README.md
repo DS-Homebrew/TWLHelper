@@ -6,6 +6,7 @@
 1. Set your bot's token ID.
     - You will need to create a bot over at [Discord Developer Portal](https://discord.com/developers/applications).
 1. You can also set other arguments in `settings.json`, such as command prefix, account status, and moderator roles.
+    - It is recommended to use IDs rather than names for Moderator Roles to make sure jishaku can't be hijacked.
 1. Install the following for your host:
     - Python 3.9.x (and its respective pip)
         - This must be 3.9.x as exception parser is broken as of 3.10.x.

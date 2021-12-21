@@ -5,6 +5,8 @@
         "PREFIX": "."
     },
 
+    "GUILD": "",
+
     "MODERATOR": [
         "Da Master",
         "Admin"
