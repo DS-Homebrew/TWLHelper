@@ -18,7 +18,7 @@
 
 import discord
 from discord.ext import commands
-from utils.utils import is_staff, is_dsi_staff
+from utils.utils import is_staff
 
 
 class Mod(commands.Cog):
@@ -34,7 +34,7 @@ class Mod(commands.Cog):
         return True
 
     @commands.command()
-    @commands.check_any(commands.is_owner(), is_dsi_staff())
+    @commands.is_owner()
     async def load(self, ctx, *, module: str):
         """Loads a Cog."""
         try:
@@ -46,7 +46,7 @@ class Mod(commands.Cog):
             await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
 
     @commands.command()
-    @commands.check_any(commands.is_owner(), is_dsi_staff())
+    @commands.is_owner()
     async def unload(self, ctx, *, module: str):
         """Unloads a Cog."""
         try:
@@ -61,7 +61,7 @@ class Mod(commands.Cog):
             await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
 
     @commands.command(name='reload')
-    @commands.check_any(commands.is_owner(), is_dsi_staff())
+    @commands.is_owner()
     async def reload(self, ctx, *, module: str):
         """Reloads a Cog."""
         try:

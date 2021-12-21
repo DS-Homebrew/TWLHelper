@@ -70,12 +70,6 @@ def is_staff():
     return commands.check(predicate)
 
 
-def is_dsi_staff():
-    def predicate(ctx):
-        return any((role.id in settings.staff_roles or role.name in settings.staff_roles) for role in ctx.message.author.roles)
-    return commands.check(predicate)
-
-
 def check_arg(argument: str, arg) -> bool:
     """Helper util to check if an argument is in a sequence.
 
