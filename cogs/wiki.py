@@ -35,7 +35,7 @@ class Wiki(commands.Cog):
         out = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", out)  # Change kbd to inline code
         return out
 
-    def read_rule(self, file, iter):
+    def read_rule(self, ctx, file, iter):
         line = file[iter]
         out = ""
         iter += 1
@@ -46,7 +46,9 @@ class Wiki(commands.Cog):
                 line = file[iter]
             else:
                 break
-        return re.sub("#### (.*)", "**\\1**", out)
+        out = re.sub("#### (.*)", "**\\1**", out)
+        out = re.sub(r"\[#.+?\]\(.+?\/(\d+)\)", "<#\\1>", out)
+        return out
 
     def embed(self, title):
         embed = discord.Embed(title=title)
@@ -209,24 +211,24 @@ class Wiki(commands.Cog):
         embed = self.embed("DS⁽ⁱ⁾ Mode Hacking Rules")
         embed.url += "community/discord-rules.html"
         embed.description = "The rules for the DS⁽ⁱ⁾ Mode Hacking Discord server"
-        if num:
+        if not num:
+            await ctx.send(embed=embed)
+        else:
             if num < 0 or num > 12:
                 return await ctx.send("Invalid rule number. Please try again.")
             page = requests.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/community/discord-rules.md").text
             numstr = str(num)
-            embed.set_thumbnail(url=discord.Embed.Empty)
-            embed.set_author(name="")
-            embed.url = discord.Embed.Empty
             rulepage = page.splitlines()
+            message = ""
             iter = 0
             rulenum = "### " + numstr
             for rule in rulepage:
                 iter += 1
                 if rulenum in rule.lower():
-                    embed.title = "Rule " + rule[4:]
-                    embed.description = self.read_rule(rulepage, iter)
+                    message = "**Rule " + rule[4:] + "**\n"
+                    message += self.read_rule(ctx, rulepage, iter)
                     break
-        await ctx.send(embed=embed)
+            await ctx.send(message)
 
     @commands.command(aliases=["discordinfo"])
     async def serverinfo(self, ctx):
