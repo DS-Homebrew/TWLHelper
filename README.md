@@ -7,7 +7,8 @@
     - You will need to create a bot over at [Discord Developer Portal](https://discord.com/developers/applications).
 1. You can also set other arguments in `settings.json`, such as command prefix, account status, and moderator roles.
 1. Install the following for your host:
-    - Python 3.8 or later (and its respective pip)
+    - Python 3.9.x (and its respective pip)
+        - This must be 3.9.x as exception parser is broken as of 3.10.x.
     - gifsicle 1.92 or later
     - ffmpeg
 1. Run `pip install -r requirements.txt`
