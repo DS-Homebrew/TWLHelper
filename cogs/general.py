@@ -28,52 +28,46 @@ class General(commands.Cog):
         return datetime.strptime(' '.join(timestr.split()), '%A, %B %d, %Y %I :%M %p').replace(tzinfo=timezone('US/Pacific'))
 
     @commands.command(require_var_positional=True)
-    async def guide(self, ctx, *guides: Literal("3ds", "wiiu", "vwii", "switch", "nx", "ns", "wii", "dsi")) -> None:  # noqa
+    async def guide(self, ctx, guide: Literal("3ds", "wiiu", "vwii", "switch", "wii", "dsi")) -> None:  # noqa
         """Links to the recommended guides.
         Usage: guide <3ds, wiiu, vwii, switch, wii, dsi>"""
         embed = discord.Embed(title="Guide")
-        for x in guides:
-            if check_arg(x, '3ds'):
-                embed.set_author(name="Nintendo Homebrew & Plailect")
-                embed.set_thumbnail(url="https://nintendohomebrew.com/assets/img/nhplai.png")
-                embed.url = "https://3ds.hacks.guide/"
-                embed.description = "A complete guide to 3DS custom firmware, from stock to boot9strap"
-                await ctx.send(embed=embed)
-                continue
-            if check_arg(x, ('wiiu',)):
-                embed.set_author(name="Nintendo Homebrew")
-                embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
-                embed.url = "https://wiiu.hacks.guide/"
-                embed.description = "A guide collaboration between Nintendo Homebrew’s Helpers and Staff, from stock to CBHC custom firmware"
-                await ctx.send(embed=embed)
-                continue
-            if check_arg(x, ('vwii',)):
-                embed.set_author(name="Nintendo Homebrew")
-                embed.set_thumbnail(url="https://i.imgur.com/FclGzNz.png")
-                embed.url = "https://wiiu.hacks.guide/#/vwii-modding"
-                embed.description = "vWii modding guide"
-                await ctx.send(embed=embed)
-                continue
-            if check_arg(x, ('switch', 'nx', 'ns')):
-                embed.set_author(name="Nintendo Homebrew")
-                embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
-                embed.url = "https://switchgui.de/switch-guide/"
-                embed.description = "A guide collaboration between Nintendo Homebrew's Helpers and Staff, from stock to Atmosphere"
-                await ctx.send(embed=embed)
-                continue
-            if check_arg(x, 'wii'):
-                embed.set_author(name="RiiConnect24")
-                embed.set_thumbnail(url="https://i.imgur.com/KI6IXmm.png")
-                embed.url = "https://wii.guide/"
-                embed.description = "The complete guide to modding your Nintendo Wii"
-                await ctx.send(embed=embed)
-                continue
-            if check_arg(x, 'dsi'):
-                embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
-                embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
-                embed.url = "https://dsi.cfw.guide/"
-                embed.description = "The complete guide to modding your Nintendo DSi"
-                await ctx.send(embed=embed)
+        if check_arg(guide, '3ds'):
+            embed.set_author(name="Nintendo Homebrew & Plailect")
+            embed.set_thumbnail(url="https://nintendohomebrew.com/assets/img/nhplai.png")
+            embed.url = "https://3ds.hacks.guide/"
+            embed.description = "A complete guide to 3DS custom firmware, from stock to boot9strap"
+            await ctx.send(embed=embed)
+        elif check_arg(guide, ('wiiu',)):
+            embed.set_author(name="Nintendo Homebrew")
+            embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
+            embed.url = "https://wiiu.hacks.guide/"
+            embed.description = "A guide collaboration between Nintendo Homebrew’s Helpers and Staff, from stock to CBHC custom firmware"
+            await ctx.send(embed=embed)
+        elif check_arg(guide, ('vwii',)):
+            embed.set_author(name="Nintendo Homebrew")
+            embed.set_thumbnail(url="https://i.imgur.com/FclGzNz.png")
+            embed.url = "https://wiiu.hacks.guide/#/vwii-modding"
+            embed.description = "vWii modding guide"
+            await ctx.send(embed=embed)
+        elif check_arg(guide, ('switch')):
+            embed.set_author(name="Nintendo Homebrew")
+            embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
+            embed.url = "https://switchgui.de/switch-guide/"
+            embed.description = "A guide collaboration between Nintendo Homebrew's Helpers and Staff, from stock to Atmosphere"
+            await ctx.send(embed=embed)
+        elif check_arg(guide, 'wii'):
+            embed.set_author(name="RiiConnect24")
+            embed.set_thumbnail(url="https://i.imgur.com/KI6IXmm.png")
+            embed.url = "https://wii.guide/"
+            embed.description = "The complete guide to modding your Nintendo Wii"
+            await ctx.send(embed=embed)
+        elif check_arg(guide, 'dsi'):
+            embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
+            embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
+            embed.url = "https://dsi.cfw.guide/"
+            embed.description = "The complete guide to modding your Nintendo DSi"
+            await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def install(self, ctx):
