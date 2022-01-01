@@ -1,5 +1,4 @@
 import discord
-import requests
 
 from discord.ext import commands
 from inspect import cleandoc
@@ -327,8 +326,12 @@ your device will refuse to write to it.
     @commands.command()
     async def netinfo(self, ctx):
         """Description of Nintendo Network status"""
-        j = requests.get('https://www.nintendo.co.jp/netinfo/en_US/status.json?callback=getJSON', timeout=45).json()
-
+        j = None
+        r = await self.bot.session.get('https://www.nintendo.co.jp/netinfo/en_US/status.json?callback=getJSON', timeout=45)
+        if r.status == 200:
+            j = await r.json()
+        else:
+            return await ctx.send("Could not receive data from Nintendo. Please try again later.")
         now = datetime.now(timezone('US/Pacific'))
 
         embed = discord.Embed(title="Network Maintenance Information / Online Status",
@@ -378,11 +381,11 @@ your device will refuse to write to it.
             embed.url = "https://www.gamebrew.org/wiki/Main_Page"
             return await ctx.send(embed=embed)
 
-        r = requests.get(f"https://www.gamebrew.org/api.php?action=opensearch&limit=1&namespace=0&format=json&redirects=resolve&search={parse.quote(' '.join(args))}")
-        if r.status_code != 200:
-            return await ctx.send(f"Error {r.status_code}! Failed to connect to GameBrew API")
+        r = await self.bot.session.get(f"https://www.gamebrew.org/api.php?action=opensearch&limit=1&namespace=0&format=json&redirects=resolve&search={parse.quote(' '.join(args))}")
+        if r.status != 200:
+            return await ctx.send(f"Error {r.status}! Failed to connect to GameBrew API")
 
-        apiData = r.json()
+        apiData = await r.json()
 
         if len(apiData[1]) > 0:
             embed = discord.Embed()
