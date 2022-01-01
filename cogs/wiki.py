@@ -22,30 +22,29 @@ class Wiki(commands.Cog):
         else:
             return await ctx.send(embed=embed)
         faqpage = page.splitlines()
-        original_url = embed.url
         iter = 0
+        field_title = None
         for faq in faqpage:
             iter += 1
             if arg.lower() in faq.lower() and "#### " in faq.lower():
-                title = faq[5:]
-                embed.url += "?faq=" + web_name(title)
-                embed.description = "**" + title + "**" + "\n"
+                field_title = faq[5:]
+                embed.url += "?faq=" + web_name(field_title)
+                embed.description = discord.Embed.Empty
                 break
-        if original_url == embed.url:
+        if embed.description != discord.Embed.Empty:
             return await ctx.send(embed=embed)
         line = faqpage[iter]
-        out = ""
+        field_description = ""
         while "#### " not in line or "#####" in line:
-            out += '\n' + faqpage[iter]
+            field_description += '\n' + faqpage[iter]
             iter += 1
             if iter < len(faqpage):
                 line = faqpage[iter]
             else:
                 break
-
-        out = re.sub("##### (.*)", "**\\1**", out)  # Change h5 to bold
-        out = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", out)  # Change kbd to inline code
-        embed.description += out
+        field_description = re.sub("##### (.*)", "**\\1**", field_description)  # Change h5 to bold
+        field_description = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", field_description)  # Change kbd to inline code
+        embed.add_field(name=field_title, value=field_description)
         await ctx.send(embed=embed)
 
     def read_glossary(self, file, iter):
@@ -58,7 +57,6 @@ class Wiki(commands.Cog):
                 line = file[iter]
             else:
                 break
-
         out = re.sub("#### (.*)", "**\\1**", out)  # Change h4 to bold
         out = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", out)  # Change kbd to inline code
         return out
@@ -224,7 +222,8 @@ class Wiki(commands.Cog):
                 if arg.lower() in item.lower() and "### " in item.lower():
                     title = item[4:]
                     embed.url += "#" + web_name(title)
-                    embed.description = "**" + title + "**" + "\n" + self.read_glossary(glossary, iter)
+                    embed.description = discord.Embed.Empty
+                    embed.add_field(name=title, value=self.read_glossary(glossary, iter))
                     break
             await ctx.send(embed=embed)
 
