@@ -111,7 +111,7 @@ class Wiki(commands.Cog):
         embed.description = "Frequently Asked Questions & Troubleshooting"
         if arg == "":
             await ctx.send(embed=embed)
-        if arg != "":
+        else:
             await self.read_faq(ctx, "nds-bootstrap", arg, embed)
 
     @faq.command(aliases=["gbar2"])
@@ -333,24 +333,25 @@ class Wiki(commands.Cog):
         embed = self.embed("GBA BIOS Info")
         embed.url += "gbarunner2/bios.html"
         embed.description = "Information on the GBA BIOS and how to dump it"
-        if arg == "nds" or arg == "gba" or arg == "flashcard" or arg == "flashcart":
-            embed.title = "Dumping GBA BIOS from a DS"
-            embed.description = "Also dump from a GBA"
-            embed.url = "https://glazedbelmont.github.io/gbabiosdump/#gameboy-advance-sp-micro-ds-ds-lite.html"
-            embed.set_author(name="GlaZed Belmont")
-            embed.set_thumbnail(url="https://raw.githubusercontent.com/GlaZedBelmont/GlaZedBelmont.github.io/master/img/glazed.png")
-        elif arg == "3ds":
-            embed.title = "Dumping GBA BIOS from a 3DS"
-            embed.description = "Tutorial to dump a GBA BIOS from a 3DS VC title"
-            embed.url = "https://glazedbelmont.github.io/gbabiosdump/#virtual-console-title-from-a-3ds.html"
-            embed.set_author(name="GlaZed Belmont")
-            embed.set_thumbnail(url="https://raw.githubusercontent.com/GlaZedBelmont/GlaZedBelmont.github.io/master/img/glazed.png")
-        elif arg == "wii" or arg == "linkcable":
-            embed.title = "Dumping GBA BIOS from a Wii"
-            embed.description = "How to dump a GBA BIOS from a Wii or GameCube"
-            embed.url = "https://github.com/FIX94/gba-link-cable-dumper"
-            embed.set_author(name="FIX94")
-            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/12349638?v=4")
+        if arg != "":
+            if check_arg(arg, ("nds", "gba", "flashcard", "flashcart")):
+                embed.title = "Dumping GBA BIOS from a DS"
+                embed.description = "Also dump from a GBA"
+                embed.url = "https://glazedbelmont.github.io/gbabiosdump/#gameboy-advance-sp-micro-ds-ds-lite.html"
+                embed.set_author(name="GlaZed Belmont")
+                embed.set_thumbnail(url="https://raw.githubusercontent.com/GlaZedBelmont/GlaZedBelmont.github.io/master/img/glazed.png")
+            elif check_arg(arg, "3ds"):
+                embed.title = "Dumping GBA BIOS from a 3DS"
+                embed.description = "Tutorial to dump a GBA BIOS using open_agb_firm"
+                embed.url = "https://glazedbelmont.github.io/gbabiosdump/#virtual-console-title-from-a-3ds.html"
+                embed.set_author(name="GlaZed Belmont")
+                embed.set_thumbnail(url="https://raw.githubusercontent.com/GlaZedBelmont/GlaZedBelmont.github.io/master/img/glazed.png")
+            elif check_arg(arg, ("wii", "linkcable")):
+                embed.title = "Dumping GBA BIOS from a Wii"
+                embed.description = "How to dump a GBA BIOS from a Wii or GameCube"
+                embed.url = "https://github.com/FIX94/gba-link-cable-dumper"
+                embed.set_author(name="FIX94")
+                embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/12349638?v=4")
         await ctx.send(embed=embed)
 
     @bios.command(aliases=["ds", "dsi"])
