@@ -1,5 +1,4 @@
 import discord
-import requests
 import re
 
 from discord.ext import commands
@@ -20,7 +19,7 @@ class Wiki(commands.Cog):
         url = "https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/" + name + "/faq.md"
         return url
 
-    def read_to_next(self, file, iter):
+    def read_faq(self, file, iter):
         line = file[iter]
         out = ""
         while "#### " not in line or "#####" in line:
@@ -82,11 +81,17 @@ class Wiki(commands.Cog):
         """TWiLight Menu Frequently Asked Questions.
         Usage: faq twilight [search parameter]"""
         embed = self.embed("TWiLight Menu++ FAQ")
-        embed.title = "TWiLight Menu++ FAQ"
         embed.url += "twilightmenu/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
-        if arg != "":
-            page = requests.get(self.git_name("twilightmenu")).text
+        if arg == "":
+            await ctx.send(embed=embed)
+        else:
+            page = None
+            r = await self.bot.session.get(self.git_name("twilightmenu"))
+            if r.status == 200:
+                page = await r.text()
+            else:
+                return await ctx.send(embed=embed)
             faqpage = page.splitlines()
             iter = 0
             for faq in faqpage:
@@ -94,8 +99,9 @@ class Wiki(commands.Cog):
                 if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
                     embed.url += "?faq=" + web_name(title)
-                    embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
-        await ctx.send(embed=embed)
+                    embed.description = "**" + title + "**" + "\n" + self.read_faq(faqpage, iter)
+                    break
+            await ctx.send(embed=embed)
 
     @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
     async def ndsbootstrap(self, ctx, *, arg=""):
@@ -104,8 +110,15 @@ class Wiki(commands.Cog):
         embed = self.embed("nds-bootstrap FAQ")
         embed.url += "nds-bootstrap/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
+        if arg == "":
+            await ctx.send(embed=embed)
         if arg != "":
-            page = requests.get(self.git_name("nds-bootstrap")).text
+            page = None
+            r = await self.bot.session.get(self.git_name("nds-bootstrap"))
+            if r.status == 200:
+                page = await r.text()
+            else:
+                return await ctx.send(embed=embed)
             faqpage = page.splitlines()
             iter = 0
             for faq in faqpage:
@@ -113,8 +126,9 @@ class Wiki(commands.Cog):
                 if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
                     embed.url += "?faq=" + web_name(title)
-                    embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
-        await ctx.send(embed=embed)
+                    embed.description = "**" + title + "**" + "\n" + self.read_faq(faqpage, iter)
+                    break
+            await ctx.send(embed=embed)
 
     @faq.command(aliases=["gbar2"])
     async def gbarunner2(self, ctx, *, arg=""):
@@ -123,8 +137,15 @@ class Wiki(commands.Cog):
         embed = self.embed("GBARunner2 FAQ")
         embed.url += "gbarunner2/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
-        if arg != "":
-            page = requests.get(self.git_name("gbarunner2")).text
+        if arg == "":
+            await ctx.send(embed=embed)
+        else:
+            page = None
+            r = await self.bot.session.get(self.git_name("gbarunner2"))
+            if r.status == 200:
+                page = await r.text()
+            else:
+                return await ctx.send(embed=embed)
             faqpage = page.splitlines()
             iter = 0
             for faq in faqpage:
@@ -132,8 +153,9 @@ class Wiki(commands.Cog):
                 if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
                     embed.url += "?faq=" + web_name(title)
-                    embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
-        await ctx.send(embed=embed)
+                    embed.description = "**" + title + "**" + "\n" + self.read_faq(faqpage, iter)
+                    break
+            await ctx.send(embed=embed)
 
     @faq.command(aliases=["gm9i"])
     async def godmode9i(self, ctx, *, arg=""):
@@ -142,8 +164,15 @@ class Wiki(commands.Cog):
         embed = self.embed("GodMode9i FAQ")
         embed.url += "godmode9i/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
-        if arg != "":
-            page = requests.get(self.git_name("godmode9i")).text
+        if arg == "":
+            await ctx.send(embed=embed)
+        else:
+            page = None
+            r = await self.bot.session.get(self.git_name("godmode9i"))
+            if r.status == 200:
+                page = await r.text()
+            else:
+                return await ctx.send(embed=embed)
             faqpage = page.splitlines()
             iter = 0
             for faq in faqpage:
@@ -151,8 +180,9 @@ class Wiki(commands.Cog):
                 if arg.lower() in faq.lower() and "#### " in faq.lower():
                     title = faq[5:]
                     embed.url += "?faq=" + web_name(title)
-                    embed.description = "**" + title + "**" + "\n" + self.read_to_next(faqpage, iter)
-        await ctx.send(embed=embed)
+                    embed.description = "**" + title + "**" + "\n" + self.read_faq(faqpage, iter)
+                    break
+            await ctx.send(embed=embed)
 
     @faq.command(aliases=["hiya"])
     async def hiyacfw(self, ctx):
@@ -242,7 +272,8 @@ class Wiki(commands.Cog):
                     title = item[4:]
                     embed.url += "#" + web_name(title)
                     embed.description = "**" + title + "**" + "\n" + self.read_glossary(glossary, iter)
-        await ctx.send(embed=embed)
+                    break
+            await ctx.send(embed=embed)
 
     @commands.command(aliases=["serverrules", "discordrules"])
     async def rule(self, ctx, num: Optional[int]):
@@ -255,7 +286,10 @@ class Wiki(commands.Cog):
         else:
             if num < 0 or num > 12:
                 return await ctx.send("Invalid rule number. Please try again.")
-            page = requests.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/community/discord-rules.md").text
+            page = None
+            r = await self.bot.session.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/community/discord-rules.md")
+            if r.status == 200:
+                page = await r.text()
             numstr = str(num)
             rulepage = page.splitlines()
             message = ""
