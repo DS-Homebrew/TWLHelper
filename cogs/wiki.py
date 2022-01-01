@@ -19,7 +19,14 @@ class Wiki(commands.Cog):
         url = "https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/" + name + "/faq.md"
         return url
 
-    async def read_faq(self, ctx, arg, faqpage, embed):
+    async def read_faq(self, ctx, console, arg, embed):
+        page = None
+        r = await self.bot.session.get(self.faq_url(console))
+        if r.status == 200:
+            page = await r.text()
+        else:
+            return await ctx.send(embed=embed)
+        faqpage = page.splitlines()
         original_url = embed.url
         iter = 0
         for faq in faqpage:
@@ -98,14 +105,7 @@ class Wiki(commands.Cog):
         if arg == "":
             await ctx.send(embed=embed)
         else:
-            page = None
-            r = await self.bot.session.get(self.faq_url("twilightmenu"))
-            if r.status == 200:
-                page = await r.text()
-            else:
-                return await ctx.send(embed=embed)
-            faqpage = page.splitlines()
-            await self.read_faq(ctx, arg, faqpage, embed)
+            await self.read_faq(ctx, "twilightmenu", arg, embed)
 
     @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
     async def ndsbootstrap(self, ctx, *, arg=""):
@@ -117,14 +117,7 @@ class Wiki(commands.Cog):
         if arg == "":
             await ctx.send(embed=embed)
         if arg != "":
-            page = None
-            r = await self.bot.session.get(self.faq_url("nds-bootstrap"))
-            if r.status == 200:
-                page = await r.text()
-            else:
-                return await ctx.send(embed=embed)
-            faqpage = page.splitlines()
-            await self.read_faq(ctx, arg, faqpage, embed)
+            await self.read_faq(ctx, "nds-bootstrap", arg, embed)
 
     @faq.command(aliases=["gbar2"])
     async def gbarunner2(self, ctx, *, arg=""):
@@ -136,14 +129,7 @@ class Wiki(commands.Cog):
         if arg == "":
             await ctx.send(embed=embed)
         else:
-            page = None
-            r = await self.bot.session.get(self.faq_url("gbarunner2"))
-            if r.status == 200:
-                page = await r.text()
-            else:
-                return await ctx.send(embed=embed)
-            faqpage = page.splitlines()
-            await self.read_faq(ctx, arg, faqpage, embed)
+            await self.read_faq(ctx, "gbarunner2", arg, embed)
 
     @faq.command(aliases=["gm9i"])
     async def godmode9i(self, ctx, *, arg=""):
@@ -155,14 +141,7 @@ class Wiki(commands.Cog):
         if arg == "":
             await ctx.send(embed=embed)
         else:
-            page = None
-            r = await self.bot.session.get(self.faq_url("godmode9i"))
-            if r.status == 200:
-                page = await r.text()
-            else:
-                return await ctx.send(embed=embed)
-            faqpage = page.splitlines()
-            await self.read_faq(ctx, arg, faqpage, embed)
+            await self.read_faq(ctx, "godmode9i", arg, embed)
 
     @faq.command(aliases=["hiya"])
     async def hiyacfw(self, ctx):
