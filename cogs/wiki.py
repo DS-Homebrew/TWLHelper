@@ -35,6 +35,21 @@ class Wiki(commands.Cog):
         out = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", out)  # Change kbd to inline code
         return out
 
+    def read_glossary(self, file, iter):
+        line = file[iter]
+        out = ""
+        while "### " not in line or "####" in line:
+            out += '\n' + file[iter]
+            iter += 1
+            if iter < len(file):
+                line = file[iter]
+            else:
+                break
+
+        out = re.sub("#### (.*)", "**\\1**", out)  # Change h4 to bold
+        out = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", out)  # Change kbd to inline code
+        return out
+
     def read_rule(self, ctx, file, iter):
         line = file[iter]
         out = ""
@@ -140,7 +155,7 @@ class Wiki(commands.Cog):
         await ctx.send(embed=embed)
 
     @faq.command(aliases=["hiya"])
-    async def hiyacfw(self, ctx, *, arg=""):
+    async def hiyacfw(self, ctx):
         """hiyaCFW Frequently Asked Questions.
         This does not have a FAQ search function."""
         embed = self.embed("hiyaCFW FAQ")
@@ -203,6 +218,30 @@ class Wiki(commands.Cog):
         embed = self.embed("Nintendo DSi Hardmod Guide")
         embed.url += "ds-index/hardmod.html"
         embed.description = "How to hardmod a Nintendo DSi"
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def glossary(self, ctx, *, arg=""):
+        """nds-bootstrap Glossary"""
+        embed = self.embed("nds-bootstrap Glossary")
+        embed.url += "nds-bootstrap/glossary.html"
+        embed.description = "Glossary for nds-bootstrap"
+        page = None
+        r = None
+        if arg != "":
+            r = await self.bot.session.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/nds-bootstrap/glossary.md")
+            if r.status == 200:
+                page = await r.text()
+            else:
+                return await ctx.send(embed=embed)
+            glossary = page.splitlines()
+            iter = 0
+            for item in glossary:
+                iter += 1
+                if arg.lower() in item.lower() and "### " in item.lower():
+                    title = item[4:]
+                    embed.url += "#" + web_name(title)
+                    embed.description = "**" + title + "**" + "\n" + self.read_glossary(glossary, iter)
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["serverrules", "discordrules"])
