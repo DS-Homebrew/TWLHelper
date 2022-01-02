@@ -44,6 +44,8 @@ class Wiki(commands.Cog):
                 break
         field_description = re.sub("##### (.*)", "**\\1**", field_description)  # Change h5 to bold
         field_description = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", field_description)  # Change kbd to inline code
+        field_description = re.sub("<.*?>(.*?)</.*?>", "\\1", field_description)  # Remove other HTML
+        field_description = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", field_description)  # Remove self-closing HTML
         embed.add_field(name=field_title, value=field_description)
         await ctx.send(embed=embed)
 
@@ -59,6 +61,8 @@ class Wiki(commands.Cog):
                 break
         out = re.sub("#### (.*)", "**\\1**", out)  # Change h4 to bold
         out = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", out)  # Change kbd to inline code
+        out = re.sub("<(.*?)>(.*?)<\/\\1>", "\\2", out)  # Remove other HTML
+        out = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", out)  # Remove self-closing HTML
         return out
 
     def read_rule(self, ctx, file, iter):
