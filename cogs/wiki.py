@@ -61,7 +61,7 @@ class Wiki(commands.Cog):
                 break
         out = re.sub("#### (.*)", "**\\1**", out)  # Change h4 to bold
         out = re.sub("<kbd(?: class=\"[^\"]*\")?>(.*?)</kbd>", "`\\1`", out)  # Change kbd to inline code
-        out = re.sub("<(.*?)>(.*?)<\/\\1>", "\\2", out)  # Remove other HTML
+        out = re.sub("<(.*?)>(.*?)<\\/\\1>", "\\2", out)  # Remove other HTML
         out = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", out)  # Remove self-closing HTML
         return out
 
@@ -77,7 +77,7 @@ class Wiki(commands.Cog):
             else:
                 break
         out = re.sub("#### (.*)", "**\\1**", out)
-        out = re.sub(r"\[#.+?\]\(.+?\/(\d+)\)", "<#\\1>", out)
+        out = re.sub(r"\[#.+?\]\(.+?\\/(\d+)\)", "<#\\1>", out)
         return out
 
     def embed(self, title):
