@@ -341,7 +341,7 @@ class Wiki(commands.Cog):
             embed.url = "https://glazedbelmont.github.io/gbabiosdump/#gameboy-advance-sp-micro-ds-ds-lite.html"
             embed.set_author(name="GlaZed Belmont")
             embed.set_thumbnail(url="https://raw.githubusercontent.com/GlaZedBelmont/GlaZedBelmont.github.io/master/img/glazed.png")
-        elif check_arg(arg, "3ds"):
+        elif check_arg(arg, ("3ds",)):
             embed.title = "Dumping GBA BIOS from a 3DS"
             embed.description = "Tutorial to dump a GBA BIOS using open_agb_firm"
             embed.url = "https://glazedbelmont.github.io/gbabiosdump/#virtual-console-title-from-a-3ds.html"
