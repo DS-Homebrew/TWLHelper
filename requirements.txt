@@ -1,5 +1,5 @@
 git+https://github.com/LightSage/discord.py@master
-requests~=2.26.0
+requests~=2.27.1
 pytz~=2021.3
 feedparser~=6.0.8
 jishaku~=2.3.2
