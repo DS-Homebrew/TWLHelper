@@ -18,12 +18,10 @@
     - Windows: `py twlhelper.py`
 
 ## License
-
-All files without a license in its header are licensed to the following:
 ```
 ISC License
 
-Copyright (C) 2021 DS-Homebrew
+Copyright (C) 2021-present DS-Homebrew
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -41,4 +39,5 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ## Credits
 - Discord.py: This wouldn't exist without it
 - [Nintendo Homebrew's Kurisu](https://github.com/nh-server/kurisu): `utils.py` error embeds, `load.py`, `assistance.py`, netinfo, simple_embed
+    - Licensed under Apache 2.0. See source, or see http://www.apache.org/licenses/LICENSE-2.0.
 - [YourKalamity](https://github.com/YourKalamity): `convert.py` code used with permission
