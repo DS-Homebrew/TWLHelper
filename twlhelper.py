@@ -21,22 +21,13 @@
 import discord
 import aiohttp
 import settings
+import os
 
 from discord.ext import commands
 from utils.utils import create_error_embed
 
 
 intents = discord.Intents.default()
-
-cogs = [
-    'cogs.general',
-    'cogs.wiki',
-    'cogs.mod',
-    'cogs.convert',
-    'cogs.unistore',
-    'cogs.rss',
-    'jishaku'
-]
 
 
 class embedHelp(commands.MinimalHelpCommand):
@@ -66,13 +57,23 @@ class TWLHelper(commands.Bot):
         self.session = aiohttp.ClientSession()
 
     def load_cogs(self):
-        for cog in cogs:
+        cog = ""
+        for filename in os.listdir("./cogs"):
             try:
-                self.load_extension(cog)
-                print(f"Loaded cog {cog}")
+                if filename.endswith(".py"):
+                    cog = f"cogs.{filename[:-3]}"
+                    self.load_extension(cog)
+                    print(f"Loaded cog cogs.{filename[:-3]}")
             except Exception as e:
                 exc = "{}: {}".format(type(e).__name__, e)
                 print("Failed to load cog {}\n{}".format(cog, exc))
+        try:
+            cog = "jishaku"
+            self.load_extension("jishaku")
+            print("Loaded cog jishaku")
+        except Exception as e:
+            exc = "{}: {}".format(type(e).__name__, e)
+            print("Failed to load cog {}\n{}".format(cog, exc))
 
     async def is_owner(self, user: discord.User):
         if settings.GUILD:
