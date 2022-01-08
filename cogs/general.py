@@ -284,7 +284,7 @@ class General(commands.Cog):
     async def dsiguide(self, ctx):
         await self.tlembed(ctx, "DSi Guide", "dsi-guide")
 
-    @commands.command()
+    @commands.command(aliases=["colour"])
     async def color(self, ctx, *, color):
         """Shows conversions of a color from #RRGGBB, #RGB, RRR GGG BBB, and BGR15"""
 
