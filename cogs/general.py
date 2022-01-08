@@ -303,8 +303,9 @@ class General(commands.Cog):
         else:
             await ctx.send_help(ctx.command)
             return
-
         embed = discord.Embed(title="Color conversions")
+        if ctx.invoked_with == "colour":
+            embed.title = "Colour conversions"
         embed.color = rgb[0] << 0x10 | rgb[1] << 0x8 | rgb[2]
         embed.add_field(name="Hex (HTML)", value=f"`#{rgb[0] << 0x10 | rgb[1] << 0x8 | rgb[2]:06X}`")
         embed.add_field(name="RGB", value=f"`{rgb[0]} {rgb[1]} {rgb[2]}`")
