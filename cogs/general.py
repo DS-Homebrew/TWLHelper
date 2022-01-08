@@ -112,7 +112,7 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @install.command(name="hiyacfw", aliases=["hiya"])
-    async def hiyacfw_install(self, ctx, *, arg=""):
+    async def hiyacfw_install(self, ctx):
         embed = discord.Embed(title="hiyaCFW Installation Guide")
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
@@ -136,25 +136,26 @@ class General(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @uninstall.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
-    async def twilight_uninstall(self, ctx, *, arg=""):
+    async def twilight_uninstall(self, ctx, *, systems):
         """Uninstalling TWiLight Menu++.\n
         Usage: .uninstall twilight [3ds, dsi, ds]"""
-        systems = ("3ds", "dsi", "ds")
+        if not systems:
+            systems = ("3ds", "dsi", "ds")
+            await ctx.send(f'Please specify a console. Valid options are: {", ".join(list(systems))}.')
+
         embed = discord.Embed(title="TWiLight Menu++ Uninstall Guide")
         embed.url = "https://wiki.ds-homebrew.com/twilightmenu/uninstalling"
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.description = "How to uninstall TWiLight Menu++"
-        if arg != "":
-            if check_arg(arg, ("3ds",)):
-                embed.url += "-3ds"
-                embed.description += " on the 3DS"
-            elif check_arg(arg, ("dsi", "flashcard", "flashcart", "ds")):
-                embed.url += "-ds"
-                embed.description += " on the DSi and/or flashcards"
-        else:
-            await ctx.send(f"Please specify a console. Valid options are: {', '.join([x for x in systems])}.")
-            return
+
+        if check_arg(systems, ("3ds",)):
+            embed.url += "-3ds"
+            embed.description += " on the 3DS"
+        elif check_arg(systems, ("dsi", "flashcard", "flashcart", "ds")):
+            embed.url += "-ds"
+            embed.description += " on the DSi and/or flashcards"
+
         embed.url += ".html"
         await ctx.send(embed=embed)
 
@@ -284,13 +285,13 @@ class General(commands.Cog):
         await self.tlembed(ctx, "DSi Guide", "dsi-guide")
 
     @commands.command()
-    async def color(self, ctx, *, arg=""):
+    async def color(self, ctx, *, color):
         """Shows conversions of a color from #RRGGBB, #RGB, RRR GGG BBB, and BGR15"""
 
-        arg = arg.replace("0x", "").replace("#", "")
+        arg = color.replace("0x", "").replace("#", "")
 
         if len(arg) == 6:  # #RRGGBB
-            rgb = (int(arg[0:2], 16), int(arg[2:4], 16), int(arg[4:6], 16))
+            rgb = int(arg[:2], 16), int(arg[2:4], 16), int(arg[4:6], 16)
         elif len(arg) == 3:  # #RGB
             rgb = (int(arg[0], 16) * 0x11, int(arg[1], 16) * 0x11, int(arg[2], 16) * 0x11)
         elif len(arg.split()) == 3:  # RRR GGG BBB
@@ -391,17 +392,19 @@ your device will refuse to write to it.
     async def gamebrew(self, ctx, *args):
         """Searches for an app on GameBrew"""
 
-        if len(args) == 0:
+        if not args:
             embed = discord.Embed()
             embed.title = "GameBrew"
             embed.description = "A wiki dedicated to Video Game Homebrew."
             embed.set_author(name="GameBrew", icon_url="https://www.gamebrew.org/images/logo3.png")
             embed.url = "https://www.gamebrew.org/wiki/Main_Page"
-            return await ctx.send(embed=embed)
+            await ctx.send(embed=embed)
+            return
 
         r = await self.bot.session.get(f"https://www.gamebrew.org/api.php?action=opensearch&limit=1&namespace=0&format=json&redirects=resolve&search={parse.quote(' '.join(args))}")
         if r.status != 200:
-            return await ctx.send(f"Error {r.status}! Failed to connect to GameBrew API")
+            await ctx.send(f"Error {r.status}! Failed to connect to GameBrew API")
+            return
 
         apiData = await r.json()
 
