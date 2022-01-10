@@ -1,6 +1,7 @@
 import subprocess
 from subprocess import Popen
 import discord
+from discord import file
 from discord.ext import commands
 import requests
 import os
@@ -56,6 +57,70 @@ class Convert(commands.Cog):
             return 1
         return 0
 
+    async def download_image(self, ctx, filelink):
+        self.check_dir()
+        supported = False
+        if filelink is None:
+            if ctx.message.attachments:
+                f = ctx.message.attachments[0]
+
+                for extension in supportedImage:
+                    if f.filename.lower().endswith(extension):
+                        supported = True
+                        r = requests.get(f.url, allow_redirects=True)
+                        fileName = "downloads/" + f.filename
+            else:
+                await ctx.send_help(ctx.command)
+                return
+        else:
+            for extension in supportedImage:
+                if filelink.lower().endswith(extension):
+                    r = requests.get(filelink, allow_redirects=True)
+                    if filelink.find('/'):
+                        fileName = "downloads/" + filelink.rsplit('/', 1)[1]
+                    supported = True
+        return r, supported, fileName
+
+    async def convert_img(self, ctx, new_extension, filelink=None):
+        new_extension = new_extension.lower()
+        r, supported, fileName = await self.download_image(ctx, filelink)
+        if supported:
+            start_time = time.time()
+            async with ctx.typing():
+                outputtext = await ctx.send("`Downloading image...`")
+                try:
+                    open(fileName, 'wb').write(r.content)
+                except Exception:
+                    await outputtext.edit(content="`Failed to download image`")
+                    return
+                await outputtext.edit(content="`Image downloaded...`")
+                if not fileName.endswith('.' + new_extension):
+                    await outputtext.edit(content="`Converting to " + new_extension.upper() + "...`")
+                    newFileName = "senpai_converted_" + fileName + "_." + new_extension
+                    pixfmt = None
+                    if new_extension == "bmp":
+                        pixfmt = "rgb565"
+                    err = self.ffmpeg_img(fileName, newFileName, pixfmt=pixfmt)
+                    if err == 1:
+                        await outputtext.edit(content="`Failed to convert to " + new_extension.upper() + "`")
+                        return
+                    await outputtext.edit(content="`Converted to " + new_extension.upper() + "`")
+                    await outputtext.edit(content="`Uploading " + new_extension.upper() + "...`")
+                    if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
+                        await ctx.send(file=discord.File(newFileName), reference=ctx.message)
+                        await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                    else:
+                        await outputtext.edit(content="`Converted image is too large! Cannot send image.`")
+                    os.remove(fileName)
+                    os.remove(newFileName)
+                    return
+                else:
+                    await outputtext.edit(content="`You asked me to convert a " + new_extension.upper() + "into a ..." + new_extension.upper() + "?`")
+                    return
+        else:
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
+
+   
     @commands.command(name="unlaunch")
     async def unlaunch_background(self, ctx, *args):
         """
@@ -143,120 +208,11 @@ class Convert(commands.Cog):
 
     @commands.command()
     async def bmp(self, ctx, filelink=None):
-        """
-        Converts an attached, or linked, image to BMP
-        """
-        self.check_dir()
-        supported = False
-        if filelink is None:
-            if ctx.message.attachments:
-                f = ctx.message.attachments[0]
-
-                for extension in supportedImage:
-                    if f.filename.lower().endswith(extension):
-                        supported = True
-                        r = requests.get(f.url, allow_redirects=True)
-                        fileName = "downloads/" + f.filename
-            else:
-                await ctx.send_help(ctx.command)
-                return
-        else:
-            for extension in supportedImage:
-                if filelink.lower().endswith(extension):
-                    r = requests.get(filelink, allow_redirects=True)
-                    if filelink.find('/'):
-                        fileName = "downloads/" + filelink.rsplit('/', 1)[1]
-                    supported = True
-
-        if supported:
-            start_time = time.time()
-            async with ctx.typing():
-                outputtext = await ctx.send("`Downloading image...`")
-                try:
-                    open(fileName, 'wb').write(r.content)
-                except Exception:
-                    await outputtext.edit(content="`Failed to download image`")
-                    return
-                await outputtext.edit(content="`Image downloaded...`")
-                if not fileName.endswith('.bmp'):
-                    await outputtext.edit(content="`Converting to BMP...`")
-                    newFileName = "senpai_converted_" + fileName + "_.bmp"
-                    err = self.ffmpeg_img(fileName, newFileName, pixfmt="rgb565")
-                    if err == 1:
-                        await outputtext.edit(content="`Failed to convert to BMP`")
-                        return
-                    await outputtext.edit(content="`Converted to BMP`")
-                    await outputtext.edit(content="`Uploading BMP...`")
-                    if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
-                        await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                        await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
-                    else:
-                        await outputtext.edit(content="`Converted image is too large! Cannot send image.`")
-                    os.remove(fileName)
-                    os.remove(newFileName)
-                    return
-                else:
-                    await outputtext.edit(content="`You asked me to convert a BMP into a ... BMP`")
-                    return
-        else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
+        await self.convert_img(ctx, "bmp", filelink)
 
     @commands.command()
     async def png(self, ctx, filelink=None):
-        """
-        Converts an attached, or linked, image to PNG
-        """
-        self.check_dir()
-        supported = False
-        if filelink is None:
-            if ctx.message.attachments:
-                f = ctx.message.attachments[0]
-
-                for extension in supportedImage:
-                    if f.filename.lower().endswith(extension):
-                        supported = True
-                        r = requests.get(f.url, allow_redirects=True)
-                        fileName = "downloads/" + f.filename
-            else:
-                await ctx.send_help(ctx.command)
-                return
-        else:
-            for extension in supportedImage:
-                if filelink.lower().endswith(extension):
-                    r = requests.get(filelink, allow_redirects=True)
-                    if filelink.find('/'):
-                        fileName = "downloads/" + filelink.rsplit('/', 1)[1]
-                    supported = True
-
-        if supported:
-            start_time = time.time()
-            async with ctx.typing():
-                outputtext = await ctx.send("`Downloading image...`")
-                try:
-                    open(fileName, 'wb').write(r.content)
-                except Exception:
-                    await outputtext.edit(content="`Failed to download image `")
-                    return
-                await outputtext.edit(content="`Image downloaded...`")
-                if not fileName.endswith('.png'):
-                    await outputtext.edit(content="`Converting to PNG...`")
-                    newFileName = "senpai_converted_" + fileName + "_.png"
-                    err = self.ffmpeg_img(fileName, newFileName)
-                    if err == 1:
-                        await outputtext.edit(content="`Failed to convert to PNG`")
-                        return
-                    await outputtext.edit(content="`Converted to PNG`")
-                    await outputtext.edit(content="`Uploading PNG...`")
-                    await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                    await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
-                    os.remove(fileName)
-                    os.remove(newFileName)
-                    return
-                else:
-                    await outputtext.edit(content="`You asked me to convert a PNG into a ... PNG`")
-                    return
-        else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
+        await self.convert_img(ctx, "png", filelink)
 
     @commands.command()
     async def gif(self, ctx, filelink=None):
@@ -325,60 +281,7 @@ class Convert(commands.Cog):
 
     @commands.command(aliases=["jpg"])
     async def jpeg(self, ctx, filelink=None):
-        """
-        Converts an attached, or linked, image to JPEG
-        """
-        self.check_dir()
-        supported = False
-        if filelink is None:
-            if ctx.message.attachments:
-                f = ctx.message.attachments[0]
-
-                for extension in supportedImage:
-                    if f.filename.lower().endswith(extension):
-                        supported = True
-                        r = requests.get(f.url, allow_redirects=True)
-                        fileName = "downloads/" + f.filename
-            else:
-                await ctx.send_help(ctx.command)
-                return
-        else:
-            for extension in supportedImage:
-                if filelink.lower().endswith(extension):
-                    r = requests.get(filelink, allow_redirects=True)
-                    if filelink.find('/'):
-                        fileName = "downloads/" + filelink.rsplit('/', 1)[1]
-                    supported = True
-
-        if supported:
-            start_time = time.time()
-            async with ctx.typing():
-                outputtext = await ctx.send("`Downloading image...`")
-                try:
-                    open(fileName, 'wb').write(r.content)
-                except Exception:
-                    await outputtext.edit(content="`Failed to download image `")
-                    return
-                await outputtext.edit(content="`Image downloaded...`")
-                if not fileName.endswith('.jpeg') and not fileName.endswith('.jpg'):
-                    await outputtext.edit(content="`Converting to JPEG...`")
-                    newFileName = "senpai_converted_" + fileName + "_.jpeg"
-                    err = self.ffmpeg_img(fileName, newFileName)
-                    if err == 1:
-                        await outputtext.edit(content="`Failed to convert to JPEG`")
-                        return
-                    await outputtext.edit(content="`Converted to JPEG`")
-                    await outputtext.edit(content="`Uploading JPEG...`")
-                    await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                    await outputtext.edit(content="`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
-                    os.remove(fileName)
-                    os.remove(newFileName)
-                    return
-                else:
-                    await outputtext.edit(content="`You asked me to convert a JPEG into a ... JPEG`")
-                    return
-        else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
+        await self.convert_img(ctx, "jpg", filelink)
 
     @commands.group()
     async def boxart(self, ctx):
