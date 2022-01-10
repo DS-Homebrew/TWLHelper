@@ -57,42 +57,38 @@ class Convert(commands.Cog):
             return 1
         return 0
 
-    async def download_image(self, ctx, filelink, outputtext):
+    async def download_image(self, ctx, filelink):
         self.check_dir()
         fileName = None
+        file = None
         if filelink is None:
             if ctx.message.attachments:
-                f = ctx.message.attachments[0]
-
-                for extension in supportedImage:
-                    if f.filename.lower().endswith(extension):
-                        r = requests.get(f.url, allow_redirects=True)
-                        fileName = "downloads/" + f.filename
+                filelink = ctx.message.attachments[0].url
             else:
-                await ctx.send_help(ctx.command)
-                return
-        else:
-            for extension in supportedImage:
-                if filelink.lower().endswith(extension):
-                    r = requests.get(filelink, allow_redirects=True)
+                return 1
+        for extension in supportedImage:
+            if filelink.lower().endswith(extension):
+                r = await self.bot.session.get(filelink, timeout=45)
+                if r.status == 200:
+                    file = await r.read()
                     if filelink.find('/'):
                         fileName = "downloads/" + filelink.rsplit('/', 1)[1]
+                else:
+                    return 2
         try:
-            open(fileName, 'wb').write(r.content)
+            open(fileName, 'wb').write(file)
         except Exception:
-            await outputtext.edit("`Failed to download image`")
-            return
+            return 3
         return fileName
 
     async def convert_img(self, ctx, new_extension, filelink=None):
         start_time = time.time()
         new_extension = new_extension.lower()
-        outputtext = await ctx.send("`Downloading image...`")
-        fileName = await self.download_image(ctx, filelink, outputtext)
-        if fileName:
+        fileName = await self.download_image(ctx, filelink)
+        if isinstance(fileName, str):
             async with ctx.typing():
                 if not fileName.endswith('.' + new_extension):
-                    await outputtext.edit("`Converting to " + new_extension.upper() + "...`")
+                    outputtext = await ctx.send("`Converting to " + new_extension.upper() + "...`")
                     newFileName = "senpai_converted_" + fileName + "_." + new_extension
                     pixfmt = None
                     if new_extension == "bmp":
@@ -114,16 +110,22 @@ class Convert(commands.Cog):
                 else:
                     await outputtext.edit("`You asked me to convert a " + new_extension.upper() + "into a ..." + new_extension.upper() + "?`")
                     return
+        elif isinstance(fileName, int):
+            if fileName == 1:
+                await ctx.send_help(ctx.command)
+            elif fileName == 2:
+                await ctx.send(f"`Error {fileName} (HTTP error). Try again later.`")
+            elif fileName == 3:
+                await ctx.send(f"`Error {fileName}. Failed to download image.`")
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     async def convert_boxart(self, ctx, scale, filelink=None):
         start_time = time.time()
-        outputtext = await ctx.send("`Downloading image...`")
-        fileName = await self.download_image(ctx, filelink, outputtext)
-        if fileName:
+        fileName = await self.download_image(ctx, filelink)
+        if isinstance(fileName, str):
             async with ctx.typing():
-                await outputtext.edit("`Image downloaded...`")
+                outputtext = await ctx.send("`Image downloaded...`")
                 newFileName = "senpai_converted_" + fileName
                 if not fileName.endswith('.png'):
                     newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
@@ -140,10 +142,16 @@ class Convert(commands.Cog):
                 await outputtext.edit("`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
                 os.remove(newFileName)
                 return
+        elif isinstance(fileName, int):
+            if fileName == 1:
+                await ctx.send_help(ctx.command)
+            elif fileName == 2:
+                await ctx.send(f"`Error {fileName} (HTTP error). Try again later.`")
+            elif fileName == 3:
+                await ctx.send(f"`Error {fileName}. Failed to download image.`")
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
-   
     @commands.command(name="unlaunch")
     async def unlaunch_background(self, ctx, *args):
         """
@@ -151,12 +159,11 @@ class Convert(commands.Cog):
         """
         start_time = time.time()
         filelink = next((arg for arg in args if arg.startswith("http")), None)
-        outputtext = await ctx.send("`Downloading image...`")
-        fileName = await self.download_image(ctx, filelink, outputtext)
-        if fileName:
+        fileName = await self.download_image(ctx, filelink)
+        if isinstance(fileName, str):
             async with ctx.typing():
                 newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.gif"
-                await outputtext.edit("`Converting to GIF...`")
+                outputtext = await ctx.send("`Converting to GIF...`")
                 try:
                     proc = Popen(["ffmpeg", "-i", fileName, "-vf", "crop='if(gte(ih,iw*3/4),iw,if(gte(iw,ih*4/3),ih*4/3,ih))':'if(gte(ih,iw*3/4),iw*3/4,if(gte(iw,ih*4/3),ih,ih*3/4))',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", "-frames", "1", newFileName])
                     proc.wait()
@@ -197,8 +204,15 @@ class Convert(commands.Cog):
                 if warning:
                     await ctx.send("`[Warning] : File size was not reduced to less than 15KiB.\n[Warning] : Converted GIF won't work with Unlaunch (try something less complicated)`")
                 return
+        elif isinstance(fileName, int):
+            if fileName == 1:
+                await ctx.send_help(ctx.command)
+            elif fileName == 2:
+                await ctx.send(f"`Error {fileName} (HTTP error). Try again later.`")
+            elif fileName == 3:
+                await ctx.send(f"`Error {fileName}. Failed to download image.`")
         else:
-            await ctx.send("Unsupported image format, or URL does not end in " + ", ".join(supportedImage))
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @commands.command()
     async def bmp(self, ctx, filelink=None):
@@ -214,17 +228,23 @@ class Convert(commands.Cog):
         """
         await self.convert_img(ctx, "png", filelink)
 
+    @commands.command(aliases=["jpg"])
+    async def jpeg(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, image to JPEG
+        """
+        await self.convert_img(ctx, "jpeg", filelink)
+
     @commands.command()
     async def gif(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to GIF
         """
         start_time = time.time()
-        outputtext = await ctx.send("`Downloading image...`")
-        fileName = await self.download_image(ctx, filelink, outputtext)
-        if fileName:
+        fileName = await self.download_image(ctx, filelink)
+        if isinstance(fileName, str):
             async with ctx.typing():
-                await outputtext.edit("`Image downloaded...`")
+                outputtext = await ctx.send("`Image downloaded...`")
                 if not fileName.endswith('.gif'):
                     await outputtext.edit("`Converting to GIF...`")
                     newFileName = "senpai_converted_" + fileName + "_.gif"
@@ -250,15 +270,15 @@ class Convert(commands.Cog):
                 else:
                     await outputtext.edit("`You asked me to convert a GIF into a ... GIF`")
                     return
+        elif isinstance(fileName, int):
+            if fileName == 1:
+                await ctx.send_help(ctx.command)
+            elif fileName == 2:
+                await ctx.send(f"`Error {fileName} (HTTP error). Try again later.`")
+            elif fileName == 3:
+                await ctx.send(f"`Error {fileName}. Failed to download image.`")
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
-
-    @commands.command(aliases=["jpg"])
-    async def jpeg(self, ctx, filelink=None):
-        """
-        Converts an attached, or linked, image to JPEG
-        """
-        await self.convert_img(ctx, "jpeg", filelink)
 
     @commands.group()
     async def boxart(self, ctx):
