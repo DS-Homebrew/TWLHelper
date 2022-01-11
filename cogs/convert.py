@@ -55,60 +55,46 @@ class Convert(commands.Cog):
             return 1
         return 0
 
-    async def download_image(self, ctx, filelink):
+    async def download_media_error(self, ctx, error_num):
+        if error_num == 1:
+                await ctx.send_help(ctx.command)
+        elif error_num == 2:
+            await ctx.send(f"`Error (HTTP error). Try again later.`")
+        elif error_num == 3:
+            await ctx.send(f"`Error. Failed to download file.`")
+        elif error_num == 4:
+            await ctx.send(f"`Error. Input file size is too large.`")
+
+    async def download_media(self, ctx, filelink):
         self.check_dir()
         fileName = None
-        file = None
         if filelink is None:
             if ctx.message.attachments:
                 filelink = ctx.message.attachments[0].url
             else:
                 return 1
-        for extension in supportedImage:
-            if filelink.lower().endswith(extension):
-                r = await self.bot.session.get(filelink, timeout=45)
-                if r.status != 200:
-                    return 2
-                if r.headers["Content-Length"] >= 104857600:
-                    return 4
-                file = await r.read()
-                if filelink.find('/'):
-                    fileName = "downloads/" + filelink.rsplit('/', 1)[1]
-        try:
-            open(fileName, 'wb').write(file)
-        except Exception:
-            return 3
-        return fileName
-
-    async def download_video(self, ctx, filelink):
-        self.check_dir()
-        fileName = None
-        if filelink is None:
-            if ctx.message.attachments:
-                filelink = ctx.message.attachments[0].url
         if filelink:
             for extension in supportedImage:
                 if filelink.lower().endswith(extension):
                     file = None
                     r = await self.bot.session.get(filelink, allow_redirects=True)
-                    print(r.headers)
                     if r.status != 200:
-                        return await ctx.send("`Error 2 (HTTP error). Please try again later.`")
+                        return 2
                     if int(r.headers['Content-Length']) >= 104857600:
-                        return await ctx.send("`Error 4. Input video size is too large.`")
+                        return 4
                     file = await r.read()
                     if filelink.find('/'):
                         fileName = "downloads/" + filelink.rsplit('/', 1)[1]
                     try:
                         open(fileName, 'wb').write(file)
                     except Exception:
-                        return await ctx.send("`Error 3. Failed to download video.`")
+                        return 3
         return fileName
 
     async def convert_img(self, ctx, new_extension, filelink=None):
         start_time = time.time()
         new_extension = new_extension.lower()
-        fileName = await self.download_image(ctx, filelink)
+        fileName = await self.download_media(ctx, filelink)
         if isinstance(fileName, str):
             async with ctx.typing():
                 if not fileName.endswith('.' + new_extension):
@@ -135,20 +121,13 @@ class Convert(commands.Cog):
                     await outputtext.edit("`You asked me to convert a " + new_extension.upper() + "into a ..." + new_extension.upper() + "?`")
                     return
         elif isinstance(fileName, int):
-            if fileName == 1:
-                await ctx.send_help(ctx.command)
-            elif fileName == 2:
-                await ctx.send(f"`Error {fileName} (HTTP error). Try again later.`")
-            elif fileName == 3:
-                await ctx.send(f"`Error {fileName}. Failed to download image.`")
-            elif fileName == 4:
-                await ctx.send(f"`Error {fileName}. Input image size is too large.`")
+            self.download_media_error(ctx, fileName)
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     async def convert_boxart(self, ctx, scale, filelink=None):
         start_time = time.time()
-        fileName = await self.download_image(ctx, filelink)
+        fileName = await self.download_media(ctx, filelink)
         if isinstance(fileName, str):
             async with ctx.typing():
                 outputtext = await ctx.send("`Image downloaded...`")
@@ -169,14 +148,7 @@ class Convert(commands.Cog):
                 os.remove(newFileName)
                 return
         elif isinstance(fileName, int):
-            if fileName == 1:
-                await ctx.send_help(ctx.command)
-            elif fileName == 2:
-                await ctx.send(f"`Error {fileName} (HTTP error). Try again later.`")
-            elif fileName == 3:
-                await ctx.send(f"`Error {fileName}. Failed to download image.`")
-            elif fileName == 4:
-                await ctx.send(f"`Error {fileName}. Input image size is too large.`")
+            self.download_media_error(ctx, fileName)
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
@@ -210,7 +182,7 @@ class Convert(commands.Cog):
     async def convert_vid(self, ctx, new_extension, filelink=None, preset=None, ffmpeg_flags=[]):
         start_time = time.time()
         new_extension = new_extension.lower()
-        fileName = await self.download_video(ctx, filelink)
+        fileName = await self.download_media(ctx, filelink)
         print(fileName)
         if isinstance(fileName, str):
             async with ctx.typing():
@@ -234,8 +206,10 @@ class Convert(commands.Cog):
                 os.remove(fileName)
                 if not size_large:
                     await outputtext.edit("`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+        elif isinstance(fileName, int):
+            self.download_media_error(ctx, fileName)
         else:
-            await ctx.send_help(ctx.command)
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
     @commands.command(name="unlaunch")
     async def unlaunch_background(self, ctx, *args):
@@ -244,7 +218,7 @@ class Convert(commands.Cog):
         """
         start_time = time.time()
         filelink = next((arg for arg in args if arg.startswith("http")), None)
-        fileName = await self.download_image(ctx, filelink)
+        fileName = await self.download_media(ctx, filelink)
         if isinstance(fileName, str):
             async with ctx.typing():
                 newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.gif"
@@ -290,14 +264,7 @@ class Convert(commands.Cog):
                     await ctx.send("`[Warning] : File size was not reduced to less than 15KiB.\n[Warning] : Converted GIF won't work with Unlaunch (try something less complicated)`")
                 return
         elif isinstance(fileName, int):
-            if fileName == 1:
-                await ctx.send_help(ctx.command)
-            elif fileName == 2:
-                await ctx.send(f"`Error {fileName} (HTTP error). Try again later.`")
-            elif fileName == 3:
-                await ctx.send(f"`Error {fileName}. Failed to download image.`")
-            elif fileName == 4:
-                await ctx.send(f"`Error {fileName}. Input image size is too large.`")
+            self.download_media_error(ctx, fileName)
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
@@ -328,7 +295,7 @@ class Convert(commands.Cog):
         Converts an attached, or linked, image to GIF
         """
         start_time = time.time()
-        fileName = await self.download_image(ctx, filelink)
+        fileName = await self.download_media(ctx, filelink)
         if isinstance(fileName, str):
             async with ctx.typing():
                 outputtext = await ctx.send("`Image downloaded...`")
@@ -358,14 +325,7 @@ class Convert(commands.Cog):
                     await outputtext.edit("`You asked me to convert a GIF into a ... GIF`")
                     return
         elif isinstance(fileName, int):
-            if fileName == 1:
-                await ctx.send_help(ctx.command)
-            elif fileName == 2:
-                await ctx.send(f"`Error {fileName} (HTTP error). Try again later.`")
-            elif fileName == 3:
-                await ctx.send(f"`Error {fileName}. Failed to download image.`")
-            elif fileName == 4:
-                await ctx.send(f"`Error {fileName}. Input image size is too large.`")
+            self.download_media_error(ctx, fileName)
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
@@ -428,43 +388,30 @@ class Convert(commands.Cog):
         """
         Converts an attached, or linked, audio file to TWiLight Menu's BGM format
         """
-        self.check_dir()
-        fileName = None
-        if ctx.message.attachments:
-            filelink = ctx.message.attachments[0].url
-        if filelink:
-            file = None
-            r = await self.bot.session.get(filelink, allow_redirects=True)
-            if r.status != 200:
-                return await ctx.send("`Error 2 (HTTP error). Please try again later.`")
-            if int(r.headers['Content-Length']) >= 104857600:
-                return await ctx.send("`Error 4. Input audio size is too large.`")
-            file = await r.read()
-            if filelink.find('/'):
-                fileName = "downloads/" + filelink.rsplit('/', 1)[1]
-            try:
-                open(fileName, 'wb').write(file)
-            except Exception:
-                return await ctx.send("`Error 3. Failed to download audio.`")
-        if not fileName:
-            return await ctx.send_help(ctx.command)
-        async with ctx.typing():
-            start_time = time.time()
-            size_large = False
-            outputtext = await ctx.send("`Converting audio...`")
-            with open(os.devnull, "w") as devnull:
-                subprocess.run(["ffmpeg", "-y", "-i", fileName, "-f", "s16le", "-acodec", "pcm_s16le", "-ac", "1", "-ar", "16k", "downloads/bgm.pcm.raw"], stdout=devnull)
+        start_time = time.time()
+        fileName = await self.download_media(ctx, filelink)
+        if isinstance(fileName, str):
+            async with ctx.typing():
+                start_time = time.time()
+                size_large = False
+                outputtext = await ctx.send("`Converting audio...`")
+                with open(os.devnull, "w") as devnull:
+                    subprocess.run(["ffmpeg", "-y", "-i", fileName, "-f", "s16le", "-acodec", "pcm_s16le", "-ac", "1", "-ar", "16k", "downloads/bgm.pcm.raw"], stdout=devnull)
 
-            await outputtext.edit("`Uploading BGM...`")
-            if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize("downloads/bgm.pcm.raw") > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
-                size_large = True
-                await outputtext.edit("`Converted BGM is too large! Cannot send BGM.`")
-            else:
-                await ctx.send(file=discord.File("downloads/bgm.pcm.raw"), reference=ctx.message)
-            os.remove("downloads/bgm.pcm.raw")
-            os.remove(fileName)
-            if not size_large:
-                await outputtext.edit("`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                await outputtext.edit("`Uploading BGM...`")
+                if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize("downloads/bgm.pcm.raw") > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
+                    size_large = True
+                    await outputtext.edit("`Converted BGM is too large! Cannot send BGM.`")
+                else:
+                    await ctx.send(file=discord.File("downloads/bgm.pcm.raw"), reference=ctx.message)
+                os.remove("downloads/bgm.pcm.raw")
+                os.remove(fileName)
+                if not size_large:
+                    await outputtext.edit("`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+        elif isinstance(fileName, int):
+            self.download_media_error(ctx, fileName)
+        else:
+            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
 
 def setup(bot):
