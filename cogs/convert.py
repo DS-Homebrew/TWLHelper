@@ -2,7 +2,6 @@ import subprocess
 from subprocess import Popen
 import discord
 from discord.ext import commands
-import requests
 import os
 import traceback
 import time
@@ -428,28 +427,29 @@ class Convert(commands.Cog):
         Converts an attached, or linked, audio file to TWiLight Menu's BGM format
         """
         self.check_dir()
+        fileName = None
         if ctx.message.attachments:
-            f = ctx.message.attachments[0]
-            r = requests.get(f.url, allow_redirects=True)
-            fileName = "downloads/" + f.filename
-        elif filelink is not None:
-            r = requests.get(filelink, allow_redirects=True)
+            filelink = ctx.message.attachments[0].url
+        if filelink:
+            file = None
+            r = await self.bot.session.get(filelink, allow_redirects=True)
+            if r.status != 200:
+                return await ctx.send("`Error 2 (HTTP error). Please try again later.`")
+            if int(r.headers['Content-Length']) >= 104857600:
+                return await ctx.send("`Error 4. Input audio size is too large.`")
+            file = await r.read()
             if filelink.find('/'):
                 fileName = "downloads/" + filelink.rsplit('/', 1)[1]
-        else:
-            await ctx.send_help(ctx.command)
-            return
+            try:
+                open(fileName, 'wb').write(file)
+            except Exception:
+                return await ctx.send("`Error 3. Failed to download audio.`")
+        if not fileName:
+            return await ctx.send_help(ctx.command)
         async with ctx.typing():
             start_time = time.time()
             size_large = False
-            outputtext = await ctx.send("`Downloading audio...`")
-            print(outputtext)
-            try:
-                open(fileName, 'wb').write(r.content)
-            except Exception:
-                await outputtext.edit("`Failed to download audio`")
-                return
-            await outputtext.edit("`Converting audio...`")
+            outputtext = await ctx.send("`Converting audio...`")
             with open(os.devnull, "w") as devnull:
                 subprocess.run(["ffmpeg", "-y", "-i", fileName, "-f", "s16le", "-acodec", "pcm_s16le", "-ac", "1", "-ar", "16k", "downloads/bgm.pcm.raw"], stdout=devnull)
 
