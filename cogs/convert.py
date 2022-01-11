@@ -80,6 +80,31 @@ class Convert(commands.Cog):
             return 3
         return fileName
 
+    async def download_video(self, ctx, filelink):
+        self.check_dir()
+        fileName = None
+        if filelink is None:
+            if ctx.message.attachments:
+                filelink = ctx.message.attachments[0].url
+        if filelink:
+            for extension in supportedImage:
+                if filelink.lower().endswith(extension):
+                    file = None
+                    r = await self.bot.session.get(filelink, allow_redirects=True)
+                    print(r.headers)
+                    if r.status != 200:
+                        return await ctx.send("`Error 2 (HTTP error). Please try again later.`")
+                    if int(r.headers['Content-Length']) >= 104857600:
+                        return await ctx.send("`Error 4. Input video size is too large.`")
+                    file = await r.read()
+                    if filelink.find('/'):
+                        fileName = "downloads/" + filelink.rsplit('/', 1)[1]
+                    try:
+                        open(fileName, 'wb').write(file)
+                    except Exception:
+                        return await ctx.send("`Error 3. Failed to download video.`")
+        return fileName
+
     async def convert_img(self, ctx, new_extension, filelink=None):
         start_time = time.time()
         new_extension = new_extension.lower()
@@ -154,6 +179,63 @@ class Convert(commands.Cog):
                 await ctx.send(f"`Error {fileName}. Input image size is too large.`")
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
+
+    def select_ffmpeg_preset(self, preset_name=None):
+        if preset_name == "discord":
+            return ["-vcodec", "libx264",
+                    "-pix_fmt", "yuv420p",
+                    "-profile:v",
+                    "baseline", "-level", "3",
+                    "-s", "852x480",
+                    '-vf', "scale=640:trunc(ow/a/2)*2"]
+        elif preset_name == "dsmp4":
+            return ['-f', 'mp4',
+                    '-vf', "fps=24000/1001, colorspace=space=ycgco:primaries=bt709:trc=bt709:range=pc:iprimaries=bt709:iall=bt709, scale=256:144",
+                    '-dst_range', "1",
+                    '-color_range', "2",
+                    '-vcodec', 'mpeg4',
+                    '-profile:v', "0",
+                    '-level', "8",
+                    "-q:v", "2",
+                    "-maxrate", "500k",
+                    "-acodec", "aac",
+                    "-ar", "32k",
+                    "-b:a", "64000",
+                    "-ac", "1",
+                    "-slices", "1",
+                    "-g", "50"]
+        elif preset_name is None:
+            return []
+
+    async def convert_vid(self, ctx, new_extension, filelink=None, preset=None, ffmpeg_flags=[]):
+        start_time = time.time()
+        new_extension = new_extension.lower()
+        fileName = await self.download_video(ctx, filelink)
+        print(fileName)
+        if isinstance(fileName, str):
+            async with ctx.typing():
+                start_time = time.time()
+                size_large = False
+                outputtext = await ctx.send("`Converting video...`")
+                newFileName = "downloads/senpai_converted_" + str(time.time()) + "." + new_extension
+                command = ['ffmpeg', "-y", '-i', fileName]
+                command.extend(self.select_ffmpeg_preset(preset))
+                command.extend(ffmpeg_flags)
+                command.append(newFileName)
+                with open(os.devnull, "w") as devnull:
+                    subprocess.run(command, stdout=devnull)
+                await outputtext.edit("`Uploading Video...`")
+                if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize(newFileName) > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
+                    size_large = True
+                    await outputtext.edit("`Converted video is too large! Cannot send video.`")
+                else:
+                    await ctx.send(file=discord.File(newFileName), reference=ctx.message)
+                os.remove(newFileName)
+                os.remove(fileName)
+                if not size_large:
+                    await outputtext.edit("`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+        else:
+            await ctx.send_help(ctx.command)
 
     @commands.command(name="unlaunch")
     async def unlaunch_background(self, ctx, *args):
@@ -332,94 +414,14 @@ class Convert(commands.Cog):
         """
         Converts an attached, or linked, video to a DSi Video for MPEG4 Player
         """
-        self.check_dir()
-        fileName = None
-        if filelink is None:
-            if ctx.message.attachments:
-                filelink = ctx.message.attachments[0].url
-        if filelink:
-            for extension in supportedImage:
-                if filelink.lower().endswith(extension):
-                    file = None
-                    r = await self.bot.session.get(filelink, allow_redirects=True)
-                    if r.status != 200:
-                        return await ctx.send("`Error 2 (HTTP error). Please try again later.`")
-                    if int(r.headers['Content-Length']) >= 104857600:
-                        return await ctx.send("`Error 4. Input video size is too large.`")
-                    file = await r.read()
-                    if filelink.find('/'):
-                        fileName = "downloads/" + filelink.rsplit('/', 1)[1]
-                    try:
-                        open(fileName, 'wb').write(file)
-                    except Exception:
-                        return await ctx.send("`Error 3. Failed to download video.`")
-        if fileName:
-            async with ctx.typing():
-                start_time = time.time()
-                size_large = False
-                outputtext = await ctx.send("`Converting video...`")
-                newFileName = "downloads/senpai_converted_" + str(time.time()) + ".mp4"
-                with open(os.devnull, "w") as devnull:
-                    subprocess.run(['ffmpeg', '-i', fileName, '-f', 'mp4', '-vf', "fps=24000/1001, colorspace=space=ycgco:primaries=bt709:trc=bt709:range=pc:iprimaries=bt709:iall=bt709, scale=256:144", '-dst_range', "1", '-color_range', "2", '-vcodec', 'mpeg4', '-profile:v', "0", '-level', "8", "-q:v", "2", "-maxrate", "500k", "-acodec", "aac", "-ar", "32k", "-b:a", "64000", "-ac", "1", "-slices", "1", "-g", "50", newFileName], stdout=devnull)
-                if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize(newFileName) > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
-                    size_large = True
-                    await outputtext.edit("`Converted video is too large! Cannot send video.`")
-                else:
-                    await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                os.remove(newFileName)
-                os.remove(fileName)
-                if not size_large:
-                    await outputtext.edit("`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
-        else:
-            return
+        await self.convert_vid(ctx, "mp4", filelink, "dsmp4")
 
     @commands.command(aliases=["mp4"])
     async def video(self, ctx, filelink=None):
         """
         Converts an attached, or linked, video to MP4
         """
-        self.check_dir()
-        fileName = None
-        if filelink is None:
-            if ctx.message.attachments:
-                filelink = ctx.message.attachments[0].url
-        if filelink:
-            for extension in supportedImage:
-                if filelink.lower().endswith(extension):
-                    file = None
-                    r = await self.bot.session.get(filelink, allow_redirects=True)
-                    if r.status != 200:
-                        return await ctx.send("`Error 2 (HTTP error). Please try again later.`")
-                    if int(r.headers['Content-Length']) >= 104857600:
-                        return await ctx.send("`Error 4. Input video size is too large.`")
-                    file = await r.read()
-                    if filelink.find('/'):
-                        fileName = "downloads/" + filelink.rsplit('/', 1)[1]
-                    try:
-                        open(fileName, 'wb').write(file)
-                    except Exception:
-                        return await ctx.send("`Error 3. Failed to download video.`")
-        if fileName:
-            async with ctx.typing():
-                start_time = time.time()
-                size_large = False
-                outputtext = await ctx.send("`Converting video...`")
-                newFileName = "downloads/senpai_converted_" + str(time.time()) + ".mp4"
-                with open(os.devnull, "w") as devnull:
-                    subprocess.run(["ffmpeg", "-y", "-an", "-i", fileName, "-vcodec", "libx264", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-level", "3", "-s", "852x480", '-vf', "scale=640:trunc(ow/a/2)*2", newFileName], stdout=devnull)
-
-                await outputtext.edit("`Uploading Video...`")
-                if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize(newFileName) > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
-                    size_large = True
-                    await outputtext.edit("`Converted video is too large! Cannot send video.`")
-                else:
-                    await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                os.remove(newFileName)
-                os.remove(fileName)
-                if not size_large:
-                    await outputtext.edit("`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
-        else:
-            await ctx.send_help(ctx.command)
+        await self.convert_vid(ctx, "mp4", filelink, "discord")
 
     @commands.command(aliases=["bgm"])
     async def twlbgm(self, ctx, filelink=None):
