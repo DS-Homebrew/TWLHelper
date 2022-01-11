@@ -25,6 +25,7 @@ import os
 
 from discord.ext import commands
 from utils.utils import create_error_embed
+from shutil import rmtree
 
 
 intents = discord.Intents.default()
@@ -145,8 +146,10 @@ def main():
     bot.load_cogs()
     bot.run(settings.TOKEN)
 
-    return bot.exitcode
+    return
 
 
 if __name__ == '__main__':
+    rmtree("downloads")
+    rmtree("senpai_converted_downloads")
     exit(main())
