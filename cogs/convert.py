@@ -84,7 +84,7 @@ class Convert(commands.Cog):
                         return 4
                     file = await r.read()
                     if filelink.find('/'):
-                        fileName = "downloads/" + filelink.rsplit('/', 1)[1]
+                        fileName = f"downloads/{filelink.rsplit('/', 1)[1]}"
                     try:
                         open(fileName, 'wb').write(file)
                     except Exception:
@@ -98,28 +98,25 @@ class Convert(commands.Cog):
         if isinstance(fileName, str):
             async with ctx.typing():
                 if not fileName.endswith('.' + new_extension):
-                    outputtext = await ctx.send("`Converting to " + new_extension.upper() + "...`")
-                    newFileName = "senpai_converted_" + fileName + "_." + new_extension
-                    pixfmt = None
-                    if new_extension == "bmp":
-                        pixfmt = "rgb565"
+                    outputtext = await ctx.send(f"`Converting to {new_extension.upper()}...`")
+                    newFileName = f"senpai_converted_{fileName}_.{new_extension}"
+                    pixfmt = "rgb565" if new_extension == "bmp" else None
                     err = self.ffmpeg_img(fileName, newFileName, pixfmt=pixfmt)
                     if err == 1:
-                        await outputtext.edit("`Failed to convert to " + new_extension.upper() + "`")
+                        await outputtext.edit(f"`Failed to convert to {new_extension.upper()}`")
                         return
-                    await outputtext.edit("`Converted to " + new_extension.upper() + "`")
-                    await outputtext.edit("`Uploading " + new_extension.upper() + "...`")
+                    await outputtext.edit(f"`Converted to {new_extension.upper()}`")
+                    await outputtext.edit(f"`Uploading {new_extension.upper()}...`")
                     if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
                         await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                        await outputtext.edit("`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                        await outputtext.edit(f"`All done! Completed in {round(time.time() - start_time, 2)} seconds`")
                     else:
                         await outputtext.edit("`Converted image is too large! Cannot send image.`")
                     os.remove(fileName)
                     os.remove(newFileName)
-                    return
                 else:
-                    await outputtext.edit("`You asked me to convert a " + new_extension.upper() + "into a ..." + new_extension.upper() + "?`")
-                    return
+                    await ctx.send(f"`You asked to convert a {new_extension.upper()} into a ...{new_extension.upper()}?`")
+                return
         elif isinstance(fileName, int):
             self.download_media_error(ctx, fileName)
         else:
@@ -131,9 +128,9 @@ class Convert(commands.Cog):
         if isinstance(fileName, str):
             async with ctx.typing():
                 outputtext = await ctx.send("`Image downloaded...`")
-                newFileName = "senpai_converted_" + fileName
+                newFileName = f"senpai_converted_{fileName}"
                 if not fileName.endswith('.png'):
-                    newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.png"
+                    newFileName = f"downloads/senpai_converted_{fileName[10:]}_.png"
                     await outputtext.edit("`Converting to PNG...`")
                     os.remove(fileName)
                 else:
@@ -144,7 +141,7 @@ class Convert(commands.Cog):
                     return
                 await outputtext.edit("`Uploading boxart...`")
                 await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                await outputtext.edit("`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                await outputtext.edit(f"`All done! Completed in {round(time.time() - start_time, 2)} seconds`")
                 os.remove(newFileName)
                 return
         elif isinstance(fileName, int):
@@ -189,7 +186,7 @@ class Convert(commands.Cog):
                 start_time = time.time()
                 size_large = False
                 outputtext = await ctx.send("`Converting video...`")
-                newFileName = "downloads/senpai_converted_" + str(time.time()) + "." + new_extension
+                newFileName = f"downloads/senpai_converted_{time.time()}.{new_extension}"
                 command = ['ffmpeg', "-y", '-i', fileName]
                 command.extend(self.select_ffmpeg_preset(preset))
                 command.extend(ffmpeg_flags)
@@ -205,7 +202,7 @@ class Convert(commands.Cog):
                 os.remove(newFileName)
                 os.remove(fileName)
                 if not size_large:
-                    await outputtext.edit("`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                    await outputtext.edit(f"`Done! Completed in {round(time.time() - start_time, 2)} seconds`")
         elif isinstance(fileName, int):
             self.download_media_error(ctx, fileName)
         else:
@@ -221,7 +218,7 @@ class Convert(commands.Cog):
         fileName = await self.download_media(ctx, filelink)
         if isinstance(fileName, str):
             async with ctx.typing():
-                newFileName = "downloads/senpai_converted_" + fileName[10:] + "_.gif"
+                newFileName = f"downloads/senpai_converted_{fileName[10:]}_.gif"
                 outputtext = await ctx.send("`Converting to GIF...`")
                 try:
                     proc = Popen(["ffmpeg", "-i", fileName, "-vf", "crop='if(gte(ih,iw*3/4),iw,if(gte(iw,ih*4/3),ih*4/3,ih))':'if(gte(ih,iw*3/4),iw*3/4,if(gte(iw,ih*4/3),ih,ih*3/4))',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", "-frames", "1", newFileName])
@@ -246,20 +243,18 @@ class Convert(commands.Cog):
                     return
                 await outputtext.edit("`GIF colour mapped...`")
                 await outputtext.edit("`Optimising GIF size...`")
-                warning = False
                 x = 0
                 while x <= 300 and os.stat(newFileName).st_size > 15000:
                     proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={x}", "-k31", "-o", newFileName])
                     proc.wait()
                     x += 50
-                if os.stat(newFileName).st_size > 15000:
-                    warning = True
+                warning = os.stat(newFileName).st_size > 15000
                 await outputtext.edit("`GIF size optimised`")
                 await outputtext.edit("`Uploading GIF...`")
                 await ctx.send(file=discord.File(newFileName), reference=ctx.message)
                 os.remove(fileName)
                 os.remove(newFileName)
-                await outputtext.edit("`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                await outputtext.edit(f"`All done! Completed in {round(time.time() - start_time, 2)} seconds`")
                 if warning:
                     await ctx.send("`[Warning] : File size was not reduced to less than 15KiB.\n[Warning] : Converted GIF won't work with Unlaunch (try something less complicated)`")
                 return
@@ -301,7 +296,7 @@ class Convert(commands.Cog):
                 outputtext = await ctx.send("`Image downloaded...`")
                 if not fileName.endswith('.gif'):
                     await outputtext.edit("`Converting to GIF...`")
-                    newFileName = "senpai_converted_" + fileName + "_.gif"
+                    newFileName = f"senpai_converted_{fileName}_.gif"
                     try:
                         proc = Popen(["ffmpeg", "-i", fileName, "-vf", "palettegen", "downloads/palette.png"])
                         proc.wait()
@@ -314,7 +309,7 @@ class Convert(commands.Cog):
                     await outputtext.edit("`Uploading GIF...`")
                     if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
                         await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                        await outputtext.edit("`All done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                        await outputtext.edit(f"`All done! Completed in {round(time.time() - start_time, 2)} seconds`")
                     else:
                         await outputtext.edit("`Converted GIF is too large! Cannot send GIF.`")
                     os.remove(fileName)
@@ -407,7 +402,7 @@ class Convert(commands.Cog):
                 os.remove("downloads/bgm.pcm.raw")
                 os.remove(fileName)
                 if not size_large:
-                    await outputtext.edit("`Done! Completed in " + str(round(time.time() - start_time, 2)) + " seconds`")
+                    await outputtext.edit(f"`All done! Completed in {round(time.time() - start_time, 2)} seconds`")
         elif isinstance(fileName, int):
             self.download_media_error(ctx, fileName)
         else:
