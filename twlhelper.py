@@ -146,10 +146,8 @@ def main():
     bot.load_cogs()
     bot.run(settings.TOKEN)
 
-    return
-
 
 if __name__ == '__main__':
     rmtree("downloads")
     rmtree("senpai_converted_downloads")
-    exit(main())
+    main()
