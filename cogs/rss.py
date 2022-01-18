@@ -34,7 +34,7 @@ class RSS(commands.Cog):
         self.bot = bot
         self.loop.start()
 
-    @tasks.loop(seconds=3600)
+    @tasks.loop(seconds=600)
     async def loop(self):
         await self.bot.wait_until_ready()
         if settings.NINUPDATE:
@@ -53,7 +53,7 @@ class RSS(commands.Cog):
         digestprev = hashlib.sha256(f.read()).digest()
         digestnext = hashlib.sha256(raw_bytes).digest()
         if digestprev == digestnext:
-            return
+            return f.close()
         f.close()
 
         consoles = [
@@ -79,6 +79,7 @@ class RSS(commands.Cog):
         f.close()
         f = open('ninupdates.xml', 'wb')
         f.write(raw_bytes)
+        f.close()
 
 
 def setup(bot):
