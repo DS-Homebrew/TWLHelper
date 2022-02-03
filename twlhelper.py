@@ -148,6 +148,9 @@ def main():
 
 
 if __name__ == '__main__':
-    rmtree("downloads")
-    rmtree("senpai_converted_downloads")
+    for folder in ("downloads", "senpai_converted_downloads"):
+        try:
+            rmtree(folder)
+        except FileNotFoundError:
+            pass
     main()
