@@ -24,7 +24,7 @@ from datetime import datetime
 from pytz import timezone
 from urllib import parse
 
-from utils import check_arg, Literal
+from utils import check_arg, Literal, twilightmenu_alias, ndsbootstrap_alias
 
 
 class General(commands.Cog):
@@ -91,7 +91,7 @@ class General(commands.Cog):
         """Links and/or information on installing apps"""
         await ctx.send_help(ctx.command)
 
-    @install.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
+    @install.command(name="twilight", aliases=twilightmenu_alias)
     async def twilight_install(self, ctx, *, arg=""):
         embed = discord.Embed(title="TWiLight Menu++ Installation Guide")
         embed.set_author(name="DS-Homebrew Wiki")
@@ -135,7 +135,7 @@ class General(commands.Cog):
         """Links and/or information on uninstalling apps"""
         await ctx.send_help(ctx.command)
 
-    @uninstall.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
+    @uninstall.command(name="twilight", aliases=twilightmenu_alias)
     async def twilight_uninstall(self, ctx, *, systems):
         """Uninstalling TWiLight Menu++.\n
         Usage: .uninstall twilight [3ds, dsi, ds]"""
@@ -255,6 +255,38 @@ class General(commands.Cog):
             embed.description = "How to dump DSiWare on a Nintendo DSi using GodMode9i"
             await ctx.send(embed=embed)
 
+    @commands.group(invoke_without_command=True, case_insensitive=True)
+    async def nightly(self, ctx):
+        """Instructions on installing nightly builds"""
+        await ctx.send_help(ctx.command)
+
+    @nightly.command(name="twilight", aliases=twilightmenu_alias)
+    async def twilight_nightly(self, ctx, *, arg=""):
+        url = "https://github.com/TWLBot/Builds/raw/master/TWiLightMenu"
+        console = ""
+        if arg != "":
+            if check_arg(arg, ("3ds",)):
+                return await self.simple_embed(ctx, """
+                                                    The latest nightly version of TWiLight Menu++ for 3DS can be downloaded from Universal Updater. \
+                                                    Select TWiLight Menu++, then install the [nightly] build.
+                                                    """, title="TWiLight Menu++ nightly for 3DS")
+            elif check_arg(arg, ("dsi",)):
+                url += "-DSi"
+                console = "for DSi"
+            elif check_arg(arg, ("flashcard", "flashcart", "ds")):
+                url += "-Flashcard"
+                console = "for flashcards"
+        url += ".7z"
+        description = f"The latest nightly version of TWiLight Menu++ {console} can be found here: {url}"
+        await self.simple_embed(ctx, description, title=f"TWiLight Menu++ nightly {console}")
+
+    @nightly.command(name="ndsbootstrap", aliases=ndsbootstrap_alias)
+    async def ndsbootstrap_nightly(self, ctx, *, arg=""):
+        url = "https://github.com/TWLBot/Builds/raw/master/nds-bootstrap.7z"
+        description = f"The latest nightly version of nds-bootstrap can be found here: {url}\n\n\
+                        On the 3DS, this can be installed from Universal Updater. Select nds-bootstrap, then install the [nightly] build."
+        await self.simple_embed(ctx, description, title="nds-bootstrap nightly")
+
     @commands.group(aliases=["crowdin"], invoke_without_command=True, case_insensitive=True)
     async def translate(self, ctx):
         """Links to Crowdin projects"""
@@ -268,11 +300,11 @@ class General(commands.Cog):
         embed.url = "https://crowdin.com/project/" + extension
         await ctx.send(embed=embed)
 
-    @translate.command(aliases=["twlmenu", "twl", "twilightmenu"])
+    @translate.command(aliases=twilightmenu_alias)
     async def twilight(self, ctx):
         await self.tlembed(ctx, "TWiLight Menu++", "TwilightMenu")
 
-    @translate.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
+    @translate.command(aliases=ndsbootstrap_alias)
     async def ndsbootstrap(self, ctx):
         await self.tlembed(ctx, "nds-bootstrap", "nds-bootstrap")
 
