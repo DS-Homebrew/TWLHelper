@@ -21,7 +21,7 @@ import re
 
 from discord.ext import commands
 from typing import Optional
-from utils.utils import check_arg, web_name
+from utils import check_arg, web_name, twilightmenu_alias, ndsbootstrap_alias
 
 
 class Wiki(commands.Cog):
@@ -110,7 +110,7 @@ class Wiki(commands.Cog):
         """Links to the FAQ for an application"""
         await ctx.send_help(ctx.command)
 
-    @faq.command(name="twilight", aliases=["twl", "twlmenu", "twilightmenu"])
+    @faq.command(name="twilight", aliases=twilightmenu_alias)
     async def twilight_faq(self, ctx, *, arg=""):
         """TWiLight Menu Frequently Asked Questions.
         Usage: faq twilight [search parameter]"""
@@ -122,7 +122,7 @@ class Wiki(commands.Cog):
         else:
             await self.read_faq(ctx, "twilightmenu", arg, embed)
 
-    @faq.command(aliases=["nds-bootstrap", "bootstrap", "ndsbs", "bs"])
+    @faq.command(aliases=ndsbootstrap_alias)
     async def ndsbootstrap(self, ctx, *, arg=""):
         """nds-bootstrap Frequently Asked Questions.
         Usage: faq ndsbootstrap [search parameter]"""
@@ -172,7 +172,7 @@ class Wiki(commands.Cog):
         """Links and/or information on updating apps or system"""
         await ctx.send_help(ctx.command)
 
-    @update.command(name="twilight", aliases=["twlmenu", "twl", "twilightmenu"])
+    @update.command(name="twilight", aliases=twilightmenu_alias)
     async def twilight_update(self, ctx, *, arg=""):
         """TWiLight Menu update guide.
         Usage: update twilight [3ds, dsi, ds]"""
