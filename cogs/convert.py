@@ -5,7 +5,7 @@ from discord.ext import commands
 import os
 import traceback
 import time
-from PIL import Image
+# import json
 
 supportedImage = [".bmp", ".gif", ".gif87", ".ico", ".icon",
     ".jpe", ".jpeg", ".jpg", ".jfif", ".jp2", ".jps", ".png", ".apng",
@@ -30,6 +30,30 @@ class Convert(commands.Cog):
         if not os.path.isdir("senpai_converted_downloads"):
             os.mkdir("senpai_converted_downloads")
         return
+
+    def ffmpeg_img(self, fileName, newFileName, crop=None, pixfmt=None, scale=None):
+        command = [
+            'ffmpeg',
+            '-y',
+            '-i',
+            fileName,
+        ]
+        if crop is not None or scale is not None:
+            command.append('-vf')
+            if crop is not None:
+                command.append('crop=' + crop)
+            if scale is not None:
+                command.append(f"crop='if(gte(ih,iw*3/4),iw,if(gte(iw,ih*4/3),ih*4/3,ih))':'if(gte(ih,iw*3/4),iw*3/4,if(gte(iw,ih*4/3),ih,ih*3/4))',scale={scale}:flags=lanczos")
+        if pixfmt is not None:
+            command.append('-pix_fmt')
+            command.append(pixfmt)
+        command.append(newFileName)
+        try:
+            proc = Popen(command)
+            proc.wait()
+        except Exception:
+            return 1
+        return 0
 
     async def download_media_error(self, ctx, error_num):
         if error_num == 1:
@@ -67,7 +91,7 @@ class Convert(commands.Cog):
                         return 3
         return fileName
 
-    async def convert_img(self, ctx, scale=None, new_extension='PNG', filelink=None):
+    async def convert_img(self, ctx, new_extension="PNG", scale=None, filelink=None):
         start_time = time.time()
         new_extension = new_extension.lower()
         fileName = await self.download_media(ctx, filelink)
@@ -76,22 +100,12 @@ class Convert(commands.Cog):
                 if not fileName.endswith('.' + new_extension):
                     outputtext = await ctx.send(f"`Converting to {new_extension.upper()}...`")
                     newFileName = f"senpai_converted_{fileName}_.{new_extension}"
-                    img = Image.open(fileName)
-                    width, height = img.size
-                    if scale:
-                        await outputtext.edit("`Scaling...`")
-                        scale = scale.rsplit(':', 1)
-                        new_width = int(scale[0])
-                        new_height = int(scale[1])
-                        img = img.resize((new_width, new_height))
-                    if format and format.lower() in ('bmp', 'jpeg'):
-                        img = img.convert('RGB')
-                    try:
-                        img.save(newFileName, format=format)
-                    except Exception:
-                        img.close()
-                        return await outputtext.edit(f"`Failed to convert to {new_extension.upper()}`")
-                    img.close()
+                    pixfmt = "rgb565" if new_extension == "bmp" else None
+                    err = self.ffmpeg_img(fileName, newFileName, scale=scale, pixfmt=pixfmt)
+                    if err == 1:
+                        await outputtext.edit(f"`Failed to convert to {new_extension.upper()}`")
+                        return
+                    await outputtext.edit(f"`Converted to {new_extension.upper()}`")
                     await outputtext.edit(f"`Uploading {new_extension.upper()}...`")
                     if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
                         await ctx.send(file=discord.File(newFileName), reference=ctx.message)
@@ -104,7 +118,7 @@ class Convert(commands.Cog):
                     await ctx.send(f"`You asked to convert a {new_extension.upper()} into a ...{new_extension.upper()}?`")
                 return
         elif isinstance(fileName, int):
-            self.download_media_error(ctx, fileName)
+            await self.download_media_error(ctx, fileName)
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
@@ -163,7 +177,7 @@ class Convert(commands.Cog):
                 if not size_large:
                     await outputtext.edit(f"`Done! Completed in {round(time.time() - start_time, 2)} seconds`")
         elif isinstance(fileName, int):
-            self.download_media_error(ctx, fileName)
+            await self.download_media_error(ctx, fileName)
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
@@ -218,7 +232,7 @@ class Convert(commands.Cog):
                     await ctx.send("`[Warning] : File size was not reduced to less than 15KiB.\n[Warning] : Converted GIF won't work with Unlaunch (try something less complicated)`")
                 return
         elif isinstance(fileName, int):
-            self.download_media_error(ctx, fileName)
+            await self.download_media_error(ctx, fileName)
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
@@ -227,21 +241,21 @@ class Convert(commands.Cog):
         """
         Converts an attached, or linked, image to BMP
         """
-        await self.convert_img(ctx, "bmp", filelink)
+        await self.convert_img(ctx, "bmp", filelink=filelink)
 
     @commands.command()
     async def png(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to PNG
         """
-        await self.convert_img(ctx, "png", filelink)
+        await self.convert_img(ctx, "png", filelink=filelink)
 
     @commands.command(aliases=["jpg"])
     async def jpeg(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to JPEG
         """
-        await self.convert_img(ctx, "jpeg", filelink)
+        await self.convert_img(ctx, "jpeg", filelink=filelink)
 
     @commands.command()
     async def gif(self, ctx, filelink=None):
@@ -279,7 +293,7 @@ class Convert(commands.Cog):
                     await outputtext.edit("`You asked me to convert a GIF into a ... GIF`")
                     return
         elif isinstance(fileName, int):
-            self.download_media_error(ctx, fileName)
+            await self.download_media_error(ctx, fileName)
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
@@ -363,7 +377,7 @@ class Convert(commands.Cog):
                 if not size_large:
                     await outputtext.edit(f"`All done! Completed in {round(time.time() - start_time, 2)} seconds`")
         elif isinstance(fileName, int):
-            self.download_media_error(ctx, fileName)
+            await self.download_media_error(ctx, fileName)
         else:
             await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
 
