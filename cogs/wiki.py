@@ -315,7 +315,7 @@ class Wiki(commands.Cog):
         embed = self.embed("Special Games")
         embed.url += "ds-index/special-games.html"
         embed.description = "A list of DS games with special features"
-        await ctx.send(embed=embed) 
+        await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def bios(self, ctx):
