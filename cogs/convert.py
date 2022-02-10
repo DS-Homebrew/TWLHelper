@@ -192,6 +192,7 @@ class Convert(commands.Cog):
     async def unlaunch_background(self, ctx, *args):
         """
         Convert an attachment or linked image to an Unlaunch GIF file
+        Returns the guide on how to create a custom Unlaunch GIF manually if no arguments are provided
         """
 
         if args == ():
@@ -373,6 +374,7 @@ class Convert(commands.Cog):
     async def twlbgm(self, ctx, filelink=None):
         """
         Converts an attached, or linked, audio file to TWiLight Menu's BGM format
+        Returns the guide on how to add and create custom audio files for TWiLight Menu if no arguments are provided
         """
 
         if filelink is None:
