@@ -149,6 +149,13 @@ class Convert(commands.Cog):
         elif preset_name is None:
             return []
 
+    def embed(self, title):
+        embed = discord.Embed(title=title)
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/"
+        return embed
+
     async def convert_vid(self, ctx, new_extension, filelink=None, preset=None, ffmpeg_flags=[]):
         start_time = time.time()
         new_extension = new_extension.lower()
@@ -300,7 +307,10 @@ class Convert(commands.Cog):
     @commands.group()
     async def boxart(self, ctx):
         if ctx.invoked_subcommand is None:
-            await ctx.send_help(ctx.command)
+            embed = self.embed("How to Get Box Art")
+            embed.url += "twilightmenu/how-to-get-box-art.html"
+            embed.description = "How to add box art to TWiLight Menu++"
+            await ctx.send(embed=embed)
 
     @boxart.command(name="nds", aliases=["dsi"])
     async def ds_boxart(self, ctx, filelink=None):
