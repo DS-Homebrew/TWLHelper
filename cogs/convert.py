@@ -193,6 +193,14 @@ class Convert(commands.Cog):
         """
         Convert an attachment or linked image to an Unlaunch GIF file
         """
+
+        if args == ():
+            embed = self.embed("Custom Unlaunch Backgrounds")
+            embed.url += "twilightmenu/custom-unlaunch-backgrounds.html"
+            embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
+            await ctx.send(embed=embed)
+            return
+
         start_time = time.time()
         filelink = next((arg for arg in args if arg.startswith("http")), None)
         fileName = await self.download_media(ctx, filelink)
@@ -366,6 +374,14 @@ class Convert(commands.Cog):
         """
         Converts an attached, or linked, audio file to TWiLight Menu's BGM format
         """
+
+        if filelink is None:
+            embed = self.embed("DSi/3DS Skins - Custom SFX")
+            embed.url += "twilightmenu/custom-dsi-3ds-sfx.html"
+            embed.description = "How to use custom background music and sound effects in DSi and 3DS skins for TWiLight Menu++"
+            await ctx.send(embed=embed)
+            return
+
         start_time = time.time()
         fileName = await self.download_media(ctx, filelink)
         if isinstance(fileName, str):
