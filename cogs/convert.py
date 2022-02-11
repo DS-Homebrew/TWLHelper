@@ -149,6 +149,13 @@ class Convert(commands.Cog):
         elif preset_name is None:
             return []
 
+    def embed(self, title):
+        embed = discord.Embed(title=title)
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed.url = "https://wiki.ds-homebrew.com/"
+        return embed
+
     async def convert_vid(self, ctx, new_extension, filelink=None, preset=None, ffmpeg_flags=[]):
         start_time = time.time()
         new_extension = new_extension.lower()
@@ -185,7 +192,16 @@ class Convert(commands.Cog):
     async def unlaunch_background(self, ctx, *args):
         """
         Convert an attachment or linked image to an Unlaunch GIF file
+        Returns the guide on how to create a custom Unlaunch GIF manually if no arguments are provided
         """
+
+        if args == ():
+            embed = self.embed("Custom Unlaunch Backgrounds")
+            embed.url += "twilightmenu/custom-unlaunch-backgrounds.html"
+            embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
+            await ctx.send(embed=embed)
+            return
+
         start_time = time.time()
         filelink = next((arg for arg in args if arg.startswith("http")), None)
         fileName = await self.download_media(ctx, filelink)
@@ -300,7 +316,10 @@ class Convert(commands.Cog):
     @commands.group()
     async def boxart(self, ctx):
         if ctx.invoked_subcommand is None:
-            await ctx.send_help(ctx.command)
+            embed = self.embed("How to Get Box Art")
+            embed.url += "twilightmenu/how-to-get-box-art.html"
+            embed.description = "How to add box art to TWiLight Menu++"
+            await ctx.send(embed=embed)
 
     @boxart.command(name="nds", aliases=["dsi"])
     async def ds_boxart(self, ctx, filelink=None):
@@ -355,7 +374,16 @@ class Convert(commands.Cog):
     async def twlbgm(self, ctx, filelink=None):
         """
         Converts an attached, or linked, audio file to TWiLight Menu's BGM format
+        Returns the guide on how to add and create custom audio files for TWiLight Menu if no arguments are provided
         """
+
+        if filelink is None:
+            embed = self.embed("DSi/3DS Skins - Custom SFX")
+            embed.url += "twilightmenu/custom-dsi-3ds-sfx.html"
+            embed.description = "How to use custom background music and sound effects in DSi and 3DS skins for TWiLight Menu++"
+            await ctx.send(embed=embed)
+            return
+
         start_time = time.time()
         fileName = await self.download_media(ctx, filelink)
         if isinstance(fileName, str):

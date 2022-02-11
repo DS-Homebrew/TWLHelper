@@ -317,30 +317,6 @@ class Wiki(commands.Cog):
         embed.description = "A list of DS games with special features"
         await ctx.send(embed=embed)
 
-    @commands.command()
-    async def unlaunchbg(self, ctx):
-        """Links to a guide to changing Unlaunch background"""
-        embed = self.embed("Custom Unlaunch Backgrounds")
-        embed.url += "twilightmenu/custom-unlaunch-backgrounds.html"
-        embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
-        await ctx.send(embed=embed)
-
-    @commands.command(aliases=['sfx'])
-    async def twlsfx(self, ctx):
-        """Links to a guide to custom TWiLight Menu SFX"""
-        embed = self.embed("DSi/3DS Skins - Custom SFX")
-        embed.url += "twilightmenu/custom-dsi-3ds-sfx.html"
-        embed.description = "How to use custom background music and sound effects in DSi and 3DS skins for TWiLight Menu++"
-        await ctx.send(embed=embed)
-
-    @commands.command()
-    async def boxartguide(self, ctx):
-        """Links to a guide to get Box Art"""
-        embed = self.embed("How to Get Box Art")
-        embed.url += "twilightmenu/how-to-get-box-art.html"
-        embed.description = "How to add box art to TWiLight Menu++"
-        await ctx.send(embed=embed)
-
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def bios(self, ctx):
         """BIOS info page"""
