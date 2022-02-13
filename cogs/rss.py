@@ -24,7 +24,7 @@ import datetime
 
 from discord.ext import tasks, commands
 from inspect import cleandoc
-from time import asctime, mktime
+from time import mktime
 from bs4 import BeautifulSoup
 
 import settings
