@@ -20,10 +20,11 @@ import discord
 import hashlib
 import feedparser
 import os
+import datetime
 
 from discord.ext import tasks, commands
 from inspect import cleandoc
-from time import asctime
+from time import asctime, mktime
 from bs4 import BeautifulSoup
 
 import settings
@@ -109,13 +110,12 @@ class RSS(commands.Cog):
             if last_updated > last_updated_old:
                 f.close()
                 channel = self.bot.get_channel(settings.SUBREDDIT)
-
-                embed = discord.Embed(colour=15549999)
+                embed = discord.Embed(colour=15549999, timestamp=datetime.datetime.fromtimestamp(mktime(last_updated)))
                 embed.title = ndsbrew['new']['entries'][0]['title']
                 embed.url = ndsbrew['new']['entries'][0]['link']
                 embed.set_author(name=ndsbrew['new']['entries'][0]['author_detail']['name'], url=ndsbrew['new']['entries'][0]['author_detail']['href'])
                 embed.description = BeautifulSoup(ndsbrew['new']['entries'][0]['summary'], "html.parser").div.get_text()
-                embed.set_footer(text=f"{ndsbrew['new']['feed']['tags'][0]['label']} • UTC {asctime(last_updated)}", icon_url=ndsbrew['new']['feed']['icon'][:-1])
+                embed.set_footer(text=f"{ndsbrew['new']['feed']['tags'][0]['label']}", icon_url=ndsbrew['new']['feed']['icon'][:-1])
                 await channel.send(embed=embed)
                 f = open('ndsbrew.xml', 'wb')
                 f.write(raw_bytes)
