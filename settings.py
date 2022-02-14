@@ -30,4 +30,5 @@ PREFIX = [x for x in settings['DEFAULT']['PREFIX']]
 STATUS = settings['DEFAULT']['STATUS']
 staff_roles = [x for x in settings['MODERATOR']]
 NINUPDATE = settings['CHANNEL']['NINUPDATES']
+SUBREDDIT = settings['CHANNEL']['SUBREDDIT']
 GUILD = settings.get('GUILD')
