@@ -55,6 +55,8 @@ class NBCompat(commands.Cog):
 
     @commands.command()
     async def ndsbcompat(self, ctx, tid=""):
+        """Searching nds-bootstrap compatibility list\n
+        Usage: .ndsbcompat <Title ID>"""
         if tid == "":
             return await ctx.send("Please input a title key and try again.")
         compatfile = open("nbcompat.json", "r", encoding='utf-8')
