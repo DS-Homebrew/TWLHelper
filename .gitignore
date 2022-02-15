@@ -1,7 +1,8 @@
 *.json
+*.xml
+*.dat
 ._*
 .DS_Store
 __pycache__
-*.xml
 downloads
 senpai_converted_downloads

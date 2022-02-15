@@ -18,14 +18,15 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+import os
 import discord
+import gspread
 import aiohttp
 import settings
-import os
 
+from shutil import rmtree
 from discord.ext import commands
 from utils.utils import create_error_embed
-from shutil import rmtree
 
 
 intents = discord.Intents.default()
@@ -56,6 +57,8 @@ class TWLHelper(commands.Bot):
             case_insensitive=True
         )
         self.session = aiohttp.ClientSession()
+        if settings.GSPREADKEY is not None:
+            self.gspread = gspread.service_account(filename=settings.GSPREADKEY)
 
     def load_cogs(self):
         cog = ""

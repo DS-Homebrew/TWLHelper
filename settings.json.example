@@ -15,5 +15,7 @@
     "CHANNEL": {
         "NINUPDATES": null,
         "SUBREDDIT": null
-    }
+    },
+
+    "GSPREADKEY": null
 }

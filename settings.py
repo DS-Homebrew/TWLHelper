@@ -32,3 +32,4 @@ staff_roles = [x for x in settings['MODERATOR']]
 NINUPDATE = settings['CHANNEL']['NINUPDATES']
 SUBREDDIT = settings['CHANNEL']['SUBREDDIT']
 GUILD = settings.get('GUILD')
+GSPREADKEY = settings.get('GSPREADKEY')
