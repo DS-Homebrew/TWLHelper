@@ -16,16 +16,17 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-import discord
-import hashlib
-import feedparser
 import os
 import datetime
+import functools
+import hashlib
+import discord
+import feedparser
 
 from discord.ext import tasks, commands
 from inspect import cleandoc
 from time import mktime
-from bs4 import BeautifulSoup
+from markdownify import markdownify
 
 import settings
 
@@ -75,7 +76,10 @@ class RSS(commands.Cog):
             ]
 
             f = open('ninupdates.xml', 'r')
-            ninupdates = self.parse_feed(raw_bytes, f.read())
+
+            argv = functools.partial(self.parse_feed, raw_bytes, f.read())
+            ninupdates = await self.bot.loop.run_in_executor(None, argv)
+
             for entry in ninupdates['new']['entries']:
                 system, ver = entry['title'].split()
                 if system not in consoles:
@@ -104,7 +108,10 @@ class RSS(commands.Cog):
         if not self.digest_check(raw_bytes, f.read()):
             f.close()
             f = open('ndsbrew.xml', 'r', encoding='utf-8')
-            ndsbrew = self.parse_feed(raw_bytes, f.read())
+
+            argv = functools.partial(self.parse_feed, raw_bytes, f.read())
+            ndsbrew = await self.bot.loop.run_in_executor(None, argv)
+
             last_updated = ndsbrew['new']['entries'][0]['updated_parsed']
             last_updated_old = ndsbrew['old']['entries'][0]['updated_parsed']
             if last_updated > last_updated_old:
@@ -114,7 +121,10 @@ class RSS(commands.Cog):
                 embed.title = ndsbrew['new']['entries'][0]['title']
                 embed.url = ndsbrew['new']['entries'][0]['link']
                 embed.set_author(name=ndsbrew['new']['entries'][0]['author_detail']['name'], url=ndsbrew['new']['entries'][0]['author_detail']['href'])
-                embed.description = BeautifulSoup(ndsbrew['new']['entries'][0]['summary'], "html.parser").div.get_text()
+                embed.description = cleandoc(markdownify(ndsbrew['new']['entries'][0]['summary']))
+                if len(embed.description) > 4000:
+                    embed.description = embed.description[:2000]
+                    embed.description += "\n..."
                 embed.set_footer(text=f"{ndsbrew['new']['feed']['tags'][0]['label']}", icon_url=ndsbrew['new']['feed']['icon'][:-1])
                 await channel.send(embed=embed)
                 f = open('ndsbrew.xml', 'wb')
