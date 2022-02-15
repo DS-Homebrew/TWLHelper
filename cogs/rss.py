@@ -90,7 +90,7 @@ class RSS(commands.Cog):
                         continue
                     elif system == systemold and ver != verold:
                         channel = self.bot.get_channel(settings.NINUPDATE)
-                        await channel.send(embed=discord.Embed(description=cleandoc('ℹ️ New update version for {}: [{}]({})'.format(system, ver, entry['link']))))
+                        await channel.send(embed=discord.Embed(description=f"ℹ️ New update version for {system}: [{ver}]({entry['link']})"))
                         continue
             f.close()
             f = open('ninupdates.xml', 'wb')
