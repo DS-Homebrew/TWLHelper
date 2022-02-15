@@ -56,13 +56,18 @@ class NBCompat(commands.Cog):
     @commands.command()
     async def ndsbcompat(self, ctx, tid=""):
         """Searching nds-bootstrap compatibility list\n
-        Usage: .ndsbcompat <Title ID>"""
+        Usage: .ndsbcompat [Title ID]"""
+        embed = None
         if tid == "":
-            return await ctx.send("Please input a title key and try again.")
+            embed = discord.Embed(title="nds-bootstrap Compatibility List")
+            embed.set_author(name="DS-Homebrew")
+            embed.description = "Spreadsheet with all documented compatibility ratings for nds-bootstrap"
+            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+            embed.url = "https://docs.google.com/spreadsheets/d/1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc/edit?usp=sharing"
+            return await ctx.send(embed=embed)
         compatfile = open("nbcompat.json", "r", encoding='utf-8')
         compatlist = json.load(compatfile)
         compatfile.close()
-        embed = None
         for line in compatlist:
             if line[3] == tid.upper():
                 embed = discord.Embed()
