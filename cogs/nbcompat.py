@@ -43,9 +43,15 @@ class NBCompat(commands.Cog):
             await self.asyncDumpWorksheet()
 
     def dumpWorksheet(self):
-        compatlist = self.bot.gspread.open_by_key('1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc').worksheet("Retail ROMs (DSi/3DS)")
-        spreadsheet = compatlist.get_all_values()
+        compatlist = self.bot.gspread.open_by_key('1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc')
+        retailds = compatlist.worksheet("Retail ROMs (DSi/3DS)")
+        testingqueue = compatlist.worksheet("Testing Queue")
+        spreadsheet = retailds.get_all_values()
         f = open("nbcompat.json", "w")
+        json.dump(spreadsheet, f)
+        f.close()
+        spreadsheet = testingqueue.get_all_values()
+        f = open("nbcompat-fallback.json", "w")
         json.dump(spreadsheet, f)
         f.close()
 
@@ -65,7 +71,9 @@ class NBCompat(commands.Cog):
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
             embed.url = "https://docs.google.com/spreadsheets/d/1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc/edit?usp=sharing"
             return await ctx.send(embed=embed)
-        compatfile = open("nbcompat.json", "r", encoding='utf-8')
+        elif tid[0] == 'H' or tid[0] == 'Z' or tid[0] == 'K':
+            return await ctx.send("DSiWare compatibility is not supported. Please try another game, or visit the list directly.")
+        compatfile = open("nbcompat.json", "r")
         compatlist = json.load(compatfile)
         compatfile.close()
         for line in compatlist:
@@ -77,9 +85,15 @@ class NBCompat(commands.Cog):
                 if line[14] != '':
                     embed.add_field(name="Notes", value=f"{line[14]}", inline=False)
                 break
-        if not embed:
-            return await ctx.send(f"{tid} not found. Please try again.")
-        return await ctx.send(content=None, embed=embed)
+        if embed:
+            return await ctx.send(content=None, embed=embed)
+        compatfile = open("nbcompat-fallback.json")
+        compatlist = json.load(compatfile)
+        compatfile.close()
+        for line in compatlist:
+            if tid.upper() in line[3]:
+                return await ctx.send(f"{line[1]} ({line[4]}) does not have any compatibility ratings!")
+        await ctx.send(f"{tid} not found. Please try again.")
 
 
 def setup(bot):
