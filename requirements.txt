@@ -4,3 +4,4 @@ feedparser~=6.0.8
 jishaku~=2.3.2
 psutil~=5.9.0
 beautifulsoup4~=4.10.0
+gspread~=5.1.1

@@ -22,7 +22,6 @@ import json
 import settings
 
 from discord.ext import tasks, commands
-from inspect import cleandoc
 
 
 class NBCompat(commands.Cog):
