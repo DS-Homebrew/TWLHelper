@@ -69,13 +69,14 @@ class NBCompat(commands.Cog):
         compatlist = json.load(compatfile)
         compatfile.close()
         for line in compatlist:
-            if line[3] == tid.upper():
+            if tid.upper() in line[3]:
                 embed = discord.Embed()
                 embed.title = f"{line[1]} ({line[4]})"
                 embed.add_field(name="Last tested version", value=f"{line[10]}", inline=False)
                 embed.add_field(name="Compatibility", value=f"{line[13]}", inline=False)
                 if line[14] != '':
                     embed.add_field(name="Notes", value=f"{line[14]}", inline=False)
+                break
         if not embed:
             return await ctx.send(f"{tid} not found. Please try again.")
         return await ctx.send(content=None, embed=embed)
