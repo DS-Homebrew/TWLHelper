@@ -122,7 +122,7 @@ class RSS(commands.Cog):
                 embed.url = ndsbrew['new']['entries'][0]['link']
                 embed.set_author(name=ndsbrew['new']['entries'][0]['author_detail']['name'], url=ndsbrew['new']['entries'][0]['author_detail']['href'])
                 embed.description = cleandoc(markdownify(ndsbrew['new']['entries'][0]['summary']))
-                if len(embed.description) > 4000:
+                if len(embed.description) > 2000:
                     embed.description = embed.description[:2000]
                     embed.description += "\n..."
                 embed.set_footer(text=f"{ndsbrew['new']['feed']['tags'][0]['label']}", icon_url=ndsbrew['new']['feed']['icon'][:-1])
