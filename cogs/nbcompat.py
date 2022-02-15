@@ -64,7 +64,7 @@ class NBCompat(commands.Cog):
         compatfile.close()
         embed = None
         for line in compatlist:
-            if line[3] == tid:
+            if line[3] == tid.upper():
                 embed = discord.Embed()
                 embed.title = f"{line[1]} ({line[4]})"
                 embed.add_field(name="Last tested version", value=f"{line[10]}", inline=False)
