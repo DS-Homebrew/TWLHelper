@@ -230,30 +230,13 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def dump(self, ctx, system: Literal('3ds', 'dsi', 'dsiware')):  # noqa
-        """How to dump games and data for CFW consoles.
-        Usage: dump <3ds, dsi, dsiware>"""
-        if check_arg(system, '3ds'):
-            embed = discord.Embed(title="GodMode9 Dump Guide")
-            embed.set_author(name="Nintendo Homebrew & Plailect")
-            embed.set_thumbnail(url="https://nintendohomebrew.com/assets/img/nhplai.png")
-            embed.url = "https://3ds.hacks.guide/dumping-titles-and-game-cartridges.html"
-            embed.description = "How to dump Cartridges and Files on a 3DS using GodMode9"
-            await ctx.send(embed=embed)
-        elif check_arg(system, ('dsi',)):
-            embed = discord.Embed(title="GodMode9i Dump Guide")
-            embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
-            embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
-            embed.url = "https://dsi.cfw.guide/dumping-game-cards.html"
-            embed.description = "How to dump cartridges on a Nintendo DSi using GodMode9i"
-            await ctx.send(embed=embed)
-        elif check_arg(system, ('dsiware',)):
-            embed = discord.Embed(title="DSiWare Backups")
-            embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
-            embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
-            embed.url = "https://dsi.cfw.guide/dsiware-backups.html"
-            embed.description = "How to dump DSiWare on a Nintendo DSi using GodMode9i"
-            await ctx.send(embed=embed)
+    async def dump(self, ctx):
+        """How to dump games and data for CFW consoles"""
+        await self.simple_embed(ctx, text="""
+                                    [Dumping DS cartridges from a 3DS console](https://3ds.hacks.guide/dumping-titles-and-game-cartridges#dumping-a-game-cartridge)
+                                    [Dumping DS cartridges from a DSi console](https://dsi.cfw.guide/dumping-game-cards.html)
+                                    [Dumping DSiWare](https://dsi.cfw.guide/dsiware-backups.html)
+                                    """, title="Dumping Games to ROM files")
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def nightly(self, ctx):
@@ -431,13 +414,11 @@ your device will refuse to write to it.
             embed.description = "A wiki dedicated to Video Game Homebrew."
             embed.set_author(name="GameBrew", icon_url="https://www.gamebrew.org/images/logo3.png")
             embed.url = "https://www.gamebrew.org/wiki/Main_Page"
-            await ctx.send(embed=embed)
-            return
+            return await ctx.send(embed=embed)
 
         r = await self.bot.session.get(f"https://www.gamebrew.org/api.php?action=opensearch&limit=1&namespace=0&format=json&redirects=resolve&search={parse.quote(' '.join(args))}")
         if r.status != 200:
-            await ctx.send(f"Error {r.status}! Failed to connect to GameBrew API")
-            return
+            return await ctx.send(f"Error {r.status}! Failed to connect to GameBrew API")
 
         apiData = await r.json()
 
