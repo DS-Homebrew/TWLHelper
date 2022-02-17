@@ -1,16 +1,9 @@
-import subprocess
-from subprocess import Popen
-import discord
-from discord.ext import commands
 import os
-import traceback
 import time
-# import json
+import discord
 
-supportedImage = [".bmp", ".gif", ".gif87", ".ico", ".icon",
-    ".jpe", ".jpeg", ".jpg", ".jfif", ".jp2", ".jps", ".png", ".apng",
-    ".tiff", ".pbm", ".webp", ".webm", ".mpg", ".3gp",
-    ".mp4", ".mov", ".wmv", ".flv", ".avi", ".mkv"]
+from asyncio.subprocess import create_subprocess_exec
+from discord.ext import commands
 
 
 class Convert(commands.Cog):
@@ -31,7 +24,7 @@ class Convert(commands.Cog):
             os.mkdir("senpai_converted_downloads")
         return
 
-    def ffmpeg_img(self, fileName, newFileName, crop=None, pixfmt=None, scale=None):
+    async def ffmpeg_img(self, fileName, newFileName, crop=None, pixfmt=None, scale=None):
         command = [
             'ffmpeg',
             '-y',
@@ -49,8 +42,8 @@ class Convert(commands.Cog):
             command.append(pixfmt)
         command.append(newFileName)
         try:
-            proc = Popen(command)
-            proc.wait()
+            proc = await create_subprocess_exec(*command)
+            await proc.wait()
         except Exception:
             return 1
         return 0
@@ -74,21 +67,19 @@ class Convert(commands.Cog):
             else:
                 return 1
         if filelink:
-            for extension in supportedImage:
-                if filelink.lower().endswith(extension):
-                    file = None
-                    r = await self.bot.session.get(filelink, allow_redirects=True)
-                    if r.status != 200:
-                        return 2
-                    if int(r.headers['Content-Length']) >= 104857600:
-                        return 4
-                    file = await r.read()
-                    if filelink.find('/'):
-                        fileName = f"downloads/{filelink.rsplit('/', 1)[1]}"
-                    try:
-                        open(fileName, 'wb').write(file)
-                    except Exception:
-                        return 3
+            file = None
+            r = await self.bot.session.get(filelink, allow_redirects=True)
+            if r.status != 200:
+                return 2
+            if int(r.headers['Content-Length']) >= 104857600:
+                return 4
+            file = await r.read()
+            if filelink.find('/'):
+                fileName = f"downloads/{filelink.rsplit('/', 1)[1]}"
+            try:
+                open(fileName, 'wb').write(file)
+            except Exception:
+                return 3
         return fileName
 
     async def convert_img(self, ctx, new_extension="PNG", scale=None, filelink=None):
@@ -101,10 +92,9 @@ class Convert(commands.Cog):
                     outputtext = await ctx.send(f"`Converting to {new_extension.upper()}...`")
                     newFileName = f"senpai_converted_{fileName}_.{new_extension}"
                     pixfmt = "rgb565" if new_extension == "bmp" else None
-                    err = self.ffmpeg_img(fileName, newFileName, scale=scale, pixfmt=pixfmt)
+                    err = await self.ffmpeg_img(fileName, newFileName, scale=scale, pixfmt=pixfmt)
                     if err == 1:
-                        await outputtext.edit(f"`Failed to convert to {new_extension.upper()}`")
-                        return
+                        return await outputtext.edit(f"`Failed to convert to {new_extension.upper()}`")
                     await outputtext.edit(f"`Converted to {new_extension.upper()}`")
                     await outputtext.edit(f"`Uploading {new_extension.upper()}...`")
                     if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
@@ -117,10 +107,8 @@ class Convert(commands.Cog):
                 else:
                     await ctx.send(f"`You asked to convert a {new_extension.upper()} into a ...{new_extension.upper()}?`")
                 return
-        elif isinstance(fileName, int):
-            await self.download_media_error(ctx, fileName)
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
+            await self.download_media_error(ctx, fileName)
 
     def select_ffmpeg_preset(self, preset_name=None):
         if preset_name == "discord":
@@ -171,8 +159,8 @@ class Convert(commands.Cog):
                 command.extend(self.select_ffmpeg_preset(preset))
                 command.extend(ffmpeg_flags)
                 command.append(newFileName)
-                with open(os.devnull, "w") as devnull:
-                    subprocess.run(command, stdout=devnull)
+                proc = await create_subprocess_exec(*command)
+                await proc.wait()
                 await outputtext.edit("`Uploading Video...`")
                 if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize(newFileName) > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
                     size_large = True
@@ -183,10 +171,8 @@ class Convert(commands.Cog):
                 os.remove(fileName)
                 if not size_large:
                     await outputtext.edit(f"`Done! Completed in {round(time.time() - start_time, 2)} seconds`")
-        elif isinstance(fileName, int):
-            await self.download_media_error(ctx, fileName)
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
+            await self.download_media_error(ctx, fileName)
 
     @commands.command(name="unlaunch")
     async def unlaunch_background(self, ctx, *args):
@@ -210,32 +196,26 @@ class Convert(commands.Cog):
                 newFileName = f"downloads/senpai_converted_{fileName[10:]}_.gif"
                 outputtext = await ctx.send("`Converting to GIF...`")
                 try:
-                    proc = Popen(["ffmpeg", "-i", fileName, "-vf", "crop='if(gte(ih,iw*3/4),iw,if(gte(iw,ih*4/3),ih*4/3,ih))':'if(gte(ih,iw*3/4),iw*3/4,if(gte(iw,ih*4/3),ih,ih*3/4))',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", "-frames", "1", newFileName])
-                    proc.wait()
+                    proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-vf", "crop='if(gte(ih,iw*3/4),iw,if(gte(iw,ih*4/3),ih*4/3,ih))':'if(gte(ih,iw*3/4),iw*3/4,if(gte(iw,ih*4/3),ih,ih*3/4))',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", "-frames", "1", newFileName)
+                    await proc.wait()
                 except Exception:
-                    error_message = traceback.format_exc()
-                    print(error_message)
-                    await outputtext.edit("`Failed to convert to GIF`")
-                    return
+                    return await outputtext.edit("`Failed to convert to GIF`")
                 await outputtext.edit("`Converted to GIF...`")
                 await outputtext.edit("`Colour Mapping GIF...`")
                 try:
                     gifsicle_args = ["gifsicle", newFileName, "-O3", "--no-extensions", "-k31", "#0", "-o", newFileName]
                     if "-dither" in args:
                         gifsicle_args.append("-f")
-                    proc = Popen(gifsicle_args)
-                    proc.wait()
+                    proc = await create_subprocess_exec(*gifsicle_args)
+                    await proc.wait()
                 except Exception:
-                    error_message = traceback.format_exc()
-                    print(error_message)
-                    await outputtext.edit("`Failed to map GIF colour...`")
-                    return
+                    return await outputtext.edit("`Failed to map GIF colour...`")
                 await outputtext.edit("`GIF colour mapped...`")
                 await outputtext.edit("`Optimising GIF size...`")
                 x = 0
                 while x <= 300 and os.stat(newFileName).st_size > 15000:
-                    proc = Popen(["gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={x}", "-k31", "-o", newFileName])
-                    proc.wait()
+                    proc = await create_subprocess_exec("gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={x}", "-k31", "-o", newFileName)
+                    await proc.wait()
                     x += 50
                 warning = os.stat(newFileName).st_size > 15000
                 await outputtext.edit("`GIF size optimised`")
@@ -247,10 +227,8 @@ class Convert(commands.Cog):
                 if warning:
                     await ctx.send("`[Warning] : File size was not reduced to less than 15KiB.\n[Warning] : Converted GIF won't work with Unlaunch (try something less complicated)`")
                 return
-        elif isinstance(fileName, int):
-            await self.download_media_error(ctx, fileName)
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
+            await self.download_media_error(ctx, fileName)
 
     @commands.command()
     async def bmp(self, ctx, filelink=None):
@@ -287,13 +265,12 @@ class Convert(commands.Cog):
                     await outputtext.edit("`Converting to GIF...`")
                     newFileName = f"senpai_converted_{fileName}_.gif"
                     try:
-                        proc = Popen(["ffmpeg", "-i", fileName, "-vf", "palettegen", "downloads/palette.png"])
-                        proc.wait()
-                        proc = Popen(["ffmpeg", "-i", fileName, "-i", "downloads/palette.png", "-filter_complex", "paletteuse", newFileName])
-                        proc.wait()
+                        proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-vf", "palettegen", "downloads/palette.png")
+                        await proc.wait()
+                        proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-i", "downloads/palette.png", "-filter_complex", "paletteuse", newFileName)
+                        await proc.wait()
                     except Exception:
-                        await outputtext.edit("`Failed to convert to GIF`")
-                        return
+                        return await outputtext.edit("`Failed to convert to GIF`")
                     await outputtext.edit("`Converted to GIF`")
                     await outputtext.edit("`Uploading GIF...`")
                     if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
@@ -306,12 +283,9 @@ class Convert(commands.Cog):
                     os.remove("downloads/palette.png")
                     return
                 else:
-                    await outputtext.edit("`You asked me to convert a GIF into a ... GIF`")
-                    return
-        elif isinstance(fileName, int):
-            await self.download_media_error(ctx, fileName)
+                    return await outputtext.edit("`You asked me to convert a GIF into a ... GIF`")
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
+            await self.download_media_error(ctx, fileName)
 
     @commands.group()
     async def boxart(self, ctx):
@@ -381,8 +355,7 @@ class Convert(commands.Cog):
             embed = self.embed("DSi/3DS Skins - Custom SFX")
             embed.url += "twilightmenu/custom-dsi-3ds-sfx.html"
             embed.description = "How to use custom background music and sound effects in DSi and 3DS skins for TWiLight Menu++"
-            await ctx.send(embed=embed)
-            return
+            return await ctx.send(embed=embed)
 
         start_time = time.time()
         fileName = await self.download_media(ctx, filelink)
@@ -391,8 +364,8 @@ class Convert(commands.Cog):
                 start_time = time.time()
                 size_large = False
                 outputtext = await ctx.send("`Converting audio...`")
-                with open(os.devnull, "w") as devnull:
-                    subprocess.run(["ffmpeg", "-y", "-i", fileName, "-f", "s16le", "-acodec", "pcm_s16le", "-ac", "1", "-ar", "16k", "downloads/bgm.pcm.raw"], stdout=devnull)
+                proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-f", "s16le", "-acodec", "pcm_s16le", "-ac", "1", "-ar", "16k", "downloads/bgm.pcm.raw")
+                await proc.wait()
 
                 await outputtext.edit("`Uploading BGM...`")
                 if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize("downloads/bgm.pcm.raw") > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
@@ -404,10 +377,8 @@ class Convert(commands.Cog):
                 os.remove(fileName)
                 if not size_large:
                     await outputtext.edit(f"`All done! Completed in {round(time.time() - start_time, 2)} seconds`")
-        elif isinstance(fileName, int):
-            await self.download_media_error(ctx, fileName)
         else:
-            await ctx.send("`Unsupported image format, or URL does not end in " + ", ".join(supportedImage) + "`")
+            await self.download_media_error(ctx, fileName)
 
 
 def setup(bot):
