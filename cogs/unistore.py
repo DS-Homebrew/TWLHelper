@@ -19,7 +19,7 @@
 import discord
 
 from discord.ext import commands
-from utils.utils import web_name
+from utils import web_name
 
 
 class UniStore(commands.Cog):

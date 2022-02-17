@@ -18,7 +18,7 @@
 
 import discord
 from discord.ext import commands
-from utils.utils import is_staff
+from utils import is_staff
 
 
 class Mod(commands.Cog):
