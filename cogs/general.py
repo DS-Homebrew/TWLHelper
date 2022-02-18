@@ -18,11 +18,11 @@
 
 import discord
 
-from discord.ext import commands
 from inspect import cleandoc
 from datetime import datetime
-from pytz import timezone
 from urllib import parse
+from discord.ext import commands
+from pytz import timezone
 
 from utils import check_arg, Literal, twilightmenu_alias, ndsbootstrap_alias
 
@@ -326,16 +326,6 @@ class General(commands.Cog):
         embed.add_field(name="RGB", value=f"`{rgb[0]} {rgb[1]} {rgb[2]}`")
         bgr15 = round(rgb[0] * 0x1F / 0xFF) | round(rgb[1] * 0x1F / 0xFF) << 5 | round(rgb[2] * 0x1F / 0xFF) << 10
         embed.add_field(name="BGR15", value=f"`0x{bgr15:04X}` `0x{bgr15 | 1 << 15:04X}`")
-        await ctx.send(embed=embed)
-
-    @commands.command(aliases=["botinfo", "whoisthisbot"])
-    async def about(self, ctx):
-        """About TWLHelper"""
-        embed = discord.Embed(title="About TWLHelper")
-        embed.set_author(name="DS-Homebrew")
-        embed.url = "https://github.com/DS-Homebrew/TWLHelper"
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.description = "TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot"
         await ctx.send(embed=embed)
 
     @commands.command()
