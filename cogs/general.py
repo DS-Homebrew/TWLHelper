@@ -44,10 +44,9 @@ class General(commands.Cog):
     def netinfo_parse_time(self, timestr):
         return datetime.strptime(' '.join(timestr.split()), '%A, %B %d, %Y %I :%M %p').replace(tzinfo=timezone('US/Pacific'))
 
-    @commands.command(require_var_positional=True)
+    @commands.command(require_var_positional=True, usage="<3ds|wiiu|vwii|switch|wii|dsi>")
     async def guide(self, ctx, guide: Literal("3ds", "wiiu", "vwii", "switch", "wii", "dsi")) -> None:  # noqa
-        """Links to the recommended guides.
-        Usage: guide <3ds, wiiu, vwii, switch, wii, dsi>"""
+        """Links to the recommended guides"""
         embed = discord.Embed(title="Guide")
         if check_arg(guide, '3ds'):
             embed.set_author(name="Nintendo Homebrew & Plailect")
@@ -330,14 +329,14 @@ class General(commands.Cog):
 
     @commands.command()
     async def sdroot(self, ctx):
-        """Image that shows what a root is"""
+        """Displays an image that shows what a root is"""
         embed = discord.Embed()
         embed.set_image(url="https://media.discordapp.net/attachments/489307733074640926/756947922804932739/wherestheroot.png")
         await ctx.send(embed=embed)
 
     @commands.command()
     async def sdlock(self, ctx):
-        """Disable write protection on an SD Card"""
+        """Tells you how to disable write protection on an SD Card"""
         embed = discord.Embed(title="Disable write protection on an SD Card")
         embed.description = cleandoc("""
                                      This switch on the SD Card should be facing upwards, as in this photo. Otherwise, \
