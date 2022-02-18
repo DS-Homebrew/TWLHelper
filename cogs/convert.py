@@ -181,13 +181,6 @@ class Convert(commands.Cog):
         Returns the guide on how to create a custom Unlaunch GIF manually if no arguments are provided
         """
 
-        if args == ():
-            embed = self.embed("Custom Unlaunch Backgrounds")
-            embed.url += "twilightmenu/custom-unlaunch-backgrounds.html"
-            embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
-            await ctx.send(embed=embed)
-            return
-
         start_time = time.time()
         filelink = next((arg for arg in args if arg.startswith("http")), None)
         fileName = await self.download_media(ctx, filelink)
@@ -227,6 +220,11 @@ class Convert(commands.Cog):
                 if warning:
                     await ctx.send("`[Warning] : File size was not reduced to less than 15KiB.\n[Warning] : Converted GIF won't work with Unlaunch (try something less complicated)`")
                 return
+        elif fileName == 1:
+            embed = self.embed("Custom Unlaunch Backgrounds")
+            embed.url += "twilightmenu/custom-unlaunch-backgrounds.html"
+            embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
+            return await ctx.send(embed=embed)
         else:
             await self.download_media_error(ctx, fileName)
 
@@ -351,13 +349,6 @@ class Convert(commands.Cog):
         Returns the guide on how to add and create custom audio files for TWiLight Menu if no arguments are provided
         """
 
-        if filelink is None:
-            embed = self.embed("DSi/3DS Skins - Custom SFX")
-            embed.url += "twilightmenu/custom-dsi-3ds-sfx.html"
-            embed.description = "How to use custom background music and sound effects in DSi and 3DS skins for TWiLight Menu++"
-            return await ctx.send(embed=embed)
-
-        start_time = time.time()
         fileName = await self.download_media(ctx, filelink)
         if isinstance(fileName, str):
             async with ctx.typing():
@@ -377,6 +368,11 @@ class Convert(commands.Cog):
                 os.remove(fileName)
                 if not size_large:
                     await outputtext.edit(f"`All done! Completed in {round(time.time() - start_time, 2)} seconds`")
+        elif fileName == 1:
+            embed = self.embed("DSi/3DS Skins - Custom SFX")
+            embed.url += "twilightmenu/custom-dsi-3ds-sfx.html"
+            embed.description = "How to use custom background music and sound effects in DSi and 3DS skins for TWiLight Menu++"
+            return await ctx.send(embed=embed)
         else:
             await self.download_media_error(ctx, fileName)
 
