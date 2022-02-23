@@ -59,7 +59,7 @@ class NBCompat(commands.Cog):
         argv = functools.partial(self.dumpWorksheet)
         await self.bot.loop.run_in_executor(None, argv)
 
-    @commands.command()
+    @commands.command(aliases=["nbcompat", "ndscompat"])
     async def ndsbcompat(self, ctx, tid=""):
         """Searching nds-bootstrap compatibility list\n
         Usage: .ndsbcompat [Title ID]"""
