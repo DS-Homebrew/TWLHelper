@@ -40,9 +40,13 @@ class General(commands.Cog):
         embed.description = cleandoc(text)
         await ctx.send(embed=embed)
 
-    # this command is a part of Kurisu (https://github.com/nh-server/Kurisu)
     def netinfo_parse_time(self, timestr):
-        return datetime.strptime(' '.join(timestr.split()), '%A, %B %d, %Y %I :%M %p').replace(tzinfo=timezone('US/Pacific'))
+        time = datetime.strptime(' '.join(timestr.split()), '%A, %B %d, %Y %I :%M %p')
+        # netinfo is US/Pacific
+        time = timezone('US/Pacific').localize(time)
+        # convert it to UTC so Discord timestamp works
+        time = time.astimezone(timezone('UTC'))
+        return time
 
     @commands.command(require_var_positional=True, usage="<3ds|wiiu|vwii|switch|wii|dsi>")
     async def guide(self, ctx, guide: Literal("3ds", "wiiu", "vwii", "switch", "wii", "dsi")) -> None:  # noqa
@@ -360,8 +364,9 @@ your device will refuse to write to it.
 
         embed = discord.Embed(title="Network Maintenance Information / Online Status",
                               url="https://www.nintendo.co.jp/netinfo/en_US/index.html",
-                              description="All times are US/Pacific.")
-        embed.set_footer(text=f"This information was last updated {now.strftime('%A, %B %d, %Y %I:%M %p')}.")
+                              description="All times are US/Pacific.",
+                              timestamp=datetime.now())
+        embed.set_footer(text="Last updated")
 
         for status_type in ("operational_statuses", "temporary_maintenances"):
             descriptor = "Maintenance" if status_type == "temporary_maintenances" else "Status"
@@ -376,10 +381,12 @@ your device will refuse to write to it.
                 end = datetime(year=2099, month=1, day=1, tzinfo=timezone('US/Pacific'))
                 if "begin" in entry:
                     begin = self.netinfo_parse_time(entry["begin"])
-                    entry_desc += '\nBegins: ' + begin.strftime('%A, %B %d, %Y %I:%M %p')
+                    timestamp = discord.utils.format_dt(begin, style='F')
+                    entry_desc += f'\nBegins: {timestamp}'
                 if "end" in entry:
                     end = self.netinfo_parse_time(entry["end"])
-                    entry_desc += '\nEnds: ' + end.strftime('%A, %B %d, %Y %I:%M %p')
+                    timestamp = discord.utils.format_dt(end, style='F')
+                    entry_desc += f'\nEnds: {timestamp}'
 
                 if now < end:
                     entry_name = "{} {}: {}".format(
