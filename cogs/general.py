@@ -264,6 +264,8 @@ class General(commands.Cog):
                 console = "for flashcards"
         url += ".7z"
         description = f"The latest nightly version of TWiLight Menu++ {console} can be found here: {url}"
+        if arg == "":
+            description += "\n\nOn the 3DS, this can be installed from Universal Updater. Select TWiLight Menu++, then install the [nightly] build."
         await self.simple_embed(ctx, description, title=f"TWiLight Menu++ nightly {console}")
 
     @nightly.command(name="ndsbootstrap", aliases=ndsbootstrap_alias)
