@@ -364,7 +364,6 @@ your device will refuse to write to it.
 
         embed = discord.Embed(title="Network Maintenance Information / Online Status",
                               url="https://www.nintendo.co.jp/netinfo/en_US/index.html",
-                              description="All times are US/Pacific.",
                               timestamp=datetime.now())
         embed.set_footer(text="Last updated")
 
