@@ -5,4 +5,4 @@ jishaku~=2.3.2
 psutil~=5.9.0
 markdownify~=0.10.3
 gspread~=5.1.1
-rapidfuzz~=2.0.3
+rapidfuzz~=2.0.4
