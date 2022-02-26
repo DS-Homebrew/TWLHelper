@@ -2,6 +2,7 @@ import os
 import time
 import discord
 
+from aiohttp import client_exceptions
 from asyncio.subprocess import create_subprocess_exec
 from discord.ext import commands
 
@@ -57,6 +58,8 @@ class Convert(commands.Cog):
             await ctx.send("`Error. Failed to download file.`")
         elif error_num == 4:
             await ctx.send("`Error. Input file size is too large.`")
+        elif error_num == 5:
+            await ctx.send("`Error. URL invalid.`")
 
     async def download_media(self, ctx, filelink):
         self.check_dir()
@@ -68,7 +71,11 @@ class Convert(commands.Cog):
                 return 1
         if filelink:
             file = None
-            r = await self.bot.session.get(filelink, allow_redirects=True)
+            r = None
+            try:
+                r = await self.bot.session.get(filelink, allow_redirects=True)
+            except client_exceptions.InvalidURL:
+                return 5
             if r.status != 200:
                 return 2
             if int(r.headers['Content-Length']) >= 104857600:
@@ -82,13 +89,13 @@ class Convert(commands.Cog):
                 return 3
         return fileName
 
-    async def convert_img(self, ctx, new_extension="PNG", scale=None, filelink=None):
+    async def convert_img(self, ctx, new_extension="PNG", scale=None, filelink=None, boxart=False):
         start_time = time.time()
         new_extension = new_extension.lower()
         fileName = await self.download_media(ctx, filelink)
         if isinstance(fileName, str):
             async with ctx.typing():
-                if not fileName.endswith('.' + new_extension):
+                if boxart or not fileName.endswith('.' + new_extension):
                     outputtext = await ctx.send(f"`Converting to {new_extension.upper()}...`")
                     newFileName = f"senpai_converted_{fileName}_.{new_extension}"
                     pixfmt = "rgb565" if new_extension == "bmp" else None
@@ -298,35 +305,35 @@ class Convert(commands.Cog):
         """
         Converts an attached, or linked, image to a DS Box Art
         """
-        await self.convert_img(ctx, scale="128:115", filelink=filelink)
+        await self.convert_img(ctx, scale="128:115", filelink=filelink, boxart=True)
 
     @boxart.command(name="gba", aliases=["fds", "gbc", "gb"])
     async def gba_boxart(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to a GB, GBC, GBA or FDS Box Art
         """
-        await self.convert_img(ctx, scale="115:115", filelink=filelink)
+        await self.convert_img(ctx, scale="115:115", filelink=filelink, boxart=True)
 
     @boxart.command(name="nes", aliases=["gen", "md", "sfc", "ms", "gg"])
     async def nes_boxart(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to a NES, Super Famicom, GameGear, Master System, Mega Drive or Genesis Box Art
         """
-        await self.convert_img(ctx, scale="84:115", filelink=filelink)
+        await self.convert_img(ctx, scale="84:115", filelink=filelink, boxart=True)
 
     @boxart.command(name="snes")
     async def snes_boxart(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to an SNES Box Art
         """
-        await self.convert_img(ctx, scale="158:115", filelink=filelink)
+        await self.convert_img(ctx, scale="158:115", filelink=filelink, boxart=True)
 
     @commands.command()
     async def dsimenu(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to a TWLMenu++ DSi Menu Theme
         """
-        await self.convert_img(ctx, scale="208:156", filelink=filelink)
+        await self.convert_img(ctx, scale="208:156", filelink=filelink, boxart=True)
 
     @commands.command()
     async def dsmp4(self, ctx, filelink=None):
@@ -353,20 +360,26 @@ class Convert(commands.Cog):
         if isinstance(fileName, str):
             async with ctx.typing():
                 start_time = time.time()
-                size_large = False
+                failed = False
                 outputtext = await ctx.send("`Converting audio...`")
                 proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-f", "s16le", "-acodec", "pcm_s16le", "-ac", "1", "-ar", "16k", "downloads/bgm.pcm.raw")
                 await proc.wait()
 
                 await outputtext.edit("`Uploading BGM...`")
-                if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize("downloads/bgm.pcm.raw") > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
-                    size_large = True
+                if not os.path.exists("downloads/bgm.pcm.raw"):
+                    failed = True
+                    await outputtext.edit("`Conversion failed. Is the attachment an audio stream?`")
+                elif (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize("downloads/bgm.pcm.raw") > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
+                    failed = True
                     await outputtext.edit("`Converted BGM is too large! Cannot send BGM.`")
                 else:
                     await ctx.send(file=discord.File("downloads/bgm.pcm.raw"), reference=ctx.message)
-                os.remove("downloads/bgm.pcm.raw")
-                os.remove(fileName)
-                if not size_large:
+                for target in ("downloads/bgm.pcm.raw", fileName):
+                    try:
+                        os.remove(target)
+                    except FileNotFoundError:
+                        pass
+                if not failed:
                     await outputtext.edit(f"`All done! Completed in {round(time.time() - start_time, 2)} seconds`")
         elif fileName == 1:
             embed = self.embed("DSi/3DS Skins - Custom SFX")
