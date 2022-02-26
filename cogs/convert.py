@@ -389,6 +389,54 @@ class Convert(commands.Cog):
         else:
             await self.download_media_error(ctx, fileName)
 
+    @commands.command()
+    async def border(self, ctx, filelink=None):
+        """
+        Converts an attacked, or linked, image file to GBARunner2 border format
+        Returns the guide on how convert manually if no arguments are provided
+        """
+
+        fileName = await self.download_media(ctx, filelink)
+        if isinstance(fileName, str):
+            async with ctx.typing():
+                start_time = time.time()
+                failed = False
+                outputtext = await ctx.send("`Converting image...`")
+                proc = await create_subprocess_exec("grit", fileName, "-gB8", "-aw256", "-ah192", "-mLs", "-mRtf", "-ftb", "-fh!", "-odownloads/gbaframe.bin")
+                await proc.wait()
+
+                outputs = ("downloads/gbaframe.pal.bin", "downloads/gbaframe.map.bin", "downloads/gbaframe.img.bin")
+                for output in outputs:
+                    if not os.path.exists(output):
+                        failed = True
+                        await outputtext.edit("`Conversion failed. Is the attachment an image?`")
+                        break
+
+                if not failed:
+                    await outputtext.edit("`Combining image...`")
+                    with open("downloads/gbaborder.bin", "wb") as borderbin:
+                        for output in outputs:
+                            with open(output, "rb") as f:
+                                borderbin.write(f.read())
+
+                    await outputtext.edit("`Uploading border...`")
+                    await ctx.send(file=discord.File("downloads/gbaborder.bin"), reference=ctx.message)
+                    for target in (fileName,) + outputs:
+                        try:
+                            os.remove(target)
+                        except FileNotFoundError:
+                            pass
+                    await outputtext.edit(f"`All done! Completed in {round(time.time() - start_time, 2)} seconds`")
+        elif fileName == 1:
+            embed = discord.Embed(title="GBARunner2 Frames & Border Guide")
+            embed.url = "https://docs.google.com/document/d/1owjiW-1fHEbokrkK2ZuPFjR2-N9s1dXCCAM3ghWRtxk/edit"
+            embed.set_author(name="FrescoASF")
+            embed.set_thumbnail(url="https://lh6.googleusercontent.com/vKqbbJtPGarQkU4Cl4zxpsFeNQ7XaRTF0z7nloTYllhTZnZWmREO6Yi13dN9pM1SM1yjWHxE3g=w1200-h630-p")
+            embed.description = "How to create and install GBARunner2 Frames/Borders\n\n[Template file](https://media.discordapp.net/attachments/620310871800807466/812223500113805312/Template.png)"
+            return await ctx.send(embed=embed)
+        else:
+            await self.download_media_error(ctx, fileName)
+
 
 def setup(bot):
     bot.add_cog(Convert(bot))
