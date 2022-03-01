@@ -77,7 +77,7 @@ class NBCompat(commands.Cog):
     def search_name(self, arg, compatlist):
         gamename = []
         matchlist = []
-        for line in compatlist:
+        for line in compatlist[2:]:
             gamename.append(line[1])
         results = process.extract(arg, gamename)
         for name, score, _ in results:
@@ -91,7 +91,7 @@ class NBCompat(commands.Cog):
         return None
 
     def search_tid(self, arg, compatlist):
-        for line in compatlist:
+        for line in compatlist[2:]:
             if arg.upper() in line[3]:
                 return line
         return None
