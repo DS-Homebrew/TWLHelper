@@ -15,7 +15,6 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-
 import discord
 import functools
 import json
@@ -31,6 +30,9 @@ class NBCompat(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.loop.start()
+
+    def cog_unload(self):
+        self.loop.cancel()
 
     async def cog_check(self, ctx):
         if settings.GSPREADKEY is None:
