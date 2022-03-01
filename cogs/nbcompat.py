@@ -77,15 +77,13 @@ class NBCompat(commands.Cog):
     # This function is based on UDB-API, licensed Apache-2.0.
     # https://github.com/LightSage/UDB-API
     def search_name(self, arg, compatlist):
-        gamename = []
         matchlist = []
-        for line in compatlist[2:]:
-            gamename.append(line[1])
-        results = process.extract(arg, gamename)
-        for name, score, _ in results:
+        game_names = [line[1] for line in compatlist[2:]]
+        results = process.extract(arg, [g.lower() for g in game_names], processor=lambda a: a.lower())
+        for _, score, idx in results:
             if score < 70:
                 continue
-            game = self.getGameValues(name, compatlist)
+            game = self.getGameValues(game_names[idx], compatlist)
             matchlist.append([score, game])
         if matchlist:
             matchlist.sort(key=lambda x: x[0], reverse=True)
