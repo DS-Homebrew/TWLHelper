@@ -15,6 +15,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
+from typing import Optional
+
 import discord
 import functools
 import json
@@ -96,33 +98,29 @@ class NBCompat(commands.Cog):
                 return line
         return None
 
-    @commands.command(aliases=["nbcompat", "ndscompat"])
-    async def ndsbcompat(self, ctx, *arg):
-        """Searching nds-bootstrap compatibility list\n
-        Usage: .ndsbcompat [Title ID | Game Name]"""
-        arg = ''.join(arg)
-        embed = None
-        tid = False
-        game = None
-        if not arg:
+    @commands.command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
+    async def ndsbcompat(self, ctx, *, title: Optional[str]):
+        """Searching nds-bootstrap compatibility list"""
+        if not title:
             embed = discord.Embed(title="nds-bootstrap Compatibility List")
             embed.set_author(name="DS-Homebrew")
             embed.description = "Spreadsheet with all documented compatibility ratings for nds-bootstrap"
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
             embed.url = "https://docs.google.com/spreadsheets/d/1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc/edit?usp=sharing"
-            return await ctx.send(embed=embed)
-        if len(arg) == 4:
-            tid = True
+            await ctx.send(embed=embed)
+            return
+
+        game = None
+        tid = len(title) == 4
+        if tid and title[0] in ['H', 'Z', 'K']:
+            return await ctx.send("DSiWare compatibility is not supported. Please try another game, or visit the list directly.")
+        with open("nbcompat.json", "r") as compatfile:
+            compatlist = json.load(compatfile)
         if tid:
-            if arg[0] == 'H' or arg[0] == 'Z' or arg[0] == 'K':
-                return await ctx.send("DSiWare compatibility is not supported. Please try another game, or visit the list directly.")
-        compatfile = open("nbcompat.json", "r")
-        compatlist = json.load(compatfile)
-        compatfile.close()
-        if tid:
-            game = self.search_tid(arg, compatlist)
+            game = self.search_tid(title, compatlist)
         else:
-            game = self.search_name(arg, compatlist)
+            game = self.search_name(title, compatlist)
+        embed = None
         if game:
             embed = discord.Embed()
             embed.title = f"{game[1]} ({game[4]})"
@@ -132,13 +130,12 @@ class NBCompat(commands.Cog):
                 embed.add_field(name="Notes", value=f"{game[14]}", inline=False)
         if embed:
             return await ctx.send(content=None, embed=embed)
-        compatfile = open("nbcompat-fallback.json")
-        compatlist = json.load(compatfile)
-        compatfile.close()
+        with open("nbcompat-fallback.json") as compatfile:
+            compatlist = json.load(compatfile)
         if tid:
-            game = self.search_tid(arg, compatlist)
+            game = self.search_tid(title, compatlist)
         else:
-            game = self.search_name(arg, compatlist)
+            game = self.search_name(title, compatlist)
         if game:
             return await ctx.send(f"{game[1]} ({game[4]}) does not have any compatibility ratings!")
         await ctx.send("Game not found. Please try again.")
