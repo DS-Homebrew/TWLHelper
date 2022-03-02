@@ -138,10 +138,9 @@ class General(commands.Cog):
         """Links and/or information on uninstalling apps"""
         await ctx.send_help(ctx.command)
 
-    @uninstall.command(name="twilight", aliases=twilightmenu_alias)
+    @uninstall.command(name="twilight", aliases=twilightmenu_alias, usage="[3ds|dsi|ds]")
     async def twilight_uninstall(self, ctx, *, systems):
-        """Uninstalling TWiLight Menu++.\n
-        Usage: .uninstall twilight [3ds, dsi, ds]"""
+        """Displays an embed with a link that tells you how to uninstall TWiLight Menu++ for a certain system."""
         if not systems:
             systems = ("3ds", "dsi", "ds")
             await ctx.send(f'Please specify a console. Valid options are: {", ".join(list(systems))}.')
@@ -164,7 +163,7 @@ class General(commands.Cog):
 
     @uninstall.command(name="unlaunch")
     async def unlaunch_uninstall(self, ctx):
-        """Uninstalling Unlaunch"""
+        """Displays an embed with a link that tells you how to uninstalling Unlaunch"""
         embed = discord.Embed(title="Uninstalling Unlaunch")
         embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
         embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
@@ -174,7 +173,7 @@ class General(commands.Cog):
 
     @uninstall.command(name="hiyacfw", aliases=["hiya"])
     async def hiyacfw_uninstall(self, ctx):
-        """Uninstalling hiyaCFW"""
+        """Displays an embed with a link that tells you how to uninstall hiyaCFW"""
         embed = discord.Embed(title="Uninstalling hiyaCFW")
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
@@ -204,7 +203,7 @@ class General(commands.Cog):
 
     @commands.command(aliases=["sd-card-setup", "sdformat"])
     async def formatsd(self, ctx):
-        """Formatting your SD card"""
+        """Displays an embed with a link that tells you how to properly format your SD card"""
         embed = discord.Embed(title="SD Card Setup")
         embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
         embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
@@ -306,7 +305,7 @@ class General(commands.Cog):
 
     @commands.command(aliases=["colour"])
     async def color(self, ctx, *, color):
-        """Shows conversions of a color from #RRGGBB, #RGB, RRR GGG BBB, and BGR15"""
+        """Displays conversions of a color from #RRGGBB, #RGB, RRR GGG BBB, and BGR15"""
 
         arg = color.replace("0x", "").replace("#", "")
 
@@ -355,7 +354,7 @@ your device will refuse to write to it.
     # this command is a part of Kurisu (https://github.com/nh-server/Kurisu)
     @commands.command()
     async def netinfo(self, ctx):
-        """Description of Nintendo Network status"""
+        """Displays Nintendo Network status"""
         j = None
         r = await self.bot.session.get('https://www.nintendo.co.jp/netinfo/en_US/status.json?callback=getJSON', timeout=45)
         if r.status == 200:
@@ -404,7 +403,6 @@ your device will refuse to write to it.
     @commands.command()
     async def gamebrew(self, ctx, *args):
         """Searches for an app on GameBrew"""
-
         if not args:
             embed = discord.Embed()
             embed.title = "GameBrew"

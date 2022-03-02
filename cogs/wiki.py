@@ -111,57 +111,52 @@ class Wiki(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @faq.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_faq(self, ctx, *, arg=""):
-        """TWiLight Menu Frequently Asked Questions.
-        Usage: faq twilight [search parameter]"""
+    async def twilight_faq(self, ctx, *, query: str = None):
+        """Shows a FAQ entry from the wiki regarding TWiLight Menu++"""
         embed = self.embed("TWiLight Menu++ FAQ")
         embed.url += "twilightmenu/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
-        if arg == "":
+        if not query:
             await ctx.send(embed=embed)
         else:
-            await self.read_faq(ctx, "twilightmenu", arg, embed)
+            await self.read_faq(ctx, "twilightmenu", query, embed)
 
     @faq.command(aliases=ndsbootstrap_alias)
-    async def ndsbootstrap(self, ctx, *, arg=""):
-        """nds-bootstrap Frequently Asked Questions.
-        Usage: faq ndsbootstrap [search parameter]"""
+    async def ndsbootstrap(self, ctx, *, query: str = None):
+        """Shows a FAQ entry from the wiki regarding nds-bootstrap"""
         embed = self.embed("nds-bootstrap FAQ")
         embed.url += "nds-bootstrap/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
-        if arg == "":
+        if not query:
             await ctx.send(embed=embed)
         else:
-            await self.read_faq(ctx, "nds-bootstrap", arg, embed)
+            await self.read_faq(ctx, "nds-bootstrap", query, embed)
 
     @faq.command(aliases=["gbar2"])
-    async def gbarunner2(self, ctx, *, arg=""):
-        """GBARunner2 Frequently Asked Questions.
-        Usage: faq gbarunner2 [search parameter]"""
+    async def gbarunner2(self, ctx, *, query: str = None):
+        """Shows a FAQ entry from the wiki regarding GBARunner2"""
         embed = self.embed("GBARunner2 FAQ")
         embed.url += "gbarunner2/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
-        if arg == "":
+        if not query:
             await ctx.send(embed=embed)
         else:
-            await self.read_faq(ctx, "gbarunner2", arg, embed)
+            await self.read_faq(ctx, "gbarunner2", query, embed)
 
     @faq.command(aliases=["gm9i"])
-    async def godmode9i(self, ctx, *, arg=""):
-        """GodMode9i Frequently Asked Questions.
-        Usage: faq godmode9i [search parameter]"""
+    async def godmode9i(self, ctx, *, query: str = None):
+        """Shows a FAQ entry from the wiki regarding GodMode9i"""
         embed = self.embed("GodMode9i FAQ")
         embed.url += "godmode9i/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
-        if arg == "":
+        if not query:
             await ctx.send(embed=embed)
         else:
-            await self.read_faq(ctx, "godmode9i", arg, embed)
+            await self.read_faq(ctx, "godmode9i", query, embed)
 
     @faq.command(aliases=["hiya"])
     async def hiyacfw(self, ctx):
-        """hiyaCFW Frequently Asked Questions.
-        This does not have a FAQ search function."""
+        """Displays an embed with a link to the hiyaCFW FAQ"""
         embed = self.embed("hiyaCFW FAQ")
         embed.url += "hiyacfw/faq.html"
         embed.description = "Frequently Asked Questions & Troubleshooting"
@@ -201,7 +196,7 @@ class Wiki(commands.Cog):
 
     @commands.command()
     async def widescreen(self, ctx):
-        """Widescreen for 3DS TWLMenu++"""
+        """Displays an embed with a link telling you how to play in widescreen"""
         embed = self.embed("Playing in Widescreen")
         embed.url += "twilightmenu/playing-in-widescreen.html"
         embed.description = "Playing in widescreen with TWiLight Menu++ on 3DS"
