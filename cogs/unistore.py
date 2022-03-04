@@ -53,7 +53,7 @@ class UniStore(commands.Cog):
                 return await ctx.send("HTTP 422: Validation error. Please try again later.")
             else:
                 return await ctx.send("Unknown response from API. Please try again later.")
-        embed = discord.Embed(title="Universal-DB", colour=discord.Colour.from_rgb(7, 47, 79))
+        embed = discord.Embed(title="Universal-DB", colour=0x1d8056)
         embed.set_author(name="Universal-Team")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
         embed.description = "A database of DS and 3DS homebrew"
@@ -80,7 +80,7 @@ class UniStore(commands.Cog):
                 return await ctx.send("HTTP 422: Validation error. Please try again later.")
             else:
                 return await ctx.send("Unknown response from API. Please try again later.")
-        embed = discord.Embed(title=title)
+        embed = discord.Embed(title=title, colour=0xda4a53)
         embed.set_author(name="DS-Homebrew")
         if extension == "Unlaunch":
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
@@ -119,7 +119,7 @@ class UniStore(commands.Cog):
         """Links to a database of TWiLight Menu++ skins and Unlaunch backgrounds\n
         To show a random skin: `skins [console] -r`
         To search for a skin: `skins [console] [search parameter]`"""
-        embed = discord.Embed(title="Skins")
+        embed = discord.Embed(title="Skins", colour=0xda4a53)
         embed.set_author(name="DS-Homebrew")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.description = "A collection of skins for TWiLight Menu++ from DS-Homebrew/twlmenu-extras on GitHub"
