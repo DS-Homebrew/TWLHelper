@@ -86,7 +86,6 @@ class NBCompat(commands.Cog):
             game = self.getGameValues(game_names[idx], compatlist)
             matchlist.append([score, game])
         if matchlist:
-            matchlist.sort(key=lambda x: x[0], reverse=True)
             return matchlist[0][1]
         return None
 
@@ -102,8 +101,9 @@ class NBCompat(commands.Cog):
         Shows an nds-bootstrap compatibility list entry.
         Displays an embed with a link to the compatibility list if no arguments provided.
         """
+        embed = discord.Embed()
         if not title:
-            embed = discord.Embed(title="nds-bootstrap Compatibility List")
+            embed.title = "nds-bootstrap Compatibility List"
             embed.set_author(name="DS-Homebrew")
             embed.description = "Spreadsheet with all documented compatibility ratings for nds-bootstrap"
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
@@ -121,9 +121,7 @@ class NBCompat(commands.Cog):
             game = self.search_tid(title, compatlist)
         else:
             game = self.search_name(title, compatlist)
-        embed = None
         if game:
-            embed = discord.Embed()
             embed.title = f"{game[1]} ({game[4]})"
             embed.add_field(name="Last tested version", value=f"{game[10]}", inline=False)
             embed.add_field(name="Compatibility", value=f"{game[13]}", inline=False)
