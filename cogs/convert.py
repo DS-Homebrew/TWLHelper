@@ -309,6 +309,9 @@ class Convert(commands.Cog):
     @commands.group()
     @software_exists(['ffmpeg'])
     async def boxart(self, ctx):
+        """
+        Group of commands that converts an attached, or linked, image to a Box Art
+        """
         if ctx.invoked_subcommand is None:
             embed = self.embed("How to Get Box Art")
             embed.url += "twilightmenu/how-to-get-box-art.html"
