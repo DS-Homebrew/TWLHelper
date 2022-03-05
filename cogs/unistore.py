@@ -54,21 +54,23 @@ class UniStore(commands.Cog):
             else:
                 return await ctx.send("Unknown response from API. Please try again later.")
         embed = discord.Embed(title="Universal-DB", colour=0x1d8056)
-        embed.set_author(name="Universal-Team")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
-        embed.description = "A database of DS and 3DS homebrew"
-        embed.url = "https://db.universal-team.net/"
         if israndom:
             return await ctx.send(embed=self.uniembed(embed, app[0], "udb"))
         if search != "":
             if app["results"]:
                 return await ctx.send(embed=self.uniembed(embed, app["results"][0], "udb"))
             return await ctx.send("App cannot be found. Please try again.")
+        # when nothing is found
+        embed.set_author(name="Universal-Team")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
+        embed.description = "A database of DS and 3DS homebrew"
+        embed.url = "https://db.universal-team.net/"
         await ctx.send(embed=embed)
 
     async def skinparse(self, ctx, title, extension, skin="", israndom=False):
         item = None
         r = None
+        embed = discord.Embed(title=title, colour=0xda4a53)
         if skin != "" or israndom:
             if israndom:
                 r = await self.bot.session.get("https://twlmenu-extras.api.hansol.ca/random/" + extension)
@@ -80,7 +82,13 @@ class UniStore(commands.Cog):
                 return await ctx.send("HTTP 422: Validation error. Please try again later.")
             else:
                 return await ctx.send("Unknown response from API. Please try again later.")
-        embed = discord.Embed(title=title, colour=0xda4a53)
+        if israndom:
+            return await ctx.send(embed=self.uniembed(embed, item[0], "skin"))
+        if skin != "":
+            if item["results"]:
+                return await ctx.send(embed=self.uniembed(embed, item["results"][0], "skin"))
+            return await ctx.send("Skin cannot be found. Please try again.")
+        # when nothing is found
         embed.set_author(name="DS-Homebrew")
         if extension == "Unlaunch":
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
@@ -100,12 +108,6 @@ class UniStore(commands.Cog):
         elif extension == "Icon":
             embed.description = "Custom icons for TWiLight Menu++"
         embed.url = "https://skins.ds-homebrew.com/" + web_name(extension) + "/"
-        if israndom:
-            return await ctx.send(embed=self.uniembed(embed, item[0], "skin"))
-        if skin != "":
-            if item["results"]:
-                return await ctx.send(embed=self.uniembed(embed, item["results"][0], "skin"))
-            return await ctx.send("Skin cannot be found. Please try again.")
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["universaldb"])
