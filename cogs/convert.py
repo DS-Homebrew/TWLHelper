@@ -412,7 +412,7 @@ class Convert(commands.Cog):
             await self.download_media_error(ctx, fileName)
 
     @commands.command()
-    @software_exists(['ffmpeg', 'grit'])
+    @software_exists(['grit'])
     async def border(self, ctx, filelink=None):
         """
         Converts an attacked, or linked, image file to GBARunner2 border format
