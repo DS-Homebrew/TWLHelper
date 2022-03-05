@@ -19,10 +19,8 @@
 import discord
 
 from inspect import cleandoc
-from datetime import datetime
 from urllib import parse
 from discord.ext import commands
-from pytz import timezone
 
 from utils import check_arg, Literal, twilightmenu_alias, ndsbootstrap_alias
 
@@ -39,14 +37,6 @@ class General(commands.Cog):
         embed = discord.Embed(title=title, color=color)
         embed.description = cleandoc(text)
         await ctx.send(embed=embed)
-
-    def netinfo_parse_time(self, timestr):
-        time = datetime.strptime(' '.join(timestr.split()), '%A, %B %d, %Y %I :%M %p')
-        # netinfo is US/Pacific
-        time = timezone('US/Pacific').localize(time)
-        # convert it to UTC so Discord timestamp works
-        time = time.astimezone(timezone('UTC'))
-        return time
 
     @commands.command(require_var_positional=True, usage="<3ds|wiiu|vwii|switch|wii|dsi>")
     async def guide(self, ctx, guide: Literal("3ds", "wiiu", "vwii", "switch", "wii", "dsi")) -> None:  # noqa
@@ -349,55 +339,6 @@ your device will refuse to write to it.
                                      *If it is write locked, your console and other applications may behave unexpectedly.*
                                      """)
         embed.set_image(url="https://i.imgur.com/RvKjWcz.png")
-        await ctx.send(embed=embed)
-
-    # this command is a part of Kurisu (https://github.com/nh-server/Kurisu)
-    @commands.command()
-    async def netinfo(self, ctx):
-        """Displays Nintendo Network status"""
-        j = None
-        r = await self.bot.session.get('https://www.nintendo.co.jp/netinfo/en_US/status.json?callback=getJSON', timeout=45)
-        if r.status == 200:
-            j = await r.json()
-        else:
-            return await ctx.send("Could not receive data from Nintendo. Please try again later.")
-        now = datetime.now(timezone('US/Pacific'))
-
-        embed = discord.Embed(title="Network Maintenance Information / Online Status",
-                              url="https://www.nintendo.co.jp/netinfo/en_US/index.html",
-                              timestamp=datetime.now())
-        embed.set_footer(text="Last updated")
-
-        for status_type in ("operational_statuses", "temporary_maintenances"):
-            descriptor = "Maintenance" if status_type == "temporary_maintenances" else "Status"
-
-            for entry in j[status_type]:
-                if "platform" in entry:
-                    entry_desc = ', '.join(entry["platform"]).replace("nintendo", "Nintendo").replace("web", "Web")
-                else:
-                    entry_desc = 'No console specified.'
-
-                begin = datetime(year=2000, month=1, day=1, tzinfo=timezone('US/Pacific'))
-                end = datetime(year=2099, month=1, day=1, tzinfo=timezone('US/Pacific'))
-                if "begin" in entry:
-                    begin = self.netinfo_parse_time(entry["begin"])
-                    timestamp = discord.utils.format_dt(begin, style='F')
-                    entry_desc += f'\nBegins: {timestamp}'
-                if "end" in entry:
-                    end = self.netinfo_parse_time(entry["end"])
-                    timestamp = discord.utils.format_dt(end, style='F')
-                    entry_desc += f'\nEnds: {timestamp}'
-
-                if now < end:
-                    entry_name = "{} {}: {}".format(
-                        "Current" if begin <= now else "Upcoming",
-                        descriptor,
-                        entry["software_title"].replace(' <br />\r\n', ', ')
-                    )
-                    if "services" in entry:
-                        entry_name += ", " + ', '.join(entry["services"])
-                    embed.add_field(name=entry_name, value=entry_desc, inline=False)
-
         await ctx.send(embed=embed)
 
     @commands.command()
