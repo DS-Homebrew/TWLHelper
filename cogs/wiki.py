@@ -34,7 +34,7 @@ class Wiki(commands.Cog):
 
     async def read_faq(self, ctx, console, arg, embed):
         page = None
-        r = await self.bot.session.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/" + console.lower() + "/faq.md")
+        r = await self.bot.session.get(f"https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/{console.lower()}/faq.md")
         if r.status == 200:
             page = await r.text()
         else:
