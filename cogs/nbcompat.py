@@ -98,7 +98,10 @@ class NBCompat(commands.Cog):
 
     @commands.command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
     async def ndsbcompat(self, ctx, *, title: Optional[str]):
-        """Searching nds-bootstrap compatibility list"""
+        """
+        Shows an nds-bootstrap compatibility list entry.
+        Displays an embed with a link to the compatibility list if no arguments provided.
+        """
         if not title:
             embed = discord.Embed(title="nds-bootstrap Compatibility List")
             embed.set_author(name="DS-Homebrew")

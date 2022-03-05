@@ -114,7 +114,7 @@ class UniStore(commands.Cog):
 
     @commands.command(aliases=["universaldb"])
     async def udb(self, ctx, *args):
-        """Links to Universal-DB and/or one of the apps.\n
+        """Displays an embed with a link to Universal-DB and/or one of the apps.\n
         To show a random app: `udb [-r]`
         To search for an app: `udb [search parameter]`"""
         if args and args[0] == "-r":
@@ -125,7 +125,7 @@ class UniStore(commands.Cog):
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def skins(self, ctx):
-        """Links to a database of TWiLight Menu++ skins and Unlaunch backgrounds\n
+        """Displays an embed with a link to a database of TWiLight Menu++ skins and Unlaunch backgrounds\n
         To show a random skin: `skins [console] -r`
         To search for a skin: `skins [console] [search parameter]`"""
         embed = discord.Embed(title="Skins", colour=0xda4a53)
@@ -137,7 +137,7 @@ class UniStore(commands.Cog):
 
     @skins.command(name="unlaunch")
     async def skin_unlaunch(self, ctx, *args):
-        """Links to the Unlaunch backgrounds page.\n
+        """Displays an embed with a link to the Unlaunch backgrounds page.\n
         To show a random background: `skins unlaunch [-r]`
         To search for a background: `skins unlaunch [search parameter]`"""
         if args and args[0] == "-r":
@@ -148,7 +148,7 @@ class UniStore(commands.Cog):
 
     @skins.command(name="dsi", aliases=["dsimenu"])
     async def skin_dsimenu(self, ctx, *args):
-        """Links to the DSi Menu skins page.\n
+        """Displays an embed with a link to the DSi Menu skins page.\n
         To show a random skin: `skins dsi [-r]`
         To search for a skin: `s`kins dsi [search parameter]`"""
         if args and args[0] == "-r":
@@ -159,7 +159,7 @@ class UniStore(commands.Cog):
 
     @skins.command(name="3ds", aliases=["3dsmenu"])
     async def skin_3dsmenu(self, ctx, *args):
-        """Links to the 3DS Menu skins page.\n
+        """Displays an embed with a link to the 3DS Menu skins page.\n
         To show a random skin: `skins 3ds [-r]`
         To search for a skin: `skins 3ds [search parameter]`"""
         if args and args[0] == "-r":
@@ -170,7 +170,7 @@ class UniStore(commands.Cog):
 
     @skins.command(name="r4", aliases=["r4theme"])
     async def skin_r4menu(self, ctx, *args):
-        """Links to the R4 Original Menu skins page.\n
+        """Displays an embed with a link to the R4 Original Menu skins page.\n
         To show a random skin: `skins r4 [-r]`
         To search for a skin: `skins r4 [search parameter]`"""
         if args and args[0] == "-r":
@@ -181,7 +181,7 @@ class UniStore(commands.Cog):
 
     @skins.command(name="font")
     async def skin_font(self, ctx, *args):
-        """Links to the TWiLight Menu++ fonts page.\n
+        """Displays an embed with a link to the TWiLight Menu++ fonts page.\n
         To show a random font: `skins fonts [-r]`
         To search for a font: `skins fonts [search parameter]`"""
         if args and args[0] == "-r":
@@ -192,7 +192,7 @@ class UniStore(commands.Cog):
 
     @skins.command(name="icon")
     async def skin_icon(self, ctx, *args):
-        """Links to the TWiLight Menu++ icons page.\n
+        """Displays an embed with a link to the TWiLight Menu++ icons page.\n
         To show a random icon: `skins icon [-r]`
         To search for an icon: `skins icon [search parameter]`"""
         if args and args[0] == "-r":
