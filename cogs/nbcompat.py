@@ -89,10 +89,15 @@ class NBCompat(commands.Cog):
             return matchlist[0][1]
         return None
 
-    def search_tid(self, arg, compatlist):
-        for line in compatlist[2:]:
-            if arg.upper() in line[3]:
-                return line
+    def search_tid(self, arg, compatlist, getlink=False):
+        for idx, val in enumerate(compatlist[2:]):
+            if arg.upper() in val[3]:
+                if not getlink:
+                    return val
+                else:
+                    # +1 because sheet starts from 1, but list starts from 0
+                    # +2 added since searching starts from row 3
+                    return idx + 3
         return None
 
     @commands.command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
@@ -118,7 +123,7 @@ class NBCompat(commands.Cog):
         with open("nbcompat.json", "r") as compatfile:
             compatlist = json.load(compatfile)
         if tid:
-            game = self.search_tid(title, compatlist)
+            game = self.search_tid(title, compatlist, getlink=False)
         else:
             game = self.search_name(title, compatlist)
         if game:
@@ -127,12 +132,14 @@ class NBCompat(commands.Cog):
             embed.add_field(name="Compatibility", value=f"{game[13]}", inline=False)
             if game[14] != '':
                 embed.add_field(name="Notes", value=f"{game[14]}", inline=False)
+            gameidx = self.search_tid(game[3], compatlist, getlink=True)
+            embed.add_field(name="Link", value=f"https://docs.google.com/spreadsheets/d/1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc/edit#gid=0&range=A{gameidx}:P{gameidx}", inline=False)
         if embed:
             return await ctx.send(content=None, embed=embed)
         with open("nbcompat-fallback.json") as compatfile:
             compatlist = json.load(compatfile)
         if tid:
-            game = self.search_tid(title, compatlist)
+            game = self.search_tid(title, compatlist, getlink=False)
         else:
             game = self.search_name(title, compatlist)
         if game:
