@@ -94,6 +94,11 @@ class UniStore(commands.Cog):
         elif extension == "Nintendo 3DS":
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/3ds.png")
             embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
+        elif extension == "Font":
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/font.png")
+            embed.description = "Custom fonts for TWiLight Menu++"
+        elif extension == "Icon":
+            embed.description = "Custom icons for TWiLight Menu++"
         embed.url = "https://skins.ds-homebrew.com/" + web_name(extension) + "/"
         if israndom:
             return await ctx.send(embed=self.uniembed(embed, item[0], "skin"))
@@ -141,7 +146,7 @@ class UniStore(commands.Cog):
     async def skin_dsimenu(self, ctx, *args):
         """Links to the DSi Menu skins page.\n
         To show a random skin: `skins dsi [-r]`
-        To search for a background: `s`kins dsi [search parameter]`"""
+        To search for a skin: `s`kins dsi [search parameter]`"""
         if args and args[0] == "-r":
             await self.skinparse(ctx, "DSi Menu Skins", "Nintendo DSi", israndom=True)
         else:
@@ -152,7 +157,7 @@ class UniStore(commands.Cog):
     async def skin_3dsmenu(self, ctx, *args):
         """Links to the 3DS Menu skins page.\n
         To show a random skin: `skins 3ds [-r]`
-        To search for a background: `skins 3ds [search parameter]`"""
+        To search for a skin: `skins 3ds [search parameter]`"""
         if args and args[0] == "-r":
             await self.skinparse(ctx, "3DS Menu Skins", "Nintendo 3DS", israndom=True)
         else:
@@ -163,12 +168,34 @@ class UniStore(commands.Cog):
     async def skin_r4menu(self, ctx, *args):
         """Links to the R4 Original Menu skins page.\n
         To show a random skin: `skins r4 [-r]`
-        To search for a background: `skins r4 [search parameter]`"""
+        To search for a skin: `skins r4 [search parameter]`"""
         if args and args[0] == "-r":
             await self.skinparse(ctx, "R4 Original Menu Skins", "R4 Original", israndom=True)
         else:
             skin = "".join(args)
             await self.skinparse(ctx, "R4 Original Menu Skins", "R4 Original", skin)
+
+    @skins.command(name="font")
+    async def skin_font(self, ctx, *args):
+        """Links to the TWiLight Menu++ fonts page.\n
+        To show a random font: `skins fonts [-r]`
+        To search for a font: `skins fonts [search parameter]`"""
+        if args and args[0] == "-r":
+            await self.skinparse(ctx, "TWiLight Menu++ Fonts", "Font", israndom=True)
+        else:
+            skin = "".join(args)
+            await self.skinparse(ctx, "TWiLight Menu++ Fonts", "Font", skin)
+
+    @skins.command(name="icon")
+    async def skin_icon(self, ctx, *args):
+        """Links to the TWiLight Menu++ icons page.\n
+        To show a random icon: `skins icon [-r]`
+        To search for an icon: `skins icon [search parameter]`"""
+        if args and args[0] == "-r":
+            await self.skinparse(ctx, "TWiLight Menu++ Icons", "Icon", israndom=True)
+        else:
+            skin = "".join(args)
+            await self.skinparse(ctx, "TWiLight Menu++ Icons", "Icon", skin)
 
 
 def setup(bot):
