@@ -3,6 +3,7 @@ import time
 import discord
 
 from aiohttp import client_exceptions
+from shutil import which
 from asyncio.subprocess import create_subprocess_exec
 from discord.ext import commands
 
@@ -17,6 +18,14 @@ class Convert(commands.Cog):
         if ctx.guild is None:
             raise commands.NoPrivateMessage()
         return True
+
+    def software_exists(apps: list):
+        def predicate(ctx):
+            for app in apps:
+                if which(app) is None:
+                    return False
+            return True
+        return commands.check(predicate)
 
     def check_dir(self):
         if not os.path.isdir("downloads"):
@@ -182,6 +191,7 @@ class Convert(commands.Cog):
             await self.download_media_error(ctx, fileName)
 
     @commands.command(name="unlaunch")
+    @software_exists(['ffmpeg', 'gifsicle'])
     async def unlaunch_background(self, ctx, *args):
         """
         Convert an attachment or linked image to an Unlaunch GIF file
@@ -236,6 +246,7 @@ class Convert(commands.Cog):
             await self.download_media_error(ctx, fileName)
 
     @commands.command()
+    @software_exists(['ffmpeg'])
     async def bmp(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to BMP
@@ -243,6 +254,7 @@ class Convert(commands.Cog):
         await self.convert_img(ctx, "bmp", filelink=filelink)
 
     @commands.command()
+    @software_exists(['ffmpeg'])
     async def png(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to PNG
@@ -250,6 +262,7 @@ class Convert(commands.Cog):
         await self.convert_img(ctx, "png", filelink=filelink)
 
     @commands.command(aliases=["jpg"])
+    @software_exists(['ffmpeg'])
     async def jpeg(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to JPEG
@@ -257,6 +270,7 @@ class Convert(commands.Cog):
         await self.convert_img(ctx, "jpeg", filelink=filelink)
 
     @commands.command()
+    @software_exists(['ffmpeg'])
     async def gif(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to GIF
@@ -293,6 +307,7 @@ class Convert(commands.Cog):
             await self.download_media_error(ctx, fileName)
 
     @commands.group()
+    @software_exists(['ffmpeg'])
     async def boxart(self, ctx):
         if ctx.invoked_subcommand is None:
             embed = self.embed("How to Get Box Art")
@@ -329,6 +344,7 @@ class Convert(commands.Cog):
         await self.convert_img(ctx, scale="158:115", filelink=filelink, boxart=True)
 
     @commands.command()
+    @software_exists(['ffmpeg'])
     async def dsimenu(self, ctx, filelink=None):
         """
         Converts an attached, or linked, image to a TWLMenu++ DSi Menu Theme
@@ -336,6 +352,7 @@ class Convert(commands.Cog):
         await self.convert_img(ctx, scale="208:156", filelink=filelink, boxart=True)
 
     @commands.command()
+    @software_exists(['ffmpeg'])
     async def dsmp4(self, ctx, filelink=None):
         """
         Converts an attached, or linked, video to a DSi Video for MPEG4 Player
@@ -343,6 +360,7 @@ class Convert(commands.Cog):
         await self.convert_vid(ctx, "mp4", filelink, "dsmp4")
 
     @commands.command(aliases=["mp4"])
+    @software_exists(['ffmpeg'])
     async def video(self, ctx, filelink=None):
         """
         Converts an attached, or linked, video to MP4
@@ -350,6 +368,7 @@ class Convert(commands.Cog):
         await self.convert_vid(ctx, "mp4", filelink, "discord")
 
     @commands.command(aliases=["bgm"])
+    @software_exists(['ffmpeg'])
     async def twlbgm(self, ctx, filelink=None):
         """
         Converts an attached, or linked, audio file to TWiLight Menu's BGM format
@@ -390,6 +409,7 @@ class Convert(commands.Cog):
             await self.download_media_error(ctx, fileName)
 
     @commands.command()
+    @software_exists(['ffmpeg', 'grit'])
     async def border(self, ctx, filelink=None):
         """
         Converts an attacked, or linked, image file to GBARunner2 border format
