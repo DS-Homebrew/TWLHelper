@@ -43,7 +43,7 @@ class embedHelp(commands.MinimalHelpCommand):
 
 class TWLHelper(commands.Bot):
     def __init__(self, command_prefix, description):
-        intents = discord.Intents(guilds=True, members=True, bans=True, messages=True)
+        intents = discord.Intents(guilds=True, members=True, bans=True, messages=True, message_content=True)
         allowed_mentions = discord.AllowedMentions(everyone=False, roles=False)
         activity = discord.Game(settings.STATUS)
         status = discord.Status.online
