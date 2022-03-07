@@ -25,11 +25,23 @@ IS_DOCKER = os.environ.get('IS_DOCKER', '')
 settingsf = open('settings.json')
 settings = json.load(settingsf)
 
+# bot internals
 TOKEN = settings['DEFAULT']['TOKEN']
 PREFIX = [x for x in settings['DEFAULT']['PREFIX']]
 STATUS = settings['DEFAULT']['STATUS']
+GSPREADKEY = settings.get('GSPREADKEY')
+
+# server specifics
+GUILD = settings.get('GUILD')
 staff_roles = [x for x in settings['MODERATOR']]
+
+# channels
 NINUPDATE = settings['CHANNEL']['NINUPDATES']
 SUBREDDIT = settings['CHANNEL']['SUBREDDIT']
-GUILD = settings.get('GUILD')
-GSPREADKEY = settings.get('GSPREADKEY')
+GITHUBUPDATES = settings['CHANNEL']['GITHUBUPDATES']
+
+# threads
+TWLUPDATES = settings['THREAD']['TWLUPDATES']
+NDSBUPDATES = settings['THREAD']['NDSBUPDATES']
+WEBUPDATES = settings['THREAD']['WEBUPDATES']
+BOTUPDATES = settings['THREAD']['BOTUPDATES']

@@ -33,6 +33,9 @@ Each function and related commands will be disabled until the instructions are f
     - To use the GBARunner2 border conversion functions, install `grit` for your host. This can be found by installing the [devkitPro build environment](https://devkitpro.org/wiki/Getting_Started).
         - If your host is already configured to compile NDS or GBA software, this should already be set up.
         - If only installing the devkitPro build environment specifically for `grit`, you will need to install both `grit` and `devkit-env` package from pacman.
+- The GitHub cog pushes GitHub webhook updates into specific threads in the server.
+    - In `settings.json`, set `GITHUBUPDATES` to the channel where the main GitHub webhook is set.
+    - In `settings.json`, under `THREAD`, set values accordingly.
 
 ## License
 ```

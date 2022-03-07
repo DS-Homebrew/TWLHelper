@@ -14,7 +14,15 @@
 
     "CHANNEL": {
         "NINUPDATES": null,
-        "SUBREDDIT": null
+        "SUBREDDIT": null,
+        "GITHUBUPDATES": null
+    },
+
+    "THREAD": {
+        "TWLUPDATES": null,
+        "NDSBUPDATES": null,
+        "WEBUPDATES": null,
+        "BOTUPDATES": null
     },
 
     "GSPREADKEY": null
