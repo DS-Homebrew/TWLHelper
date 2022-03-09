@@ -79,6 +79,10 @@ class TWLHelper(commands.Bot):
             exc = "{}: {}".format(type(e).__name__, e)
             print("Failed to load cog {}\n{}".format(cog, exc))
 
+    async def close(self):
+        await self.session.close()
+        await super().close()
+
     async def is_owner(self, user: discord.User):
         if settings.GUILD:
             g = self.get_guild(settings.GUILD)
