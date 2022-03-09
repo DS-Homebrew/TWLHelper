@@ -228,75 +228,79 @@ class API(commands.Cog):
     async def udbparse(self, ctx, search="", israndom=False):
         app = None
         r = None
-        if israndom or search != "":
+
+        async with ctx.typing():
+            if israndom or search != "":
+                if israndom:
+                    r = await self.bot.session.get("https://udb-api.lightsage.dev/random")
+                elif search != "":
+                    r = await self.bot.session.get(f"https://udb-api.lightsage.dev/search/{search}")
+                if r.status == 200:
+                    app = await r.json()
+                elif r.status == 422:
+                    return await ctx.send("HTTP 422: Validation error. Please try again later.")
+                else:
+                    return await ctx.send("Unknown response from API. Please try again later.")
+            embed = discord.Embed(title="Universal-DB", colour=0x1d8056)
+            embed.url = "https://db.universal-team.net/"
             if israndom:
-                r = await self.bot.session.get("https://udb-api.lightsage.dev/random")
+                return await ctx.send(embed=self.uniembed(embed, app[0], "udb"))
             elif search != "":
-                r = await self.bot.session.get(f"https://udb-api.lightsage.dev/search/{search}")
-            if r.status == 200:
-                app = await r.json()
-            elif r.status == 422:
-                return await ctx.send("HTTP 422: Validation error. Please try again later.")
-            else:
-                return await ctx.send("Unknown response from API. Please try again later.")
-        embed = discord.Embed(title="Universal-DB", colour=0x1d8056)
-        embed.url = "https://db.universal-team.net/"
-        if israndom:
-            return await ctx.send(embed=self.uniembed(embed, app[0], "udb"))
-        elif search != "":
-            if app["results"]:
-                return await ctx.send(embed=self.uniembed(embed, app["results"][0], "udb"))
-            else:
-                return await ctx.send("App cannot be found. Please try again.")
-        # when no args
-        embed.set_author(name="Universal-Team")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
-        embed.description = "A database of DS and 3DS homebrew"
-        await ctx.send(embed=embed)
+                if app["results"]:
+                    return await ctx.send(embed=self.uniembed(embed, app["results"][0], "udb"))
+                else:
+                    return await ctx.send("App cannot be found. Please try again.")
+            # when no args
+            embed.set_author(name="Universal-Team")
+            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
+            embed.description = "A database of DS and 3DS homebrew"
+            await ctx.send(embed=embed)
 
     async def skinparse(self, ctx, title, extension, skin="", israndom=False):
         item = None
         r = None
-        if skin != "" or israndom:
+
+        async with ctx.typing():
+            if skin != "" or israndom:
+                if israndom:
+                    r = await self.bot.session.get(f"https://twlmenu-extras.api.hansol.ca/random/{extension}")
+                elif skin != "":
+                    r = await self.bot.session.get(f"https://twlmenu-extras.api.hansol.ca/search/{extension}/{skin}")
+                if r.status == 200:
+                    item = await r.json()
+                elif r.status == 422:
+                    return await ctx.send("HTTP 422: Validation error. Please try again later.")
+                else:
+                    return await ctx.send("Unknown response from API. Please try again later.")
+            embed = discord.Embed(title=title, colour=0xda4a53)
+            embed.url = f"https://skins.ds-homebrew.com/{web_name(extension)}/"
             if israndom:
-                r = await self.bot.session.get(f"https://twlmenu-extras.api.hansol.ca/random/{extension}")
+                return await ctx.send(embed=self.uniembed(embed, item[0], "skin"))
             elif skin != "":
-                r = await self.bot.session.get(f"https://twlmenu-extras.api.hansol.ca/search/{extension}/{skin}")
-            if r.status == 200:
-                item = await r.json()
-            elif r.status == 422:
-                return await ctx.send("HTTP 422: Validation error. Please try again later.")
-            else:
-                return await ctx.send("Unknown response from API. Please try again later.")
-        embed = discord.Embed(title=title, colour=0xda4a53)
-        embed.url = f"https://skins.ds-homebrew.com/{web_name(extension)}/"
-        if israndom:
-            return await ctx.send(embed=self.uniembed(embed, item[0], "skin"))
-        elif skin != "":
-            if item["results"]:
-                return await ctx.send(embed=self.uniembed(embed, item["results"][0], "skin"))
-            else:
-                return await ctx.send("Skin cannot be found. Please try again.")
-        # when no args
-        embed.set_author(name="DS-Homebrew")
-        if extension == "Unlaunch":
-            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-            embed.description = "Custom backgrounds for Unlaunch"
-        elif extension == "Nintendo DSi":
-            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/dsi.png")
-            embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
-        elif extension == "R4 Original":
-            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/r4.png")
-            embed.description = "Custom skins for TWiLight Menu++'s R4 Original Menu theme"
-        elif extension == "Nintendo 3DS":
-            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/3ds.png")
-            embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
-        elif extension == "Font":
-            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/font.png")
-            embed.description = "Custom fonts for TWiLight Menu++"
-        elif extension == "Icon":
-            embed.description = "Custom icons for TWiLight Menu++"
-        await ctx.send(embed=embed)
+                if item["results"]:
+                    return await ctx.send(embed=self.uniembed(embed, item["results"][0], "skin"))
+                else:
+                    return await ctx.send("Skin cannot be found. Please try again.")
+            # when no args
+            embed.set_author(name="DS-Homebrew")
+            if extension == "Unlaunch":
+                embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+                embed.description = "Custom backgrounds for Unlaunch"
+            elif extension == "Nintendo DSi":
+                embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/dsi.png")
+                embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
+            elif extension == "R4 Original":
+                embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/r4.png")
+                embed.description = "Custom skins for TWiLight Menu++'s R4 Original Menu theme"
+            elif extension == "Nintendo 3DS":
+                embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/3ds.png")
+                embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
+            elif extension == "Font":
+                embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/font.png")
+                embed.description = "Custom fonts for TWiLight Menu++"
+            elif extension == "Icon":
+                embed.description = "Custom icons for TWiLight Menu++"
+            await ctx.send(embed=embed)
 
     @commands.command(aliases=["universaldb"])
     async def udb(self, ctx, *args):
@@ -399,20 +403,21 @@ class API(commands.Cog):
             embed.url = "https://www.gamebrew.org/wiki/Main_Page"
             return await ctx.send(embed=embed)
 
-        r = await self.bot.session.get(f"https://www.gamebrew.org/api.php?action=opensearch&limit=1&namespace=0&format=json&redirects=resolve&search={parse.quote(' '.join(args))}")
-        if r.status != 200:
-            return await ctx.send(f"Error {r.status}! Failed to connect to GameBrew API")
+        async with ctx.typing():
+            r = await self.bot.session.get(f"https://www.gamebrew.org/api.php?action=opensearch&limit=1&namespace=0&format=json&redirects=resolve&search={parse.quote(' '.join(args))}")
+            if r.status != 200:
+                return await ctx.send(f"Error {r.status}! Failed to connect to GameBrew API")
 
-        apiData = await r.json()
+            apiData = await r.json()
 
-        if len(apiData[1]) > 0:
-            embed = discord.Embed()
-            embed.title = apiData[1][0]
-            embed.set_author(name="GameBrew", icon_url="https://www.gamebrew.org/images/logo3.png")
-            embed.url = apiData[3][0]
-            await ctx.send(embed=embed)
-        else:
-            await ctx.send("App cannot be found. Please try again.")
+            if len(apiData[1]) > 0:
+                embed = discord.Embed()
+                embed.title = apiData[1][0]
+                embed.set_author(name="GameBrew", icon_url="https://www.gamebrew.org/images/logo3.png")
+                embed.url = apiData[3][0]
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send("App cannot be found. Please try again.")
 
 
 def setup(bot):
