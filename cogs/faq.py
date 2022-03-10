@@ -71,7 +71,10 @@ class FAQ(commands.Cog):
         field_description = re.sub("<.*?>(.*?)</.*?>", "\\1", field_description)  # Remove other HTML
         field_description = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", field_description)  # Remove self-closing HTML
         embed.description = f"**{field_title}**"
-        embed.description += field_description
+        if len(embed.description) + len(field_description) > 500:
+            embed.description += "\nSee linked page for details."
+        else:
+            embed.description += field_description
         await ctx.send(embed=embed)
 
     async def read_guide(self, ctx, arg, embed):
@@ -107,7 +110,10 @@ class FAQ(commands.Cog):
         field_description = re.sub("<.*?>(.*?)</.*?>", "\\1", field_description)  # Remove other HTML
         field_description = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", field_description)  # Remove self-closing HTML
         embed.description = f"**{field_title}**"
-        embed.description += field_description
+        if len(embed.description) + len(field_description) > 500:
+            embed.description += "\nSee linked page for details."
+        else:
+            embed.description += field_description
         await ctx.send(embed=embed)
 
     def read_glossary(self, file, iter):
@@ -158,11 +164,32 @@ class FAQ(commands.Cog):
         """Shows a FAQ entry from the wiki regarding GBARunner2"""
         embed = self.wikiembed("GBARunner2 FAQ")
         embed.url += "gbarunner2/faq.html"
-        embed.description = "Frequently Asked Questions & Troubleshooting"
         if not query:
             await ctx.send(embed=embed)
         else:
             await self.read_faq(ctx, "gbarunner2", query, embed)
+
+    @faq.command(aliases=["gm9i"])
+    async def godmode9i(self, ctx, *, query: str = None):
+        """Shows a FAQ entry from the wiki regarding GodMode9i"""
+        embed = self.wikiembed("GodMode9i FAQ")
+        embed.url += "godmode9i/faq.html"
+        embed.description = "Frequently Asked Questions & Troubleshooting"
+        if not query:
+            await ctx.send(embed=embed)
+        else:
+            await self.read_faq(ctx, "godmode9i", query, embed)
+
+    @faq.command(aliases=["hiya"])
+    async def hiyacfw(self, ctx, *, query: str = None):
+        """Displays an embed with a link to the hiyaCFW FAQ"""
+        embed = self.wikiembed("hiyaCFW FAQ")
+        embed.url += "hiyacfw/faq.html"
+        embed.description = "Frequently Asked Questions & Troubleshooting"
+        if not query:
+            await ctx.send(embed=embed)
+        else:
+            await self.read_faq(ctx, "hiyacfw", query, embed)
 
     @faq.command(name="guide")
     async def faq_guide(self, ctx, *, query: str = None):
@@ -176,22 +203,6 @@ class FAQ(commands.Cog):
             await ctx.send(embed=embed)
         else:
             await self.read_guide(ctx, query, embed)
-
-    @faq.command(aliases=["gm9i"])
-    async def godmode9i(self, ctx):
-        """Shows a FAQ entry from the wiki regarding GodMode9i"""
-        embed = self.wikiembed("GodMode9i FAQ")
-        embed.url += "godmode9i/faq.html"
-        embed.description = "Frequently Asked Questions & Troubleshooting"
-        await ctx.send(embed=embed)
-
-    @faq.command(aliases=["hiya"])
-    async def hiyacfw(self, ctx):
-        """Displays an embed with a link to the hiyaCFW FAQ"""
-        embed = self.wikiembed("hiyaCFW FAQ")
-        embed.url += "hiyacfw/faq.html"
-        embed.description = "Frequently Asked Questions & Troubleshooting"
-        await ctx.send(embed=embed)
 
     @commands.command()
     async def glossary(self, ctx, *, arg=""):
