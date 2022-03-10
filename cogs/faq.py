@@ -88,7 +88,7 @@ class FAQ(commands.Cog):
             iter += 1
             if arg.lower() in faq.lower() and "## " in faq.lower():
                 field_title = faq[3:]
-                embed.url += "?faq=" + web_name(field_title)
+                embed.url += "#" + web_name(field_title)
                 embed.description = discord.Embed.Empty
                 break
         if embed.description != discord.Embed.Empty:
