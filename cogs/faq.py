@@ -31,6 +31,8 @@ class FAQ(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    descriptionMaxSize = 750
+
     def wikiembed(self, title):
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew Wiki")
@@ -71,7 +73,7 @@ class FAQ(commands.Cog):
         field_description = re.sub("<.*?>(.*?)</.*?>", "\\1", field_description)  # Remove other HTML
         field_description = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", field_description)  # Remove self-closing HTML
         embed.description = f"**{field_title}**"
-        if len(embed.description) + len(field_description) > 500:
+        if len(embed.description) + len(field_description) > self.descriptionMaxSize:
             embed.description += "\nSee linked page for details."
         else:
             embed.description += field_description
@@ -110,7 +112,7 @@ class FAQ(commands.Cog):
         field_description = re.sub("<.*?>(.*?)</.*?>", "\\1", field_description)  # Remove other HTML
         field_description = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", field_description)  # Remove self-closing HTML
         embed.description = f"**{field_title}**"
-        if len(embed.description) + len(field_description) > 500:
+        if len(embed.description) + len(field_description) > self.descriptionMaxSize:
             embed.description += "\nSee linked page for details."
         else:
             embed.description += field_description
