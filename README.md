@@ -11,6 +11,9 @@
 1. Install the following for your host:
     - Python 3.9.x (and its respective pip)
         - This must be 3.9.x as exception parser is broken as of 3.10.x.
+1. Create a venv and activate it
+    - UNIX-based: `python3 -m venv venv`, `source venv/bin/activate`
+    - Windows `py -m venv venv`, `.\venv\Scripts\activate`
 1. Run `pip install -r requirements.txt`
 1. Run the following command:
     - UNIX-based: `python3 twlhelper.py`
