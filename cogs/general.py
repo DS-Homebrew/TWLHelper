@@ -51,7 +51,7 @@ class General(commands.Cog):
             embed.set_author(name="Nintendo Homebrew")
             embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
             embed.url = "https://wiiu.hacks.guide/"
-            embed.description = "A guide collaboration between Nintendo Homebrew’s Helpers and Staff, from stock to CBHC custom firmware"
+            embed.description = "A guide to hacking the Nintendo Wii U"
             await ctx.send(embed=embed)
         elif check_arg(guide, ('vwii',)):
             embed.set_author(name="Nintendo Homebrew")
@@ -63,7 +63,7 @@ class General(commands.Cog):
             embed.set_author(name="Nintendo Homebrew")
             embed.set_thumbnail(url="https://i.imgur.com/CVSu1zc.png")
             embed.url = "https://switchgui.de/switch-guide/"
-            embed.description = "A guide collaboration between Nintendo Homebrew's Helpers and Staff, from stock to Atmosphere"
+            embed.description = "Switch CFW Guide"
             await ctx.send(embed=embed)
         elif check_arg(guide, 'wii'):
             embed.set_author(name="RiiConnect24")
