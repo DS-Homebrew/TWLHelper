@@ -45,7 +45,7 @@ class API(commands.Cog):
             return settings.GSPREADKEY is not None
         return commands.check(predicate)
 
-    @tasks.loop(seconds=3600)
+    @tasks.loop(hours=1)
     async def loop(self):
         await self.bot.wait_until_ready()
         await self.update_netinfo()
@@ -216,10 +216,10 @@ class API(commands.Cog):
     # UniStore related functions
     def uniembed(self, embed, appid, store):
         embed.title = appid["title"]
-        embed.color = int(appid['color'][1:], 16) if 'color' in appid else discord.Embed.Empty
-        embed.set_author(name=appid["author"], icon_url=appid["avatar"] if "avatar" in appid else discord.Embed.Empty)
-        embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else discord.Embed.Empty)))
-        embed.description = appid["description"] if "description" in appid else discord.Embed.Empty
+        embed.color = int(appid['color'][1:], 16) if 'color' in appid else None
+        embed.set_author(name=appid["author"], icon_url=appid["avatar"] if "avatar" in appid else None)
+        embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else None)))
+        embed.description = appid["description"] if "description" in appid else None
         if store == "udb":
             embed.url += appid["systems"][0].lower() + "/"
         embed.url += web_name(appid["title"])
@@ -420,5 +420,5 @@ class API(commands.Cog):
                 await ctx.send("App cannot be found. Please try again.")
 
 
-def setup(bot):
-    bot.add_cog(API(bot))
+async def setup(bot):
+    await bot.add_cog(API(bot))

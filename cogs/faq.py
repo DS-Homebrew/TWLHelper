@@ -55,9 +55,9 @@ class FAQ(commands.Cog):
             if arg.lower() in faq.lower() and "#### " in faq.lower():
                 field_title = faq[5:]
                 embed.url += "?faq=" + web_name(field_title)
-                embed.description = discord.Embed.Empty
+                embed.description = None
                 break
-        if embed.description != discord.Embed.Empty:
+        if not embed.description:
             return await ctx.send(embed=embed)
         line = faqpage[iter]
         field_description = ""
@@ -94,9 +94,9 @@ class FAQ(commands.Cog):
             if arg.lower() in faq.lower() and "## " in faq.lower():
                 field_title = faq[3:]
                 embed.url += "#" + web_name(field_title)
-                embed.description = discord.Embed.Empty
+                embed.description = None
                 break
-        if embed.description != discord.Embed.Empty:
+        if not embed.description:
             return await ctx.send(embed=embed)
         line = faqpage[iter]
         field_description = ""
@@ -227,11 +227,11 @@ class FAQ(commands.Cog):
                 if arg.lower() in item.lower() and "### " in item.lower():
                     title = item[4:]
                     embed.url += "#" + web_name(title)
-                    embed.description = discord.Embed.Empty
+                    embed.description = None
                     embed.add_field(name=title, value=self.read_glossary(glossary, iter))
                     break
             await ctx.send(embed=embed)
 
 
-def setup(bot):
-    bot.add_cog(FAQ(bot))
+async def setup(bot):
+    await bot.add_cog(FAQ(bot))

@@ -67,5 +67,5 @@ class GitHub(commands.Cog):
                     await thread.send(embeds=message.embeds)
 
 
-def setup(bot):
-    bot.add_cog(GitHub(bot))
+async def setup(bot):
+    await bot.add_cog(GitHub(bot))

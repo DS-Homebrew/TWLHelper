@@ -450,5 +450,5 @@ class Convert(commands.Cog):
             await self.download_media_error(ctx, fileName)
 
 
-def setup(bot):
-    bot.add_cog(Convert(bot))
+async def setup(bot):
+    await bot.add_cog(Convert(bot))

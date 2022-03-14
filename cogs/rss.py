@@ -38,7 +38,7 @@ class RSS(commands.Cog):
         self.bot = bot
         self.loop.start()
 
-    @tasks.loop(seconds=600)
+    @tasks.loop(minutes=10)
     async def loop(self):
         await self.bot.wait_until_ready()
         if settings.NINUPDATE:
@@ -132,5 +132,5 @@ class RSS(commands.Cog):
         f.close()
 
 
-def setup(bot):
-    bot.add_cog(RSS(bot))
+async def setup(bot):
+    await bot.add_cog(RSS(bot))

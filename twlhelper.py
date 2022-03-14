@@ -19,6 +19,7 @@
 #
 
 import os
+import asyncio
 import discord
 import gspread
 import aiohttp
@@ -56,24 +57,23 @@ class TWLHelper(commands.Bot):
             status=status,
             case_insensitive=True
         )
-        self.session = aiohttp.ClientSession()
         if settings.GSPREADKEY is not None:
             self.gspread = gspread.service_account(filename=settings.GSPREADKEY)
 
-    def load_cogs(self):
+    async def load_cogs(self):
         cog = ""
         for filename in os.listdir("./cogs"):
             try:
                 if filename.endswith(".py"):
                     cog = f"cogs.{filename[:-3]}"
-                    self.load_extension(cog)
+                    await self.load_extension(cog)
                     print(f"Loaded cog cogs.{filename[:-3]}")
             except Exception as e:
                 exc = "{}: {}".format(type(e).__name__, e)
                 print("Failed to load cog {}\n{}".format(cog, exc))
         try:
             cog = "jishaku"
-            self.load_extension("jishaku")
+            await self.load_extension("jishaku")
             print("Loaded cog jishaku")
         except Exception as e:
             exc = "{}: {}".format(type(e).__name__, e)
@@ -146,12 +146,14 @@ class TWLHelper(commands.Bot):
             await channel.send(embed=embed)
 
 
-def main():
+async def main():
     bot = TWLHelper(settings.PREFIX, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot")
-    bot.help_command = embedHelp()
     print('Starting TWLHelper...')
-    bot.load_cogs()
-    bot.run(settings.TOKEN)
+    async with bot:
+        bot.help_command = embedHelp()
+        await bot.load_cogs()
+        bot.session = aiohttp.ClientSession()
+        await bot.start(settings.TOKEN)
 
 
 if __name__ == '__main__':
@@ -160,4 +162,4 @@ if __name__ == '__main__':
             rmtree(folder)
         except FileNotFoundError:
             pass
-    main()
+    asyncio.run(main())

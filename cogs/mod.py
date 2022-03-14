@@ -78,5 +78,5 @@ class Mod(commands.Cog):
         await channel.send(inp, allowed_mentions=discord.AllowedMentions(everyone=True, roles=True))
 
 
-def setup(bot):
-    bot.add_cog(Mod(bot))
+async def setup(bot):
+    await bot.add_cog(Mod(bot))
