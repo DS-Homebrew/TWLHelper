@@ -57,7 +57,7 @@ class FAQ(commands.Cog):
                 embed.url += "?faq=" + web_name(field_title)
                 embed.description = None
                 break
-        if not embed.description:
+        if embed.description:
             return await ctx.send(embed=embed)
         line = faqpage[iter]
         field_description = ""
@@ -96,7 +96,7 @@ class FAQ(commands.Cog):
                 embed.url += "#" + web_name(field_title)
                 embed.description = None
                 break
-        if not embed.description:
+        if embed.description:
             return await ctx.send(embed=embed)
         line = faqpage[iter]
         field_description = ""
