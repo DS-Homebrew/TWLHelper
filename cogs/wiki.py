@@ -178,6 +178,14 @@ class Wiki(commands.Cog):
         embed.description = "A list of DS games with special features"
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def customskins(self, ctx):
+        """Displays an embed with a link to a guide on custom TWiLight Menu++ skins"""
+        embed = self.embed("Custom DSi/3DS Skins")
+        embed.url += "twilightmenu/custom-dsi-3ds-skins.html"
+        embed.description = "How to Create DSi/3DS Skins for TWiLight Menu++"
+        await ctx.send(embed=embed)
+
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def bios(self, ctx):
         """BIOS info page"""
