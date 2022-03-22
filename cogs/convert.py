@@ -209,7 +209,8 @@ class Convert(commands.Cog):
                 newFileName = f"downloads/senpai_converted_{fileName[10:]}_.gif"
                 outputtext = await ctx.send("`Converting to GIF...`")
                 try:
-                    proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-filter_complex", "color=black,format=rgb24[c];[c][0]scale2ref[c][i];[c][i]overlay=format=auto:shortest=1,setsar=1[o];[o]crop='if(gte(ih,iw*3/4),iw,if(gte(iw,ih*4/3),ih*4/3,ih))':'if(gte(ih,iw*3/4),iw*3/4,if(gte(iw,ih*4/3),ih,ih*3/4))',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse", "-frames", "1", newFileName)
+                    maxcolors = 31 if any(dither in args for dither in ["-dither", "--dither", "-d"]) else 256
+                    proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-filter_complex", f"color=black,format=rgb24[c];[c][0]scale2ref[c][i];[c][i]overlay=format=auto:shortest=1,setsar=1[o];[o]crop='if(gte(ih,iw*3/4),iw,if(gte(iw,ih*4/3),ih*4/3,ih))':'if(gte(ih,iw*3/4),iw*3/4,if(gte(iw,ih*4/3),ih,ih*3/4))',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors={maxcolors}:reserve_transparent=0[p];[s1][p]paletteuse", "-frames", "1", newFileName)
                     await proc.wait()
                 except Exception:
                     await outputtext.edit("`Failed to convert to GIF`")
@@ -218,8 +219,6 @@ class Convert(commands.Cog):
                 await outputtext.edit("`Colour Mapping GIF...`")
                 try:
                     gifsicle_args = ["gifsicle", newFileName, "-O3", "--no-extensions", "-k31", "#0", "-o", newFileName]
-                    if "-dither" in args:
-                        gifsicle_args.append("-f")
                     proc = await create_subprocess_exec(*gifsicle_args)
                     await proc.wait()
                 except Exception:
