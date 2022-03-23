@@ -74,7 +74,7 @@ class Convert(commands.Cog):
                   "`Error. Input file size is too large.`",
                   "`Error. URL invalid.`"]
         if error_num in range(2, 6):
-            return await ctx.send(errors[error_num])
+            return await ctx.send(errors[error_num - 2])
 
     async def download_media(self, ctx, filelink):
         self.check_dir()
