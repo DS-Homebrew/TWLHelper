@@ -68,15 +68,13 @@ class Convert(commands.Cog):
 
     async def download_media_error(self, ctx, error_num):
         if error_num == 1:
-            await ctx.send_help(ctx.command)
-        elif error_num == 2:
-            await ctx.send("`Error (HTTP error). Try again later.`")
-        elif error_num == 3:
-            await ctx.send("`Error. Failed to download file.`")
-        elif error_num == 4:
-            await ctx.send("`Error. Input file size is too large.`")
-        elif error_num == 5:
-            await ctx.send("`Error. URL invalid.`")
+            return await ctx.send_help(ctx.command)
+        errors = ["`Error (HTTP error). Try again later.`",
+                  "`Error. Failed to download file.`",
+                  "`Error. Input file size is too large.`",
+                  "`Error. URL invalid.`"]
+        if error_num in range(2, 6):
+            return await ctx.send(errors[error_num])
 
     async def download_media(self, ctx, filelink):
         self.check_dir()
