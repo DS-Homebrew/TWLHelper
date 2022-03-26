@@ -100,38 +100,44 @@ class RSS(commands.Cog):
             f.write(raw_bytes)
         f.close()
 
+    async def subredditEmbed(self, rss, idx):
+        channel = self.bot.get_channel(settings.SUBREDDIT)
+        entry = rss['entries'][idx]
+        embed = discord.Embed(colour=15549999, timestamp=datetime.datetime.fromtimestamp(mktime(entry['updated_parsed'])))
+        embed.title = entry['title']
+        embed.url = entry['link']
+        embed.set_author(name=entry['author_detail']['name'], url=entry['author_detail']['href'])
+        embed.description = cleandoc(markdownify(entry['summary']))
+        if len(embed.description) > 2000:
+            embed.description = embed.description[:2000]
+            embed.description += "\n..."
+        embed.set_footer(text=f"{rss['feed']['tags'][0]['label']}", icon_url=rss['feed']['icon'][:-1])
+        return await channel.send(embed=embed)
+
     async def subreddit(self):
         async with self.bot.session.get('https://www.reddit.com/r/ndsbrew/.rss') as resp:
             raw_bytes = await resp.read()
         if not os.path.isfile('ndsbrew.xml'):
             new = open('ndsbrew.xml', 'wb')
             new.write(raw_bytes)
-            new.close()
+            return new.close()
         f = open('ndsbrew.xml', 'rb')
-        if not self.digest_check(raw_bytes, f.read()):
-            f.close()
-            f = open('ndsbrew.xml', 'r', encoding='utf-8')
-
-            ndsbrew = await self.asyncParseFeed(raw_bytes, f.read())
-
-            last_updated = ndsbrew['new']['entries'][0]['updated_parsed']
-            last_updated_old = ndsbrew['old']['entries'][0]['updated_parsed']
-            if last_updated > last_updated_old:
-                f.close()
-                channel = self.bot.get_channel(settings.SUBREDDIT)
-                embed = discord.Embed(colour=15549999, timestamp=datetime.datetime.fromtimestamp(mktime(last_updated)))
-                embed.title = ndsbrew['new']['entries'][0]['title']
-                embed.url = ndsbrew['new']['entries'][0]['link']
-                embed.set_author(name=ndsbrew['new']['entries'][0]['author_detail']['name'], url=ndsbrew['new']['entries'][0]['author_detail']['href'])
-                embed.description = cleandoc(markdownify(ndsbrew['new']['entries'][0]['summary']))
-                if len(embed.description) > 2000:
-                    embed.description = embed.description[:2000]
-                    embed.description += "\n..."
-                embed.set_footer(text=f"{ndsbrew['new']['feed']['tags'][0]['label']}", icon_url=ndsbrew['new']['feed']['icon'][:-1])
-                await channel.send(embed=embed)
-                f = open('ndsbrew.xml', 'wb')
-                f.write(raw_bytes)
+        if self.digest_check(raw_bytes, f.read()):
+            return f.close()
         f.close()
+        f = open('ndsbrew.xml', 'r', encoding='utf-8')
+        ndsbrew = await self.asyncParseFeed(raw_bytes, f.read())
+        f.close()
+        f = open('ndsbrew.xml', 'wb')
+        f.write(raw_bytes)
+        f.close()
+
+        new_posts = []
+        for idx, val in enumerate(ndsbrew['new']['entries']):
+            if val not in ndsbrew['old']['entries']:
+                new_posts.insert(0, idx)
+        for idx in new_posts:
+            await self.subredditEmbed(ndsbrew['new'], idx)
 
 
 async def setup(bot):
