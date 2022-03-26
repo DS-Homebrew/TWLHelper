@@ -51,11 +51,15 @@ class RSS(commands.Cog):
         digestnext = hashlib.sha256(new).digest()
         return digestprev == digestnext
 
-    def parse_feed(self, new, old):
+    def parseFeed(self, new, old):
         feed = {}
         feed['new'] = feedparser.parse(new)
         feed['old'] = feedparser.parse(old)
         return feed
+
+    async def asyncParseFeed(self, new, old):
+        argv = functools.partial(self.parseFeed, new, old)
+        return await self.bot.loop.run_in_executor(None, argv)
 
     async def ninupdates(self):
         async with self.bot.session.get('https://yls8.mtheall.com/ninupdates/feed.php') as resp:
@@ -77,8 +81,7 @@ class RSS(commands.Cog):
 
             f = open('ninupdates.xml', 'r')
 
-            argv = functools.partial(self.parse_feed, raw_bytes, f.read())
-            ninupdates = await self.bot.loop.run_in_executor(None, argv)
+            ninupdates = await self.asyncParseFeed(raw_bytes, f.read())
 
             for entry in ninupdates['new']['entries']:
                 system, ver = entry['title'].split()
@@ -109,8 +112,7 @@ class RSS(commands.Cog):
             f.close()
             f = open('ndsbrew.xml', 'r', encoding='utf-8')
 
-            argv = functools.partial(self.parse_feed, raw_bytes, f.read())
-            ndsbrew = await self.bot.loop.run_in_executor(None, argv)
+            ndsbrew = await self.asyncParseFeed(raw_bytes, f.read())
 
             last_updated = ndsbrew['new']['entries'][0]['updated_parsed']
             last_updated_old = ndsbrew['old']['entries'][0]['updated_parsed']
