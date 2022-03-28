@@ -224,12 +224,28 @@ class Convert(commands.Cog):
                     return self.yeet([fileName, newFileName])
                 await outputtext.edit("`GIF colour mapped...`")
                 await outputtext.edit("`Optimising GIF size...`")
-                x = 0
-                while x <= 1500 and os.stat(newFileName).st_size > 15000:
-                    proc = await create_subprocess_exec("gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={x}", "-k31", "-o", newFileName)
-                    await proc.wait()
-                    x += 50
-                warning = os.stat(newFileName).st_size > 15000
+
+                UNLAUNCH_GIF_SIZE = 15472
+                size = os.stat(newFileName).st_size
+                if size > UNLAUNCH_GIF_SIZE:
+                    # Binary search for best lossy optimization
+                    left = 0
+                    right = 2000
+                    mid = right // 2
+                    while (size > UNLAUNCH_GIF_SIZE or abs(UNLAUNCH_GIF_SIZE - size) > 10) and (mid != 2000):
+                        proc = await create_subprocess_exec("gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={mid}", "-k31", "-o", newFileName + "_lossy")
+                        await proc.wait()
+
+                        size = os.stat(newFileName + "_lossy").st_size
+                        if size > UNLAUNCH_GIF_SIZE:
+                            left = mid + 1
+                        else:
+                            right = mid - 1
+
+                        mid = left + ((right - left) // 2)
+                    os.rename(newFileName + "_lossy", newFileName)
+
+                warning = os.stat(newFileName).st_size > UNLAUNCH_GIF_SIZE
                 await outputtext.edit("`GIF size optimised`")
                 await outputtext.edit("`Uploading GIF...`")
                 await ctx.send(file=discord.File(newFileName), reference=ctx.message)
