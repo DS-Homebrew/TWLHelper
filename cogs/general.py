@@ -340,6 +340,16 @@ your device will refuse to write to it.
         embed.set_image(url="https://i.imgur.com/RvKjWcz.png")
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=["flashcard"])
+    async def flashcart(self, ctx):
+        """Links the r/flashcarts flashcart quick start guide"""
+        embed = discord.Embed(title="Flashcart Quick Start Guide")
+        embed.url = "https://www.reddit.com/r/flashcarts/wiki/ds-quick-start-guide"
+        embed.description = "A Quick Guide on GBA and NDS flashcarts."
+        embed.set_author(name="r/flashcarts")
+        embed.set_thumbnail(url="https://b.thumbs.redditmedia.com/lBsOPXDyCx0p1MSx1qCdAtglHB4nineg5w9-3KHzO2A.png")
+        await ctx.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(General(bot))
