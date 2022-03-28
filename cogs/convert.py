@@ -225,7 +225,7 @@ class Convert(commands.Cog):
                 await outputtext.edit("`GIF colour mapped...`")
                 await outputtext.edit("`Optimising GIF size...`")
                 x = 0
-                while x <= 300 and os.stat(newFileName).st_size > 15000:
+                while x <= 1500 and os.stat(newFileName).st_size > 15000:
                     proc = await create_subprocess_exec("gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={x}", "-k31", "-o", newFileName)
                     await proc.wait()
                     x += 50
