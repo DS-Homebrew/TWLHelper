@@ -3,6 +3,7 @@ import time
 import discord
 
 from aiohttp import client_exceptions
+from math import ceil, log2
 from shutil import which
 from asyncio.subprocess import create_subprocess_exec
 from discord.ext import commands
@@ -232,7 +233,9 @@ class Convert(commands.Cog):
                     left = 0
                     right = 2000
                     mid = right // 2
-                    while (size > UNLAUNCH_GIF_SIZE or abs(UNLAUNCH_GIF_SIZE - size) > 10) and (mid != 2000):
+                    iteration = 0
+                    max_iterations = ceil(log2(right - left))
+                    while (size > UNLAUNCH_GIF_SIZE or abs(UNLAUNCH_GIF_SIZE - size) > 10) and (mid != 2000) and (iteration < max_iterations):
                         proc = await create_subprocess_exec("gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={mid}", "-k31", "-o", newFileName + "_lossy")
                         await proc.wait()
 
@@ -243,6 +246,7 @@ class Convert(commands.Cog):
                             right = mid - 1
 
                         mid = left + ((right - left) // 2)
+                        iteration += 1
                     os.rename(newFileName + "_lossy", newFileName)
 
                 warning = os.stat(newFileName).st_size > UNLAUNCH_GIF_SIZE
