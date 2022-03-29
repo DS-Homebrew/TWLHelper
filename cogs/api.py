@@ -335,6 +335,7 @@ class API(commands.Cog):
                 embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/font.png")
                 embed.description = "Custom fonts for TWiLight Menu++"
             elif extension == "Icon":
+                embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
                 embed.description = "Custom icons for TWiLight Menu++"
             await ctx.send(embed=embed)
 
