@@ -48,6 +48,8 @@ class UniStoreView(discord.ui.View):
         embed.description = appid["description"] if "description" in appid else None
         if store == "udb":
             embed.url = f'https://db.universal-team.net/{appid["systems"][0].lower()}/'
+        else:
+            embed.url = f'https://skins.ds-homebrew.com/{store}/'
         embed.url += web_name(appid["title"])
         return embed
 
@@ -256,17 +258,7 @@ class API(commands.Cog):
         await ctx.send(embed=self.netinfo_embed)
 
     # UniStore related functions
-    def uniembed(self, embed, appid, store):
-        embed.title = appid["title"]
-        embed.color = int(appid['color'][1:], 16) if 'color' in appid else None
-        embed.set_author(name=appid["author"], icon_url=appid["avatar"] if "avatar" in appid else None)
-        embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else None)))
-        embed.description = appid["description"] if "description" in appid else None
-        if store == "udb":
-            embed.url += appid["systems"][0].lower() + "/"
-        embed.url += web_name(appid["title"])
-        return embed
-
+    # Uses UniStoreView class
     async def udbparse(self, ctx, search="", israndom=False):
         app = None
         r = None
@@ -283,10 +275,8 @@ class API(commands.Cog):
                     return await ctx.send("HTTP 422: Validation error. Please try again later.")
                 else:
                     return await ctx.send("Unknown response from API. Please try again later.")
-            embed = discord.Embed(title="Universal-DB", colour=0x1d8056)
-            embed.url = "https://db.universal-team.net/"
             if israndom:
-                return await ctx.send(embed=UniStoreView.unistoreapp(embed, app[0], "udb"))
+                return await ctx.send(embed=UniStoreView.unistoreapp(UniStoreView, app[0], "udb"))
             elif search != "":
                 if app["results"]:
                     menu = UniStoreView(app["results"], "udb")
@@ -294,6 +284,8 @@ class API(commands.Cog):
                 else:
                     return await ctx.send("App cannot be found. Please try again.")
             # when no args
+            embed = discord.Embed(title="Universal-DB", colour=0x1d8056)
+            embed.url = "https://db.universal-team.net/"
             embed.set_author(name="Universal-Team")
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
             embed.description = "A database of DS and 3DS homebrew"
@@ -315,16 +307,17 @@ class API(commands.Cog):
                     return await ctx.send("HTTP 422: Validation error. Please try again later.")
                 else:
                     return await ctx.send("Unknown response from API. Please try again later.")
-            embed = discord.Embed(title=title, colour=0xda4a53)
-            embed.url = f"https://skins.ds-homebrew.com/{web_name(extension)}/"
             if israndom:
-                return await ctx.send(embed=self.uniembed(embed, item[0], "skin"))
+                return await ctx.send(embed=UniStoreView.unistoreapp(UniStoreView, item[0], web_name(extension)))
             elif skin != "":
                 if item["results"]:
-                    return await ctx.send(embed=self.uniembed(embed, item["results"][0], "skin"))
+                    menu = UniStoreView(item["results"], web_name(extension))
+                    return await ctx.send(embed=menu.unistoreapp(item["results"][0], web_name(extension)), view=menu)
                 else:
                     return await ctx.send("Skin cannot be found. Please try again.")
             # when no args
+            embed = discord.Embed(title=title, colour=0xda4a53)
+            embed.url = f"https://skins.ds-homebrew.com/{web_name(extension)}/"
             embed.set_author(name="DS-Homebrew")
             if extension == "Unlaunch":
                 embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
