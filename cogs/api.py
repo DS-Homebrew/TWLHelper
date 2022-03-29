@@ -26,8 +26,50 @@ from typing import Optional
 from datetime import datetime
 from pytz import timezone
 from rapidfuzz import process
+from discord import Interaction
 from discord.ext import tasks, commands
 from utils import web_name
+
+
+class UniStoreView(discord.ui.View):
+    def __init__(self, apps, store):
+        self.apps = apps
+        self.store = store
+        self.iterator = 0
+        self.iteratorcap = len(apps) - 1
+        super().__init__()
+
+    def unistoreapp(self, appid, store):
+        embed = discord.Embed()
+        embed.title = appid["title"]
+        embed.color = int(appid['color'][1:], 16) if 'color' in appid else None
+        embed.set_author(name=appid["author"], icon_url=appid["avatar"] if "avatar" in appid else None)
+        embed.set_thumbnail(url=appid["icon"] if "icon" in appid else (appid["image"] if "image" in appid else (appid["avatar"] if "avatar" in appid else None)))
+        embed.description = appid["description"] if "description" in appid else None
+        if store == "udb":
+            embed.url = f'https://db.universal-team.net/{appid["systems"][0].lower()}/'
+        embed.url += web_name(appid["title"])
+        return embed
+
+    @discord.ui.button(label='Previous')
+    async def previousbutton(self, interaction: Interaction, button):
+        if self.iterator == 0:
+            return await interaction.response.defer()
+        self.iterator -= 1
+        await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store))
+
+    @discord.ui.button(label='Next')
+    async def nextbutton(self, interaction: Interaction, button):
+        if self.iterator == self.iteratorcap:
+            return await interaction.response.defer()
+        self.iterator += 1
+        await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store))
+
+    @discord.ui.button(label='Close')
+    async def closebutton(self, interaction: Interaction, button):
+        super().clear_items()
+        await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store), view=self)
+        return self.stop()
 
 
 class API(commands.Cog):
@@ -244,10 +286,11 @@ class API(commands.Cog):
             embed = discord.Embed(title="Universal-DB", colour=0x1d8056)
             embed.url = "https://db.universal-team.net/"
             if israndom:
-                return await ctx.send(embed=self.uniembed(embed, app[0], "udb"))
+                return await ctx.send(embed=UniStoreView.unistoreapp(embed, app[0], "udb"))
             elif search != "":
                 if app["results"]:
-                    return await ctx.send(embed=self.uniembed(embed, app["results"][0], "udb"))
+                    menu = UniStoreView(app["results"], "udb")
+                    return await ctx.send(embed=menu.unistoreapp(app["results"][0], "udb"), view=menu)
                 else:
                     return await ctx.send("App cannot be found. Please try again.")
             # when no args
