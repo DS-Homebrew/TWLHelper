@@ -155,20 +155,22 @@ class UniStoreView(CustomView):
 
     @discord.ui.button(label='Previous')
     async def previousbutton(self, interaction: Interaction, button):
-        if self.iterator == 0:
+        if self.iterator == 0 or self.ctx.author != interaction.user:
             return await interaction.response.defer()
         self.iterator -= 1
         await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store))
 
     @discord.ui.button(label='Next')
     async def nextbutton(self, interaction: Interaction, button):
-        if self.iterator == self.iteratorcap:
+        if self.iterator == self.iteratorcap or self.ctx.author != interaction.user:
             return await interaction.response.defer()
         self.iterator += 1
         await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store))
 
     @discord.ui.button(label='Close')
     async def closebutton(self, interaction: Interaction, button):
+        if self.ctx.author != interaction.user:
+            return await interaction.response.defer()
         super().clear_items()
         await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store), view=self)
         return self.stop()
@@ -258,20 +260,22 @@ class NBCompatView(CustomView):
 
     @discord.ui.button(label='Previous')
     async def previousbutton(self, interaction: Interaction, button):
-        if self.iterator == 0:
+        if self.iterator == 0 or self.ctx.author != interaction.user:
             return await interaction.response.defer()
         self.iterator -= 1
         await interaction.response.edit_message(embed=self.nbembed(self.games[self.iterator], self.compatlist))
 
     @discord.ui.button(label='Next')
     async def nextbutton(self, interaction: Interaction, button):
-        if self.iterator == self.iteratorcap:
+        if self.iterator == self.iteratorcap or self.ctx.author != interaction.user:
             return await interaction.response.defer()
         self.iterator += 1
         await interaction.response.edit_message(embed=self.nbembed(self.games[self.iterator], self.compatlist))
 
     @discord.ui.button(label='Close')
     async def closebutton(self, interaction: Interaction, button):
+        if self.ctx.author != interaction.user:
+            return await interaction.response.defer()
         super().clear_items()
         await interaction.response.edit_message(embed=self.nbembed(self.games[self.iterator], self.compatlist), view=self)
         return self.stop()
