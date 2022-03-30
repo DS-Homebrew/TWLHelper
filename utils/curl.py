@@ -22,6 +22,7 @@ import discord
 from rapidfuzz import process
 from utils.utils import web_name, create_error_embed
 
+__all__ = ("UniStoreView", "NBCompatView")
 
 class CustomView(discord.ui.View):
     def __init__(self):
