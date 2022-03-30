@@ -1,3 +1,21 @@
+#
+# ISC License
+#
+# Copyright (C) 2021-present DS-Homebrew
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+
 import json
 import discord
 
@@ -6,6 +24,11 @@ from utils.utils import web_name, create_error_embed
 
 
 class CustomView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=60)
+
+    message: discord.Message = None
+
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if self.ctx.author != interaction.user:
             return False
@@ -19,6 +42,11 @@ class CustomView(discord.ui.View):
             await interaction.response.send_message(f'{interaction.user.mention} Unexpected exception occurred')
             embed = create_error_embed(exc, interaction=interaction)
             await interaction.channel.send(embed=embed)
+
+    async def on_timeout(self):
+        self.clear_items()
+        await self.message.edit(embed=self.message.embeds[0], view=self)
+        self.stop()
 
 
 class UniStoreView(CustomView):
@@ -72,7 +100,8 @@ class UniStoreView(CustomView):
                 if app["results"]:
                     self.apps = app["results"]
                     self.iteratorcap = len(self.apps) - 1
-                    return await ctx.send(embed=self.unistoreapp(self.apps[0], "udb"), view=self)
+                    self.message = await ctx.send(embed=self.unistoreapp(self.apps[0], "udb"), view=self)
+                    return
                 else:
                     await ctx.send("App cannot be found. Please try again.")
                     return self.stop()
@@ -109,7 +138,8 @@ class UniStoreView(CustomView):
                     self.apps = item["results"]
                     self.iteratorcap = len(self.apps) - 1
                     self.store = web_name(self.store)
-                    return await ctx.send(embed=self.unistoreapp(self.apps[0], self.store), view=self)
+                    self.message = await ctx.send(embed=self.unistoreapp(self.apps[0], self.store), view=self)
+                    return
                 else:
                     await ctx.send("Skin cannot be found. Please try again.")
                     return self.stop()
@@ -167,7 +197,7 @@ class UniStoreView(CustomView):
     @discord.ui.button(label='Close')
     async def closebutton(self, interaction: discord.Interaction, button):
         self.clear_items()
-        await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store), view=self)
+        await interaction.response.edit_message(embed=interaction.message.embeds[0], view=self)
         self.stop()
 
 
@@ -243,7 +273,8 @@ class NBCompatView(CustomView):
             view = None if tid else self
             self.games = game
             self.iteratorcap = len(self.games) - 1
-            return await self.ctx.send(embed=self.nbembed(self.games[0], self.compatlist), view=view)
+            self.message = await self.ctx.send(embed=self.nbembed(self.games[0], self.compatlist), view=view)
+            return
         with open("nbcompat-fallback.json") as compatfile:
             self.compatlist = json.load(compatfile)
         if tid:
