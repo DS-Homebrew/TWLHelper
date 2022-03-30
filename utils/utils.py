@@ -15,12 +15,13 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-#
-from typing import Any, Optional
 
+
+import traceback
 import discord
 import settings
-import traceback
+
+from typing import Any, Optional
 from discord.ext import commands
 
 __all__ = ("create_error_embed",
@@ -29,16 +30,23 @@ __all__ = ("create_error_embed",
            "web_name")
 
 
-def create_error_embed(exc: Any, ctx: Optional[commands.Context] = None) -> discord.Embed:
+def create_error_embed(exc: Any, ctx: Optional[commands.Context] = None, interaction: Optional[discord.Interaction] = None) -> discord.Embed:
     trace = "".join(traceback.format_exception(type(exc), value=exc, tb=exc.__traceback__, chain=False))
     embed = discord.Embed(title="Unexpected exception", description=f"```py\n{trace}```", color=0xe50730)
 
     if ctx:
         embed.title += f" in command {ctx.command}"
-        channelfmt = ctx.channel.mention if ctx.channel.guild else "Direct Message"
+        channelfmt = ctx.channel.mention if ctx.guild else "Direct Message"
         embed.add_field(name="Channel", value=channelfmt)
         embed.add_field(name="Invocation", value=ctx.message.content)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.display_avatar.url)
+    elif interaction:
+        embed.title += " in interaction"
+        channelfmt = interaction.channel.mention if interaction.guild else "Direct Message"
+        embed.add_field(name="Channel", value=channelfmt)
+        if interaction.message.content:
+            embed.add_field(name="Invocation", value=interaction.message.content)
+        embed.set_author(name=interaction.user.name, icon_url=interaction.user.display_avatar.url)
 
     embed.add_field(name="Exception Type", value=exc.__class__.__name__)
     return embed

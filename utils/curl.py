@@ -14,10 +14,10 @@ class CustomView(discord.ui.View):
     async def on_error(self, exc, item: discord.ui.Item, interaction: discord.Interaction):
         exc = getattr(exc, 'original', exc)
         if isinstance(exc, discord.Forbidden):
-            await interaction.channel.send(f"💢 I can't help you if you don't let me!\n`{exc.text}`.")
+            await interaction.response.send_message(f"💢 I can't help you if you don't let me!\n`{exc.text}`.")
         else:
-            await interaction.channel.send(f'{interaction.user.mention} Unexpected exception occurred')
-            embed = create_error_embed(exc)
+            await interaction.response.send_message(f'{interaction.user.mention} Unexpected exception occurred')
+            embed = create_error_embed(exc, interaction=interaction)
             await interaction.channel.send(embed=embed)
 
 
