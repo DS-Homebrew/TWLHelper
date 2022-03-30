@@ -175,7 +175,7 @@ class UniStoreView(CustomView):
     async def closebutton(self, interaction: discord.Interaction, button):
         self.clear_items()
         await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store), view=self)
-        return self.stop()
+        self.stop()
 
 
 class NBCompatView(CustomView):
@@ -276,8 +276,6 @@ class NBCompatView(CustomView):
 
     @discord.ui.button(label='Close')
     async def closebutton(self, interaction: discord.Interaction, button):
-        if self.ctx.author != interaction.user:
-            return await interaction.response.defer()
         self.clear_items()
         await interaction.response.edit_message(embed=self.nbembed(self.games[self.iterator], self.compatlist), view=self)
         self.stop()
