@@ -1,13 +1,17 @@
 import json
 import discord
 
-from discord import Interaction
 from rapidfuzz import process
 from utils.utils import web_name, create_error_embed
 
 
 class CustomView(discord.ui.View):
-    async def on_error(self, exc, item: discord.ui.Item, interaction: Interaction, ):
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        if self.ctx.author != interaction.user:
+            return False
+        return True
+
+    async def on_error(self, exc, item: discord.ui.Item, interaction: discord.Interaction):
         author: discord.Member = interaction.user
         exc = getattr(exc, 'original', exc)
         channel = interaction.channel
@@ -154,24 +158,22 @@ class UniStoreView(CustomView):
             await self.skinparse(self.ctx, skin=self.argument, israndom=self.israndom)
 
     @discord.ui.button(label='Previous')
-    async def previousbutton(self, interaction: Interaction, button):
-        if self.iterator == 0 or self.ctx.author != interaction.user:
+    async def previousbutton(self, interaction: discord.Interaction, button):
+        if self.iterator == 0:
             return await interaction.response.defer()
         self.iterator -= 1
         await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store))
 
     @discord.ui.button(label='Next')
-    async def nextbutton(self, interaction: Interaction, button):
-        if self.iterator == self.iteratorcap or self.ctx.author != interaction.user:
+    async def nextbutton(self, interaction: discord.Interaction, button):
+        if self.iterator == self.iteratorcap:
             return await interaction.response.defer()
         self.iterator += 1
         await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store))
 
     @discord.ui.button(label='Close')
-    async def closebutton(self, interaction: Interaction, button):
-        if self.ctx.author != interaction.user:
-            return await interaction.response.defer()
-        super().clear_items()
+    async def closebutton(self, interaction: discord.Interaction, button):
+        self.clear_items()
         await interaction.response.edit_message(embed=self.unistoreapp(self.apps[self.iterator], self.store), view=self)
         return self.stop()
 
@@ -259,23 +261,23 @@ class NBCompatView(CustomView):
         await self.ctx.send("Game not found. Please try again.")
 
     @discord.ui.button(label='Previous')
-    async def previousbutton(self, interaction: Interaction, button):
-        if self.iterator == 0 or self.ctx.author != interaction.user:
+    async def previousbutton(self, interaction: discord.Interaction, button):
+        if self.iterator == 0:
             return await interaction.response.defer()
         self.iterator -= 1
         await interaction.response.edit_message(embed=self.nbembed(self.games[self.iterator], self.compatlist))
 
     @discord.ui.button(label='Next')
-    async def nextbutton(self, interaction: Interaction, button):
-        if self.iterator == self.iteratorcap or self.ctx.author != interaction.user:
+    async def nextbutton(self, interaction: discord.Interaction, button):
+        if self.iterator == self.iteratorcap:
             return await interaction.response.defer()
         self.iterator += 1
         await interaction.response.edit_message(embed=self.nbembed(self.games[self.iterator], self.compatlist))
 
     @discord.ui.button(label='Close')
-    async def closebutton(self, interaction: Interaction, button):
+    async def closebutton(self, interaction: discord.Interaction, button):
         if self.ctx.author != interaction.user:
             return await interaction.response.defer()
-        super().clear_items()
+        self.clear_items()
         await interaction.response.edit_message(embed=self.nbembed(self.games[self.iterator], self.compatlist), view=self)
-        return self.stop()
+        self.stop()
