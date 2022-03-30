@@ -236,7 +236,8 @@ class NBCompatView(CustomView):
             self.compatlist = json.load(compatfile)
         if tid:
             game = self.search_tid(self.title, self.compatlist, getlink=False)
-        else:
+        if not game:
+            tid = False
             game = self.search_name(self.title, self.compatlist)
         if game:
             view = None if tid else self
