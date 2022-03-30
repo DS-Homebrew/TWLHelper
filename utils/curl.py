@@ -253,7 +253,7 @@ class NBCompatView(CustomView):
         else:
             game = self.search_name(self.title, self.compatlist)
         if game:
-            return await self.ctx.send(f"{game[1]} ({game[4]}) does not have any compatibility ratings!")
+            return await self.ctx.send(f"{game[0][1]} ({game[0][4]}) does not have any compatibility ratings!")
         await self.ctx.send("Game not found. Please try again.")
 
     @discord.ui.button(label='Previous')
