@@ -74,7 +74,7 @@ class API(commands.Cog):
         await self.bot.loop.run_in_executor(None, argv)
 
     @commands.command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
-    # @gspreadkey_exists()
+    @gspreadkey_exists()
     async def ndsbcompat(self, ctx, *, title: Optional[str]):
         """
         Shows an nds-bootstrap compatibility list entry.
