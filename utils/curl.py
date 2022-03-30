@@ -12,20 +12,13 @@ class CustomView(discord.ui.View):
         return True
 
     async def on_error(self, exc, item: discord.ui.Item, interaction: discord.Interaction):
-        author: discord.Member = interaction.user
         exc = getattr(exc, 'original', exc)
-        channel = interaction.channel
-
-        if isinstance(exc, discord.NotFound):
-            await channel.send("ID not found.")
-
-        elif isinstance(exc, discord.Forbidden):
-            await channel.send(f"💢 I can't help you if you don't let me!\n`{exc.text}`.")
-
+        if isinstance(exc, discord.Forbidden):
+            await interaction.channel.send(f"💢 I can't help you if you don't let me!\n`{exc.text}`.")
         else:
-            await channel.send(f'{author.mention} Unexpected exception occurred')
+            await interaction.channel.send(f'{interaction.user.mention} Unexpected exception occurred')
             embed = create_error_embed(exc)
-            await channel.send(embed=embed)
+            await interaction.channel.send(embed=embed)
 
 
 class UniStoreView(CustomView):

@@ -96,7 +96,7 @@ class TWLHelper(commands.Bot):
         print("TWLHelper ready.")
 
     async def on_command_error(self, ctx: commands.Context, exc: commands.CommandInvokeError):
-        author: discord.Member = ctx.author
+        author = ctx.author
         command: commands.Command = ctx.command or '<unknown cmd>'
         exc = getattr(exc, 'original', exc)
         channel = ctx.channel
@@ -129,9 +129,6 @@ class TWLHelper(commands.Bot):
         elif isinstance(exc, commands.MissingRequiredArgument):
             await ctx.send(f'{author.mention} You are missing required argument `{exc.param.name}`.\n')
             await ctx.send_help(ctx.command)
-
-        elif isinstance(exc, discord.NotFound):
-            await ctx.send("ID not found.")
 
         elif isinstance(exc, discord.Forbidden):
             await ctx.send(f"💢 I can't help you if you don't let me!\n`{exc.text}`.")

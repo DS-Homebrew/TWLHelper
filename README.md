@@ -61,7 +61,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ## Credits
 - Discord.py: This wouldn't exist without it
-- [Nintendo Homebrew's Kurisu](https://github.com/nh-server/kurisu): `utils.py` error embeds, `load.py`, `assistance.py`, netinfo, simple_embed
+- [Nintendo Homebrew's Kurisu](https://github.com/nh-server/kurisu): `assistance.py`, netinfo, simple_embed
     - Licensed under Apache 2.0. See source, or see http://www.apache.org/licenses/LICENSE-2.0.
 - [YourKalamity](https://github.com/YourKalamity): `convert.py` code used with permission
 - [LightSage's UDB-API](https://github.com/LightSage/UDB-API): fuzzy searching

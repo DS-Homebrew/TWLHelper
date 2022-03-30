@@ -15,56 +15,31 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-# send_dm_message, command_signature, error embeds taken from Kurisu, http://www.apache.org/licenses/LICENSE-2.0
 #
+from typing import Any, Optional
 
 import discord
 import settings
 import traceback
 from discord.ext import commands
 
-__all__ = ("send_dm_message",
-           "command_signature",
-           "create_error_embed",
+__all__ = ("create_error_embed",
            "is_staff",
            "check_arg",
            "web_name")
 
 
-async def send_dm_message(member: discord.Member, message: str, ctx: commands.Context = None, **kwargs) -> bool:
-    """A helper function for sending a message to a member's DMs.
+def create_error_embed(exc: Any, ctx: Optional[commands.Context] = None) -> discord.Embed:
+    trace = "".join(traceback.format_exception(type(exc), value=exc, tb=exc.__traceback__, chain=False))
+    embed = discord.Embed(title="Unexpected exception", description=f"```py\n{trace}```", color=0xe50730)
 
-    Returns a boolean indicating success of the DM
-    and notifies of the failure if ctx is supplied."""
-    try:
-        await member.send(message, **kwargs)
-        return True
-    except (discord.HTTPException, discord.Forbidden, discord.NotFound, AttributeError):
-        if ctx:
-            await ctx.send(f"Failed to send DM message to {member.mention}")
-        return False
-
-
-def command_signature(command, *, prefix=".") -> str:
-    """Helper function for a command signature
-
-    Parameters
-    -----------
-    command: :class:`discord.ext.commands.Command`
-        The command to generate a signature for
-    prefix: str
-        The prefix to include in the signature"""
-    signature = f"{discord.utils.escape_markdown(prefix)}{command.qualified_name} {command.signature}"
-    return signature
-
-
-def create_error_embed(exc, ctx=None) -> discord.Embed:
-    embed = discord.Embed(title="Unexpected exception", color=0xe50730)
     if ctx:
         embed.title += f" in command {ctx.command}"
-        embed.add_field(name="Information", value=f"channel: {ctx.channel.mention if isinstance(ctx.channel, discord.TextChannel) else 'Direct Message'}\ncommand: {ctx.command}\nmessage: {ctx.message.content}\nauthor: {ctx.author.mention}", inline=False)
-    trace = "".join(traceback.format_exception(etype=None, value=exc, tb=exc.__traceback__))
-    embed.description = f'```py\n{trace}```'
+        channelfmt = ctx.channel.mention if ctx.channel.guild else "Direct Message"
+        embed.add_field(name="Channel", value=channelfmt)
+        embed.add_field(name="Invocation", value=ctx.message.content)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.display_avatar.url)
+
     embed.add_field(name="Exception Type", value=exc.__class__.__name__)
     return embed
 

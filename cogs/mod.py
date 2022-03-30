@@ -1,20 +1,20 @@
 #
-# Copyright (C) 2020 Nintendo Homebrew
+# ISC License
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Copyright (C) 2021-present DS-Homebrew
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-# load.py
-# .speak from blah.py
 
 import discord
 from discord.ext import commands
@@ -52,11 +52,8 @@ class Mod(commands.Cog):
         try:
             if module[0:7] != "cogs.":
                 module = "cogs." + module
-            if module == "cogs.load":
-                await ctx.send("❌ I don't think you want to unload that!")
-            else:
-                await self.bot.unload_extension(module)
-                await ctx.send('✅ Extension unloaded.')
+            await self.bot.unload_extension(module)
+            await ctx.send('✅ Extension unloaded.')
         except Exception as e:
             await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
 
@@ -74,8 +71,8 @@ class Mod(commands.Cog):
 
     @commands.command()
     @commands.check_any(commands.is_owner(), is_staff())
-    async def speak(self, ctx, channel: discord.TextChannel, *, inp):
-        await channel.send(inp, allowed_mentions=discord.AllowedMentions(everyone=True, roles=True))
+    async def speak(self, ctx: commands.Context, channel: discord.TextChannel, *, text: str):
+        await channel.send(text, allowed_mentions=discord.AllowedMentions(everyone=True, roles=True))
 
 
 async def setup(bot):
