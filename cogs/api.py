@@ -25,9 +25,8 @@ from urllib import parse
 from typing import Optional
 from datetime import datetime
 from pytz import timezone
-from rapidfuzz import process
 from discord.ext import tasks, commands
-from utils import UniStoreView
+from utils import UniStoreView, NBCompatView
 
 
 class API(commands.Cog):
@@ -74,84 +73,23 @@ class API(commands.Cog):
         argv = functools.partial(self.dumpWorksheet)
         await self.bot.loop.run_in_executor(None, argv)
 
-    def getGameValues(self, name, compatlist):
-        for line in compatlist:
-            if name == line[1]:
-                return line
-        return None
-
-    # This function is based on UDB-API, licensed Apache-2.0.
-    # https://github.com/LightSage/UDB-API
-    def search_name(self, arg, compatlist):
-        matchlist = []
-        game_names = [line[1] for line in compatlist[2:]]
-        results = process.extract(arg, [g.lower() for g in game_names], processor=lambda a: a.lower())
-        for _, score, idx in results:
-            if score < 70:
-                continue
-            game = self.getGameValues(game_names[idx], compatlist)
-            matchlist.append([score, game])
-        if matchlist:
-            return matchlist[0][1]
-        return None
-
-    def search_tid(self, arg, compatlist, getlink=False):
-        for idx, val in enumerate(compatlist[2:]):
-            if arg.upper() in val[3]:
-                if not getlink:
-                    return val
-                else:
-                    # +1 because sheet starts from 1, but list starts from 0
-                    # +2 added since searching starts from row 3
-                    return idx + 3
-        return None
-
     @commands.command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
-    @gspreadkey_exists()
+    # @gspreadkey_exists()
     async def ndsbcompat(self, ctx, *, title: Optional[str]):
         """
         Shows an nds-bootstrap compatibility list entry.
         Displays an embed with a link to the compatibility list if no arguments provided.
         """
-        embed = discord.Embed()
         if not title:
+            embed = discord.Embed()
             embed.title = "nds-bootstrap Compatibility List"
             embed.set_author(name="DS-Homebrew")
             embed.description = "Spreadsheet with all documented compatibility ratings for nds-bootstrap"
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
             embed.url = "https://docs.google.com/spreadsheets/d/1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc/edit?usp=sharing"
-            await ctx.send(embed=embed)
-            return
-
-        game = None
-        tid = len(title) == 4
-        if tid and title[0] in ['H', 'Z', 'K']:
-            return await ctx.send("DSiWare compatibility is not supported. Please try another game, or visit the list directly.")
-        with open("nbcompat.json", "r") as compatfile:
-            compatlist = json.load(compatfile)
-        if tid:
-            game = self.search_tid(title, compatlist, getlink=False)
-        else:
-            game = self.search_name(title, compatlist)
-        if game:
-            embed.title = f"{game[1]} ({game[4]})"
-            embed.add_field(name="Last tested version", value=f"{game[10]}", inline=False)
-            embed.add_field(name="Compatibility", value=f"{game[13]}", inline=False)
-            if game[14] != '':
-                embed.add_field(name="Notes", value=f"{game[14]}", inline=False)
-            gameidx = self.search_tid(game[3], compatlist, getlink=True)
-            embed.add_field(name="Link", value=f"https://docs.google.com/spreadsheets/d/1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc/edit#gid=0&range=A{gameidx}:P{gameidx}", inline=False)
-        if embed:
-            return await ctx.send(content=None, embed=embed)
-        with open("nbcompat-fallback.json") as compatfile:
-            compatlist = json.load(compatfile)
-        if tid:
-            game = self.search_tid(title, compatlist, getlink=False)
-        else:
-            game = self.search_name(title, compatlist)
-        if game:
-            return await ctx.send(f"{game[1]} ({game[4]}) does not have any compatibility ratings!")
-        await ctx.send("Game not found. Please try again.")
+            return await ctx.send(embed=embed)
+        menu = NBCompatView(ctx, title)
+        await menu.start()
 
     # Nintendo Network status information
     # All netinfo related functions are based on Kurisu, licensed Apache-2.0.
