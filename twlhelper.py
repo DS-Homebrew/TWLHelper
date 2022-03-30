@@ -138,11 +138,11 @@ class TWLHelper(commands.Bot):
 
         elif isinstance(exc, commands.CommandInvokeError):
             await ctx.send(f'{author.mention} `{command}` raised an exception during usage')
-            embed = create_error_embed(ctx, exc)
+            embed = create_error_embed(exc, ctx)
             await channel.send(embed=embed)
         else:
             await ctx.send(f'{author.mention} Unexpected exception occurred while using the command `{command}`')
-            embed = create_error_embed(ctx, exc)
+            embed = create_error_embed(exc, ctx)
             await channel.send(embed=embed)
 
 
