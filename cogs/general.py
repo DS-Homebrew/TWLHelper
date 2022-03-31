@@ -37,8 +37,8 @@ class General(commands.Cog):
         embed.description = cleandoc(text)
         await ctx.send(embed=embed)
 
-    @commands.command(require_var_positional=True, usage="<3ds|wiiu|vwii|switch|wii|dsi>")
-    async def guide(self, ctx, guide: Literal("3ds", "wiiu", "vwii", "switch", "wii", "dsi")) -> None:  # noqa
+    @commands.command(require_var_positional=True, usage="<3ds|wiiu|vwii|switch|wii|dsi|ngage>")
+    async def guide(self, ctx, guide: Literal("3ds", "wiiu", "vwii", "switch", "wii", "dsi", "ngage")) -> None:  # noqa
         """Links to the recommended guides"""
         embed = discord.Embed(title="Guide")
         if check_arg(guide, '3ds'):
@@ -76,6 +76,12 @@ class General(commands.Cog):
             embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
             embed.url = "https://dsi.cfw.guide/"
             embed.description = "The complete guide to modding your Nintendo DSi"
+            await ctx.send(embed=embed)
+        elif check_arg(guide, 'ngage'):
+            embed.set_author(name="N-Gage SDK")
+            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/98208101?s=200&v=4")
+            embed.url = "https://hackaday.com/2022/01/27/an-up-to-date-development-environment-for-the-nokia-n-gage/"
+            embed.description = "A homebrew development environment for the Nokia N-Gage"
             await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
