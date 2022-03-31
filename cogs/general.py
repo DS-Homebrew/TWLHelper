@@ -80,7 +80,7 @@ class General(commands.Cog):
         elif check_arg(guide, 'ngage'):
             embed.set_author(name="N-Gage SDK")
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/98208101?s=200&v=4")
-            embed.url = "https://hackaday.com/2022/01/27/an-up-to-date-development-environment-for-the-nokia-n-gage/"
+            embed.url = "https://github.com/ngagesdk"
             embed.description = "A homebrew development environment for the Nokia N-Gage"
             await ctx.send(embed=embed)
 
