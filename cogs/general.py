@@ -77,12 +77,6 @@ class General(commands.Cog):
             embed.url = "https://dsi.cfw.guide/"
             embed.description = "The complete guide to modding your Nintendo DSi"
             await ctx.send(embed=embed)
-        elif check_arg(guide, 'ngage'):
-            embed.set_author(name="N-Gage SDK")
-            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/98208101?s=200&v=4")
-            embed.url = "https://github.com/ngagesdk"
-            embed.description = "A homebrew development environment for the Nokia N-Gage"
-            await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def install(self, ctx):
