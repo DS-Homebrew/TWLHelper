@@ -37,8 +37,8 @@ class General(commands.Cog):
         embed.description = cleandoc(text)
         await ctx.send(embed=embed)
 
-    @commands.command(require_var_positional=True, usage="<3ds|wiiu|vwii|switch|wii|dsi|ngage>")
-    async def guide(self, ctx, guide: Literal("3ds", "wiiu", "vwii", "switch", "wii", "dsi", "ngage")) -> None:  # noqa
+    @commands.command(require_var_positional=True, usage="<3ds|wiiu|vwii|switch|wii|dsi>")
+    async def guide(self, ctx, guide: Literal("3ds", "wiiu", "vwii", "switch", "wii", "dsi")) -> None:  # noqa
         """Links to the recommended guides"""
         embed = discord.Embed(title="Guide")
         if check_arg(guide, '3ds'):
