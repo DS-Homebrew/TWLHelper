@@ -30,7 +30,7 @@ __all__ = ("create_error_embed",
            "web_name")
 
 
-def create_error_embed(exc: Any, ctx: Optional[commands.Context] = None, interaction: Optional[discord.Interaction] = None) -> discord.Embed:
+def create_error_embed(exc: Any, *, ctx: Optional[commands.Context] = None, interaction: Optional[discord.Interaction] = None) -> discord.Embed:
     trace = "".join(traceback.format_exception(type(exc), value=exc, tb=exc.__traceback__, chain=False))
     embed = discord.Embed(title="Unexpected exception", description=f"```py\n{trace}```", color=0xe50730)
 
