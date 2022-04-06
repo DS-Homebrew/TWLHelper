@@ -233,6 +233,8 @@ class Convert(commands.Cog):
                     left = 0
                     right = 2000
                     mid = right // 2
+                    best_size = 0
+                    best_lossy = 0
                     iteration = 0
                     max_iterations = ceil(log2(right - left))
                     while (size > UNLAUNCH_GIF_SIZE or abs(UNLAUNCH_GIF_SIZE - size) > 10) and (mid != 2000) and (iteration < max_iterations):
@@ -240,13 +242,23 @@ class Convert(commands.Cog):
                         await proc.wait()
 
                         size = os.stat(newFileName + "_lossy").st_size
+
+                        if size <= UNLAUNCH_GIF_SIZE and (abs(UNLAUNCH_GIF_SIZE - size) < abs(UNLAUNCH_GIF_SIZE - best_size)):
+                            best_size = size
+                            best_lossy = mid
+
                         if size > UNLAUNCH_GIF_SIZE:
                             left = mid + 1
                         else:
                             right = mid - 1
-
                         mid = left + ((right - left) // 2)
+
                         iteration += 1
+
+                    if best_size != size:  # Final size wasn't best, redo to the best
+                        proc = await create_subprocess_exec("gifsicle", newFileName, "-O3", "--no-extensions", f"--lossy={best_lossy}", "-k31", "-o", newFileName + "_lossy")
+                        await proc.wait()
+
                     os.rename(newFileName + "_lossy", newFileName)
 
                 warning = os.stat(newFileName).st_size > UNLAUNCH_GIF_SIZE
