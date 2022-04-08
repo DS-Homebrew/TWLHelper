@@ -127,23 +127,19 @@ class General(commands.Cog):
         """Links and/or information on uninstalling apps"""
         await ctx.send_help(ctx.command)
 
-    @uninstall.command(name="twilight", aliases=twilightmenu_alias, usage="[3ds|dsi|ds]")
-    async def twilight_uninstall(self, ctx, *, systems):
+    @uninstall.command(name="twilight", aliases=twilightmenu_alias, require_var_positional=True, usage="[3ds|dsi|ds]")
+    async def twilight_uninstall(self, ctx, system: Literal("3ds", "dsi", "ds", "flashcard", "flashcart")):  # noqa
         """Displays an embed with a link that tells you how to uninstall TWiLight Menu++ for a certain system."""
-        if not systems:
-            systems = ("3ds", "dsi", "ds")
-            await ctx.send(f'Please specify a console. Valid options are: {", ".join(list(systems))}.')
-
         embed = discord.Embed(title="TWiLight Menu++ Uninstall Guide")
         embed.url = "https://wiki.ds-homebrew.com/twilightmenu/uninstalling"
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.description = "How to uninstall TWiLight Menu++"
 
-        if check_arg(systems, ("3ds",)):
+        if check_arg(system, ("3ds",)):
             embed.url += "-3ds"
             embed.description += " on the 3DS"
-        elif check_arg(systems, ("dsi", "flashcard", "flashcart", "ds")):
+        elif check_arg(system, ("dsi", "flashcard", "flashcart", "ds")):
             embed.url += "-ds"
             embed.description += " on the DSi and/or flashcards"
 
