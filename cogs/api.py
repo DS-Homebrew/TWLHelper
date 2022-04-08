@@ -15,18 +15,42 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-
-import json
 import functools
-import discord
-import settings
-
-from urllib import parse
-from typing import Optional
+import json
 from datetime import datetime
+from typing import Any, Optional
+from urllib import parse
+
+import discord
+from discord.ext import commands, tasks
 from pytz import timezone
-from discord.ext import tasks, commands
-from utils import UniStoreView, NBCompatView
+
+import settings
+from utils import ViewPages
+from utils.pagination import NBCompatView
+
+
+class UDBMenu(ViewPages):
+    async def format_page(self, entry: Any):
+        embed = discord.Embed(title=entry['title'], url=f'https://db.universal-team.net/{entry["systems"][0].lower()}/{parse.quote(entry["title"])}')
+        embed.color = int(entry['color'][1:], 16) if 'color' in entry else None
+        embed.set_author(name=entry["author"], icon_url=entry["avatar"] if "avatar" in entry else None)
+        embed.set_thumbnail(url=entry["icon"] if "icon" in entry else (entry["image"] if "image" in entry else (entry["avatar"] if "avatar" in entry else None)))
+        embed.description = entry["description"] if "description" in entry else None
+        return embed
+
+
+class SkinsMenu(ViewPages):
+    async def format_page(self, entry: Any):
+        store_name = self.ctx.command.extras['store']
+        embed = discord.Embed()
+        embed.title = entry["title"]
+        embed.color = int(entry['color'][1:], 16) if 'color' in entry else None
+        embed.set_author(name=entry["author"], icon_url=entry["avatar"] if "avatar" in entry else None)
+        embed.set_thumbnail(url=entry["icon"] if "icon" in entry else (entry["image"] if "image" in entry else (entry["avatar"] if "avatar" in entry else None)))
+        embed.description = entry["description"] if "description" in entry else None
+        embed.url = f'https://skins.ds-homebrew.com/{store_name}/{parse.quote(entry["title"])}'
+        return embed
 
 
 class API(commands.Cog):
@@ -151,15 +175,35 @@ class API(commands.Cog):
         """Shows the Nintendo Network status information"""
         await ctx.send(embed=self.netinfo_embed)
 
+    async def request(self, url: str):
+        async with self.bot.session.get(url) as r:
+            if r.status != 200:
+                raise commands.CommandError(f"Unable to request the api for some reason. ({r.status})")
+            return await r.json()
+
     @commands.command(aliases=["universaldb"])
-    async def udb(self, ctx, *args):
+    async def udb(self, ctx, *, application):
         """Displays an embed with a link to Universal-DB and/or one of the apps.\n
         To show a random app: `udb [-r]`
         To search for an app: `udb [search parameter]`"""
-        menu = UniStoreView(ctx, "".join(args), "udb")
-        if args and args[0] == "-r":
-            menu.israndom = True
-        return await menu.start()
+        if not application:
+            embed = discord.Embed(title="Universal-DB", colour=0x1d8056)
+            embed.url = "https://db.universal-team.net/"
+            embed.set_author(name="Universal-Team")
+            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/49733679?s=400&v=4")
+            embed.description = "A database of DS and 3DS homebrew"
+            await ctx.send(embed=embed)
+            return
+
+        if application.strip() == "-r":
+            url = "https://udb-api.lightsage.dev/random"
+        else:
+            url = f"https://udb-api.lightsage.dev/search/{parse.quote(application)}"
+        resp = await self.request(url)
+        source = resp['results'] if type(resp) == dict else resp
+
+        menu = UDBMenu(source, ctx)
+        await menu.start()
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
     async def skins(self, ctx):
@@ -173,65 +217,121 @@ class API(commands.Cog):
         embed.url = "https://skins.ds-homebrew.com/"
         await ctx.send(embed=embed)
 
-    @skins.command(name="unlaunch")
-    async def skin_unlaunch(self, ctx, *args):
-        """Displays an embed with a link to the Unlaunch backgrounds page.\n
+    async def send_skin_help(self, ctx: commands.Context):
+        embed = discord.Embed(colour=0xda4a53)
+        store_name = ctx.command.extras['store']
+        embed.url = f"https://skins.ds-homebrew.com/{parse.quote(store_name)}/"
+        embed.set_author(name="DS-Homebrew")
+        if store_name == "Unlaunch":
+            embed.title = "Unlaunch Backgrounds"
+            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+            embed.description = "Custom backgrounds for Unlaunch"
+        elif store_name == "Nintendo DSi":
+            embed.title = "DSi Menu Skins"
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/dsi.png")
+            embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
+        elif store_name == "R4 Original":
+            embed.title = "R4 Original Menu Skins"
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/r4.png")
+            embed.description = "Custom skins for TWiLight Menu++'s R4 Original Menu theme"
+        elif store_name == "Nintendo 3DS":
+            embed.title = "3DS Menu Skins"
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/3ds.png")
+            embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
+        elif store_name == "Font":
+            embed.title = "TWiLight Menu++ Fonts"
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/font.png")
+            embed.description = "Custom fonts for TWiLight Menu++"
+        elif store_name == "Icon":
+            embed.title = "TWiLight Menu++ Icons"
+            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+            embed.description = "Custom icons for TWiLight Menu++"
+
+        await ctx.send(embed=embed)
+
+    async def start_skin_menu(self, ctx, argument):
+        store_name = parse.quote(ctx.command.extras['store'])
+
+        if argument.strip() == "-r":
+            url = f"https://twlmenu-extras.api.hansol.ca/random/{store_name}"
+        else:
+            url = f"https://twlmenu-extras.api.hansol.ca/search/{store_name}/{parse.quote(argument)}"
+        resp = await self.request(url)
+        source = resp['results'] if type(resp) == dict else resp
+        menu = SkinsMenu(source, store_name, ctx)
+        await menu.start()
+
+    @skins.command(name="unlaunch", extras={"store": "Unlaunch"})
+    async def skin_unlaunch(self, ctx, *, skin=None):
+        """Displays an embed with a link to the Unlaunch backgrounds page.
+
         To show a random background: `skins unlaunch [-r]`
         To search for a background: `skins unlaunch [search parameter]`"""
-        menu = UniStoreView(ctx, "".join(args), "Unlaunch")
-        if args and args[0] == "-r":
-            menu.israndom = True
-        return await menu.start()
+        if not skin:
+            await self.send_skin_help(ctx)
+            return
 
-    @skins.command(name="dsi", aliases=["dsimenu"])
-    async def skin_dsimenu(self, ctx, *args):
-        """Displays an embed with a link to the DSi Menu skins page.\n
+        await self.start_skin_menu(ctx, skin)
+
+    @skins.command(name="dsi", aliases=["dsimenu"], extras={"store": "Nintendo DSi"})
+    async def skin_dsimenu(self, ctx, *, skin=None):
+        """Displays an embed with a link to the DSi Menu skins page.
+
         To show a random skin: `skins dsi [-r]`
-        To search for a skin: `s`kins dsi [search parameter]`"""
-        menu = UniStoreView(ctx, "".join(args), "Nintendo DSi")
-        if args and args[0] == "-r":
-            menu.israndom = True
-        return await menu.start()
+        To search for a skin: `skins dsi [search parameter]`"""
+        if not skin:
+            await self.send_skin_help(ctx)
+            return
 
-    @skins.command(name="3ds", aliases=["3dsmenu"])
-    async def skin_3dsmenu(self, ctx, *args):
-        """Displays an embed with a link to the 3DS Menu skins page.\n
+        await self.start_skin_menu(ctx, skin)
+
+    @skins.command(name="3ds", aliases=["3dsmenu"], extras={"store": "Nintendo 3DS"})
+    async def skin_3dsmenu(self, ctx, *, skin=None):
+        """Displays an embed with a link to the 3DS Menu skins page.
+
         To show a random skin: `skins 3ds [-r]`
         To search for a skin: `skins 3ds [search parameter]`"""
-        menu = UniStoreView(ctx, "".join(args), "Nintendo 3DS")
-        if args and args[0] == "-r":
-            menu.israndom = True
-        return await menu.start()
+        if not skin:
+            await self.send_skin_help(ctx)
+            return
 
-    @skins.command(name="r4", aliases=["r4theme"])
-    async def skin_r4menu(self, ctx, *args):
-        """Displays an embed with a link to the R4 Original Menu skins page.\n
+        await self.start_skin_menu(ctx, skin)
+
+    @skins.command(name="r4", aliases=["r4theme"], extras={"store": "R4 Original"})
+    async def skin_r4menu(self, ctx, *, skin=None):
+        """Displays an embed with a link to the R4 Original Menu skins page.
+
         To show a random skin: `skins r4 [-r]`
         To search for a skin: `skins r4 [search parameter]`"""
-        menu = UniStoreView(ctx, "".join(args), "R4 Original")
-        if args and args[0] == "-r":
-            menu.israndom = True
-        return await menu.start()
+        if not skin:
+            await self.send_skin_help(ctx)
+            return
 
-    @skins.command(name="font")
-    async def skin_font(self, ctx, *args):
-        """Displays an embed with a link to the TWiLight Menu++ fonts page.\n
+        await self.start_skin_menu(ctx, skin)
+
+    @skins.command(name="font", extras={"store": "Font"})
+    async def skin_font(self, ctx, *, skin=None):
+        """Displays an embed with a link to the TWiLight Menu++ fonts page.
+
         To show a random font: `skins fonts [-r]`
         To search for a font: `skins fonts [search parameter]`"""
-        menu = UniStoreView(ctx, "".join(args), "Font")
-        if args and args[0] == "-r":
-            menu.israndom = True
-        return await menu.start()
+        if not skin:
+            await self.send_skin_help(ctx)
+            return
 
-    @skins.command(name="icon")
-    async def skin_icon(self, ctx, *args):
-        """Displays an embed with a link to the TWiLight Menu++ icons page.\n
+        await self.start_skin_menu(ctx, skin)
+
+    @skins.command(name="icon", extras={"store": "Icon"})
+    async def skin_icon(self, ctx, *, skin=None):
+        """Displays an embed with a link to the TWiLight Menu++ icons page.
+
         To show a random icon: `skins icon [-r]`
         To search for an icon: `skins icon [search parameter]`"""
-        menu = UniStoreView(ctx, "".join(args), "Icon")
-        if args and args[0] == "-r":
-            menu.israndom = True
-        return await menu.start()
+        if not skin:
+            await self.send_skin_help(ctx)
+            return
+
+        await self.start_skin_menu(ctx, skin)
 
     # Gamebrew searching
     @commands.command()

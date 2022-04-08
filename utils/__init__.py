@@ -1,4 +1,4 @@
 from .converters import *  # noqa
-from .curl import *  # noqa
+from .pagination import *  # noqa
 from .utils import *  # noqa
 from .aliases import * # noqa
