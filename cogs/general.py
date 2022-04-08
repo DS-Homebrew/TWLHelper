@@ -253,7 +253,7 @@ class General(commands.Cog):
         await self.simple_embed(ctx, description, title=f"TWiLight Menu++ nightly {console}")
 
     @nightly.command(name="ndsbootstrap", aliases=ndsbootstrap_alias)
-    async def ndsbootstrap_nightly(self, ctx, *, arg=""):
+    async def ndsbootstrap_nightly(self, ctx):
         url = "https://github.com/TWLBot/Builds/raw/master/nds-bootstrap.7z"
         description = f"The latest nightly version of nds-bootstrap can be found here: {url}\n\n\
                         On the 3DS, this can be installed from Universal Updater. Select nds-bootstrap, then install the [nightly] build."
