@@ -24,10 +24,10 @@ from urllib import parse
 import discord
 from discord.ext import commands, tasks
 from pytz import timezone
+from rapidfuzz import process
 
 import settings
 from utils import ViewPages
-from utils.pagination import NBCompatView
 
 
 class UDBMenu(ViewPages):
@@ -50,6 +50,18 @@ class SkinsMenu(ViewPages):
         embed.set_thumbnail(url=entry["icon"] if "icon" in entry else (entry["image"] if "image" in entry else (entry["avatar"] if "avatar" in entry else None)))
         embed.description = entry["description"] if "description" in entry else None
         embed.url = f'https://skins.ds-homebrew.com/{store_name}/{parse.quote(entry["title"])}'
+        return embed
+
+
+class NBCompatMenu(ViewPages):
+    async def format_page(self, entry: Any):
+        embed = discord.Embed()
+        embed.title = f"{entry[1]} ({entry[4]})"
+        embed.add_field(name="Last tested version", value=f"{entry[10]}", inline=False)
+        embed.add_field(name="Compatibility", value=f"{entry[13]}", inline=False)
+        if entry[14] != '':
+            embed.add_field(name="Notes", value=f"{entry[14]}", inline=False)
+        embed.add_field(name="Link", value=f"{entry[16]}", inline=False)
         return embed
 
 
@@ -97,6 +109,39 @@ class API(commands.Cog):
         argv = functools.partial(self.dumpWorksheet)
         await self.bot.loop.run_in_executor(None, argv)
 
+    def getGameValues(self, name, compatlist):
+        for line in compatlist:
+            if name == line[1]:
+                return line
+        return None
+
+    def search_tid(self, arg, compatlist, getlink=False):
+        for idx, val in enumerate(compatlist[2:]):
+            if arg.upper() in val[3]:
+                if not getlink:
+                    game = val
+                    game.append(f"https://docs.google.com/spreadsheets/d/1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc/edit#gid=0&range=A{idx+3}:P{idx+3}")
+                    return [game]
+                else:
+                    # +1 because sheet starts from 1, but list starts from 0
+                    # +2 added since searching starts from row 3
+                    return f"https://docs.google.com/spreadsheets/d/1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc/edit#gid=0&range=A{idx+3}:P{idx+3}"
+        return None
+
+    # This function is based on UDB-API, licensed Apache-2.0.
+    # https://github.com/LightSage/UDB-API
+    def search_name(self, arg, compatlist):
+        matchlist = []
+        game_names = [line[1] for line in compatlist[2:]]
+        results = process.extract(arg, [g.lower() for g in game_names], processor=lambda a: a.lower())
+        for _, score, idx in results:
+            if score < 70:
+                continue
+            game = self.getGameValues(game_names[idx], compatlist)
+            game.append(self.search_tid(game[3], compatlist, getlink=True))
+            matchlist.append(game)
+        return matchlist
+
     @commands.command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
     @gspreadkey_exists()
     async def ndsbcompat(self, ctx, *, title: Optional[str]):
@@ -112,8 +157,23 @@ class API(commands.Cog):
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
             embed.url = "https://docs.google.com/spreadsheets/d/1LRTkXOUXraTMjg1eedz_f7b5jiuyMv2x6e_jY_nyHSc/edit?usp=sharing"
             return await ctx.send(embed=embed)
-        menu = NBCompatView(ctx, title)
-        await menu.start()
+
+        tid = len(title) == 4
+        if tid and title[0] in ['H', 'Z', 'K']:
+            return await ctx.send("DSiWare compatibility is not supported. Please try another game, or visit the list directly.")
+        with open("nbcompat.json", "r") as compatfile:
+            compatlist = json.load(compatfile)
+        source = self.search_tid(title, compatlist, getlink=False) if tid else self.search_name(title, compatlist)
+        if source:
+            menu = NBCompatMenu(source, ctx)
+            return await menu.start()
+        else:
+            with open("nbcompat-fallback.json") as compatfile:
+                compatlist = json.load(compatfile)
+            source = self.search_tid(title, compatlist, getlink=False) if tid else self.search_name(title, compatlist)
+            if source:
+                return await ctx.send(f"{source[0][1]} ({source[0][4]}) does not have any compatibility ratings!")
+            await ctx.send("Game not found. Please try again.")
 
     # Nintendo Network status information
     # All netinfo related functions are based on Kurisu, licensed Apache-2.0.
