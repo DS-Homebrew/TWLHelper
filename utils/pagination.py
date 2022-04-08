@@ -31,8 +31,6 @@ class CustomView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=60)
 
-    message: discord.Message = None
-
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         return self.ctx.author == interaction.user
 
@@ -74,7 +72,7 @@ class ViewPages(CustomView):
         Returns
         -------
         discord.Embed
-            An embed
+            An embed that's ready to be sent
 
         Raises
         ------
