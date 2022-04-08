@@ -201,6 +201,8 @@ class API(commands.Cog):
             url = f"https://udb-api.lightsage.dev/search/{parse.quote(application)}"
         resp = await self.request(url)
         source = resp['results'] if type(resp) == dict else resp
+        if not source:
+            return await ctx.send("App not found. Please try again.")
 
         menu = UDBMenu(source, ctx)
         await menu.start()
@@ -258,6 +260,8 @@ class API(commands.Cog):
             url = f"https://twlmenu-extras.api.hansol.ca/search/{store_name}/{parse.quote(argument)}"
         resp = await self.request(url)
         source = resp['results'] if type(resp) == dict else resp
+        if not source:
+            return await ctx.send("App not found. Please try again.")
         menu = SkinsMenu(source, store_name, ctx)
         await menu.start()
 
