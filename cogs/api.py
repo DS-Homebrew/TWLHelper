@@ -242,7 +242,7 @@ class API(commands.Cog):
             return await r.json()
 
     @commands.command(aliases=["universaldb"])
-    async def udb(self, ctx, *, application):
+    async def udb(self, ctx, *, application=None):
         """Displays an embed with a link to Universal-DB and/or one of the apps.\n
         To show a random app: `udb [-r]`
         To search for an app: `udb [search parameter]`"""
