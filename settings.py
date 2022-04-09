@@ -16,14 +16,14 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-import os
 import json
+import os
 
 IS_DOCKER = os.environ.get('IS_DOCKER', '')
 
 # Load config
-settingsf = open('settings.json')
-settings = json.load(settingsf)
+with open("settings.json", "r") as f:
+    settings = json.load(f)
 
 # bot internals
 TOKEN = settings['DEFAULT']['TOKEN']
