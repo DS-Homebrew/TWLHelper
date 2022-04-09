@@ -19,13 +19,13 @@
 import os
 import datetime
 import functools
-import hashlib
-import discord
-import feedparser
-
-from discord.ext import tasks, commands
+from hashlib import sha256
 from inspect import cleandoc
 from time import mktime
+
+import discord
+import feedparser
+from discord.ext import tasks, commands
 from markdownify import markdownify
 
 import settings
@@ -47,8 +47,8 @@ class RSS(commands.Cog):
             await self.subreddit()
 
     def digest_check(self, new, old):
-        digestprev = hashlib.sha256(old).digest()
-        digestnext = hashlib.sha256(new).digest()
+        digestprev = sha256(old).digest()
+        digestnext = sha256(new).digest()
         return digestprev == digestnext
 
     def parseFeed(self, new, old):
@@ -61,44 +61,43 @@ class RSS(commands.Cog):
         argv = functools.partial(self.parseFeed, new, old)
         return await self.bot.loop.run_in_executor(None, argv)
 
-    async def ninupdates(self):
-        async with self.bot.session.get('https://yls8.mtheall.com/ninupdates/feed.php') as resp:
+    async def getFeed(self, url: str, xml: str):
+        async with self.bot.session.get(url) as resp:
             raw_bytes = await resp.read()
-
-        if not os.path.isfile('ninupdates.xml'):
-            new = open('ninupdates.xml', 'wb')
-            new.write(raw_bytes)
-            new.close()
-
-        f = open('ninupdates.xml', 'rb')
-        if not self.digest_check(raw_bytes, f.read()):
-            f.close()
-
-            consoles = [
-                'Old3DS',
-                'New3DS'
-            ]
-
-            f = open('ninupdates.xml', 'r')
-
-            ninupdates = await self.asyncParseFeed(raw_bytes, f.read())
-
-            for entry in ninupdates['new']['entries']:
-                system, ver = entry['title'].split()
-                if system not in consoles:
-                    continue
-                for entryold in ninupdates['old']['entries']:
-                    systemold, verold = entryold['title'].split()
-                    if systemold not in consoles:
-                        continue
-                    elif system == systemold and ver != verold:
-                        channel = self.bot.get_channel(settings.NINUPDATE)
-                        await channel.send(embed=discord.Embed(description=f"ℹ️ New update version for {system}: [{ver}]({entry['link']})"))
-                        continue
-            f.close()
-            f = open('ninupdates.xml', 'wb')
+        if not os.path.isfile(xml):
+            with open(xml, 'wb') as new:
+                new.write(raw_bytes)
+                return 1
+        with open(xml, 'rb') as f:
+            if self.digest_check(raw_bytes, f.read()):
+                return 2
+        with open(xml, 'r', encoding='utf-8') as f:
+            feed = await self.asyncParseFeed(raw_bytes, f.read())
+        with open(xml, 'wb') as f:
             f.write(raw_bytes)
-        f.close()
+        return feed
+
+    async def ninupdates(self):
+        ninupdates = await self.getFeed('https://yls8.mtheall.com/ninupdates/feed.php', 'ninupdates.xml')
+        if isinstance(ninupdates, int):
+            return
+
+        consoles = [
+            'Old3DS',
+            'New3DS'
+        ]
+        for entry in ninupdates['new']['entries']:
+            system, ver = entry['title'].split()
+            if system not in consoles:
+                continue
+            for entryold in ninupdates['old']['entries']:
+                systemold, verold = entryold['title'].split()
+                if systemold not in consoles:
+                    continue
+                elif system == systemold and ver != verold:
+                    channel = self.bot.get_channel(settings.NINUPDATE)
+                    await channel.send(embed=discord.Embed(description=f"ℹ️ New update version for {system}: [{ver}]({entry['link']})"))
+                    continue
 
     async def subredditEmbed(self, rss, idx):
         channel = self.bot.get_channel(settings.SUBREDDIT)
@@ -115,22 +114,9 @@ class RSS(commands.Cog):
         return await channel.send(embed=embed)
 
     async def subreddit(self):
-        async with self.bot.session.get('https://www.reddit.com/r/ndsbrew/.rss') as resp:
-            raw_bytes = await resp.read()
-        if not os.path.isfile('ndsbrew.xml'):
-            new = open('ndsbrew.xml', 'wb')
-            new.write(raw_bytes)
-            return new.close()
-        f = open('ndsbrew.xml', 'rb')
-        if self.digest_check(raw_bytes, f.read()):
-            return f.close()
-        f.close()
-        f = open('ndsbrew.xml', 'r', encoding='utf-8')
-        ndsbrew = await self.asyncParseFeed(raw_bytes, f.read())
-        f.close()
-        f = open('ndsbrew.xml', 'wb')
-        f.write(raw_bytes)
-        f.close()
+        ndsbrew = await self.getFeed('https://www.reddit.com/r/ndsbrew/.rss', 'ndsbrew.xml')
+        if isinstance(ndsbrew, int):
+            return
 
         new_posts = []
         for idx, val in enumerate(ndsbrew['new']['entries']):
