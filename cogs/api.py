@@ -33,7 +33,7 @@ from utils import ViewPages, web_name
 
 class UDBMenu(ViewPages):
     async def format_page(self, entry: Any):
-        embed = discord.Embed(title=entry['title'], url=f'https://db.universal-team.net/{entry["systems"][0].lower()}/{web_name(entry["title"])}')
+        embed = discord.Embed(title=entry['title'], url=f'https://db.universal-team.net/{entry["systems"][0].lower()}/{(entry["slug"])}')
         embed.color = int(entry['color'][1:], 16) if 'color' in entry else None
         embed.set_author(name=entry["author"], icon_url=entry["avatar"] if "avatar" in entry else None)
         embed.set_thumbnail(url=entry["icon"] if "icon" in entry else (entry["image"] if "image" in entry else (entry["avatar"] if "avatar" in entry else None)))
