@@ -45,3 +45,7 @@ TWLUPDATES = settings['THREAD']['TWLUPDATES']
 NDSBUPDATES = settings['THREAD']['NDSBUPDATES']
 WEBUPDATES = settings['THREAD']['WEBUPDATES']
 MISCUPDATES = settings['THREAD']['MISCUPDATES']
+
+# international channels
+I11L = settings['I11L']
+DEEPLTOKEN = settings.get('DEEPLTOKEN')
