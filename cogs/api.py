@@ -15,6 +15,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
+
 import functools
 import json
 from datetime import datetime
@@ -27,12 +28,12 @@ from pytz import timezone
 from rapidfuzz import process
 
 import settings
-from utils import ViewPages
+from utils import ViewPages, web_name
 
 
 class UDBMenu(ViewPages):
     async def format_page(self, entry: Any):
-        embed = discord.Embed(title=entry['title'], url=f'https://db.universal-team.net/{entry["systems"][0].lower()}/{parse.quote(entry["title"])}')
+        embed = discord.Embed(title=entry['title'], url=f'https://db.universal-team.net/{entry["systems"][0].lower()}/{web_name(entry["title"])}')
         embed.color = int(entry['color'][1:], 16) if 'color' in entry else None
         embed.set_author(name=entry["author"], icon_url=entry["avatar"] if "avatar" in entry else None)
         embed.set_thumbnail(url=entry["icon"] if "icon" in entry else (entry["image"] if "image" in entry else (entry["avatar"] if "avatar" in entry else None)))
@@ -42,14 +43,15 @@ class UDBMenu(ViewPages):
 
 class SkinsMenu(ViewPages):
     async def format_page(self, entry: Any):
-        store_name = self.ctx.command.extras['store']
+        store_name = web_name(self.ctx.command.extras['store'])
         embed = discord.Embed()
         embed.title = entry["title"]
         embed.color = int(entry['color'][1:], 16) if 'color' in entry else None
         embed.set_author(name=entry["author"], icon_url=entry["avatar"] if "avatar" in entry else None)
         embed.set_thumbnail(url=entry["icon"] if "icon" in entry else (entry["image"] if "image" in entry else (entry["avatar"] if "avatar" in entry else None)))
         embed.description = entry["description"] if "description" in entry else None
-        embed.url = f'https://skins.ds-homebrew.com/{store_name}/{parse.quote(entry["title"])}'
+        embed.url = f'https://skins.ds-homebrew.com/{store_name}/{web_name(entry["title"])}'
+        print(embed.url)
         return embed
 
 
@@ -282,7 +284,7 @@ class API(commands.Cog):
     async def send_skin_help(self, ctx: commands.Context):
         embed = discord.Embed(colour=0xda4a53)
         store_name = ctx.command.extras['store']
-        embed.url = f"https://skins.ds-homebrew.com/{parse.quote(store_name)}/"
+        embed.url = f"https://skins.ds-homebrew.com/{web_name(store_name)}/"
         embed.set_author(name="DS-Homebrew")
         if store_name == "Unlaunch":
             embed.title = "Unlaunch Backgrounds"
@@ -322,7 +324,7 @@ class API(commands.Cog):
         source = resp['results'] if type(resp) == dict else resp
         if not source:
             return await ctx.send("App not found. Please try again.")
-        menu = SkinsMenu(source, store_name, ctx)
+        menu = SkinsMenu(source, ctx)
         await menu.start()
 
     @skins.command(name="unlaunch", extras={"store": "Unlaunch"})
