@@ -18,11 +18,11 @@
 
 
 import discord
+import re
 import settings
 
 
 from discord.ext import commands
-from re import findall
 from urllib.parse import quote
 
 
@@ -31,6 +31,11 @@ class International(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.VALID_LANGUAGE_CODES = [
+            "BG", "CS", "DA", "DE", "EL", "EN-GB", "EN-US", "EN", "ES", "ET",
+            "FI", "FR", "HU", "IT", "JA", "LT", "LV", "NL", "PL", "PT-PT",
+            "PT-BR", "PT", "RO", "RU", "SK", "SL", "SV", "ZH"
+        ]
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -58,16 +63,22 @@ class International(commands.Cog):
                         session=self.bot.session
                     )
 
-                    # Check for language code in name from autotranslated message
+                    msg = message.content
+
                     language_code = "EN"
-                    if message.reference:
+                    matches = re.findall(f"^({'|'.join(self.VALID_LANGUAGE_CODES)}):", msg, re.IGNORECASE)
+                    if len(matches) > 0:
+                        # Check if message specifies a language
+                        language_code = matches[0].upper()
+                        msg = msg[len(matches[0]) + 1:]
+                    elif message.reference:
+                        # Check for language code in name from autotranslated message
                         reply = await message.channel.fetch_message(message.reference.message_id)
-                        matches = findall(r"\[([A-Z\-]{2,5})\]", reply.author.display_name)
+                        matches = re.findall(r"\[([A-Z\-]{2,5})\]", reply.author.display_name)
                         if len(matches) > 0:
                             language_code = matches[0]
 
                     # If the message we're replying to isn't english, translate with DeepL
-                    msg = message.content
                     if language_code != "EN":
                         async with self.bot.session.get(f"https://api-free.deepl.com/v2/translate?auth_key={settings.DEEPLTOKEN}&target_lang={language_code}&text={quote(msg)}") as response:
                             msg = (await response.json())["translations"][0]["text"]
