@@ -60,7 +60,7 @@ class International(commands.Cog):
 
                     # Check for language code in name from autotranslated message
                     language_code = "EN"
-                    if message.reference.message_id:
+                    if message.reference:
                         reply = await message.channel.fetch_message(message.reference.message_id)
                         matches = findall(r"\[([A-Z\-]{2,5})\]", reply.author.display_name)
                         if len(matches) > 0:
