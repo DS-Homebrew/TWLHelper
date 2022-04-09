@@ -27,9 +27,16 @@
 
     "I11L": [
         {
-            "ID": null,
-            "WEBHOOK_ID": null,
-            "WEBHOOK_TOKEN": ""
+            "I11L": {
+                "ID": null,
+                "WEBHOOK_ID": null,
+                "WEBHOOK_TOKEN": ""
+            },
+            "EN": {
+                "ID": null,
+                "WEBHOOK_ID": null,
+                "WEBHOOK_TOKEN": ""
+            }
         }
     ],
     

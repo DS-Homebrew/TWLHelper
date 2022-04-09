@@ -22,6 +22,7 @@ import settings
 
 
 from discord.ext import commands
+from re import findall
 from urllib.parse import quote
 
 
@@ -33,22 +34,49 @@ class International(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if message.guild.id == settings.GUILD:
+        if message.guild.id == settings.GUILD and not message.webhook_id:
             for i11l_channel in settings.I11L:
-                if i11l_channel["ID"] == message.channel.id:
+                if i11l_channel["I11L"]["ID"] == message.channel.id:
                     webhook = discord.Webhook.partial(
-                        i11l_channel["WEBHOOK_ID"],
-                        i11l_channel["WEBHOOK_TOKEN"],
+                        i11l_channel["EN"]["WEBHOOK_ID"],
+                        i11l_channel["EN"]["WEBHOOK_TOKEN"],
                         session=self.bot.session
                     )
 
                     # Translate with DeepL
                     async with self.bot.session.get(f"https://api-free.deepl.com/v2/translate?auth_key={settings.DEEPLTOKEN}&target_lang=EN-US&text={quote(message.content)}") as response:
+                        translation = (await response.json())["translations"][0]
                         await webhook.send(
-                            content=(await response.json())["translations"][0]["text"],
-                            username=message.author.display_name,
+                            content=translation["text"],
+                            username=f"{message.author.display_name} [{translation['detected_source_language']}]",
                             avatar_url=message.author.avatar
                         )
+                elif i11l_channel["EN"]["ID"] == message.channel.id:
+                    webhook = discord.Webhook.partial(
+                        i11l_channel["I11L"]["WEBHOOK_ID"],
+                        i11l_channel["I11L"]["WEBHOOK_TOKEN"],
+                        session=self.bot.session
+                    )
+
+                    # Check for language code in name from autotranslated message
+                    language_code = "EN"
+                    if message.reference.message_id:
+                        reply = await message.channel.fetch_message(message.reference.message_id)
+                        matches = findall(r"\[([A-Z\-]{2,5})\]", reply.author.display_name)
+                        if len(matches) > 0:
+                            language_code = matches[0]
+
+                    # If the message we're replying to isn't english, translate with DeepL
+                    msg = message.content
+                    if language_code != "EN":
+                        async with self.bot.session.get(f"https://api-free.deepl.com/v2/translate?auth_key={settings.DEEPLTOKEN}&target_lang={language_code}&text={quote(msg)}") as response:
+                            msg = (await response.json())["translations"][0]["text"]
+
+                    await webhook.send(
+                        content=msg,
+                        username=message.author.display_name,
+                        avatar_url=message.author.avatar
+                    )
 
 
 async def setup(bot):
