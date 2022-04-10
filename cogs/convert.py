@@ -1,11 +1,11 @@
 import os
+from asyncio.subprocess import create_subprocess_exec
 from math import ceil, log2
 from shutil import which
 from time import time
 
 import discord
 from aiohttp import client_exceptions
-from asyncio.subprocess import create_subprocess_exec
 from discord.ext import commands
 
 
@@ -113,7 +113,7 @@ class Convert(commands.Cog):
             async with ctx.typing():
                 if boxart or not fileName.endswith('.' + new_extension):
                     outputtext = await ctx.send(f"`Converting to {new_extension.upper()}...`")
-                    newFileName = f"senpai_converted_{fileName}_.{new_extension}"
+                    newFileName = f"downloads/senpai_converted_{time()}.{new_extension}"
                     pixfmt = "rgb565" if new_extension == "bmp" else None
                     err = await self.ffmpeg_img(fileName, newFileName, scale=scale, pixfmt=pixfmt)
                     if err == 1:
@@ -204,7 +204,7 @@ class Convert(commands.Cog):
         fileName = await self.download_media(ctx, filelink)
         if isinstance(fileName, str):
             async with ctx.typing():
-                newFileName = f"downloads/senpai_converted_{fileName[10:]}_.gif"
+                newFileName = f"downloads/senpai_converted_{time()}.gif"
                 outputtext = await ctx.send("`Converting to GIF...`")
                 try:
                     maxcolors = 31 if any(dither in args for dither in ["-dither", "--dither", "-d"]) else 256
