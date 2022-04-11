@@ -55,9 +55,6 @@ class ViewPages(CustomView):
         self._source = source
         super().__init__()
 
-    async def format_initial_message(self):
-        return await self.get_page()
-
     async def format_page(self, entry: Any) -> discord.Embed:
         """A coroutine that allows you to format an entry.
 
@@ -88,7 +85,7 @@ class ViewPages(CustomView):
         destination : discord.abc.Messageable, optional
             An optional destination channel to send the menu to, by default None
         """
-        kwargs = {'embed': await self.format_initial_message(), 'view': self}
+        kwargs = {'embed': await self.get_page(), 'view': self}
         if destination:
             await destination.send(**kwargs)
         else:
