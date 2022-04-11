@@ -18,22 +18,22 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-import os
 import asyncio
+import contextlib
+import os
+from shutil import rmtree
+from typing import Union
+
+import aiohttp
 import discord
 import gspread
-import aiohttp
-import settings
-
-from shutil import rmtree
 from discord.ext import commands
+
+import settings
 from utils.utils import create_error_embed
 
 
-intents = discord.Intents.default()
-
-
-class embedHelp(commands.MinimalHelpCommand):
+class EmbedHelp(commands.MinimalHelpCommand):
     async def send_pages(self):
         destination = self.get_destination()
         for page in self.paginator.pages:
@@ -50,6 +50,7 @@ class TWLHelper(commands.Bot):
         status = discord.Status.online
         super().__init__(
             command_prefix=command_prefix,
+            help_command=EmbedHelp(),
             description=description,
             intents=intents,
             allowed_mentions=allowed_mentions,
@@ -69,15 +70,13 @@ class TWLHelper(commands.Bot):
                     await self.load_extension(cog)
                     print(f"Loaded cog cogs.{filename[:-3]}")
             except Exception as e:
-                exc = "{}: {}".format(type(e).__name__, e)
-                print("Failed to load cog {}\n{}".format(cog, exc))
+                print(f"Failed to load cog {cog}\n{type(e).__name__}: {e}")
         try:
             cog = "jishaku"
             await self.load_extension("jishaku")
             print("Loaded cog jishaku")
         except Exception as e:
-            exc = "{}: {}".format(type(e).__name__, e)
-            print("Failed to load cog {}\n{}".format(cog, exc))
+            print(f"Failed to load cog {cog}\n{type(e).__name__}: {e}")
 
     async def close(self):
         await self.session.close()
@@ -97,9 +96,8 @@ class TWLHelper(commands.Bot):
 
     async def on_command_error(self, ctx: commands.Context, exc: commands.CommandInvokeError):
         author = ctx.author
-        command: commands.Command = ctx.command or '<unknown cmd>'
+        command: Union[commands.Command, str] = ctx.command or '<unknown cmd>'
         exc = getattr(exc, 'original', exc)
-        channel = ctx.channel
 
         if isinstance(exc, commands.CommandNotFound):
             return
@@ -127,27 +125,24 @@ class TWLHelper(commands.Bot):
             await ctx.send(f'{author.mention} A bad argument was given, expected one of {", ".join(exc.literals)}')
 
         elif isinstance(exc, commands.MissingRequiredArgument):
-            await ctx.send(f'{author.mention} You are missing required argument `{exc.param.name}`.\n')
+            await ctx.send(f'{author.mention} You are missing required argument `{exc.param.name}`.')
             await ctx.send_help(ctx.command)
 
         elif isinstance(exc, discord.Forbidden):
             await ctx.send(f"💢 I can't help you if you don't let me!\n`{exc.text}`.")
 
         elif isinstance(exc, commands.CommandInvokeError):
-            await ctx.send(f'{author.mention} `{command}` raised an exception during usage')
-            embed = create_error_embed(exc, ctx=ctx)
-            await channel.send(embed=embed)
+            await ctx.send(f'{author.mention} `{command}` raised an exception during usage', embed=create_error_embed(exc, ctx=ctx))
+
         else:
-            await ctx.send(f'{author.mention} Unexpected exception occurred while using the command `{command}`')
-            embed = create_error_embed(exc, ctx=ctx)
-            await channel.send(embed=embed)
+            await ctx.send(f'{author.mention} Unexpected exception occurred while using the command `{command}`',
+                           embed=create_error_embed(exc, ctx=ctx))
 
 
 async def main():
     bot = TWLHelper(settings.PREFIX, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot")
     print('Starting TWLHelper...')
     async with bot:
-        bot.help_command = embedHelp()
         await bot.load_cogs()
         bot.session = aiohttp.ClientSession()
         await bot.start(settings.TOKEN)
@@ -155,8 +150,6 @@ async def main():
 
 if __name__ == '__main__':
     for folder in ("downloads", "senpai_converted_downloads"):
-        try:
+        with contextlib.suppress(FileNotFoundError):
             rmtree(folder)
-        except FileNotFoundError:
-            pass
     asyncio.run(main())
