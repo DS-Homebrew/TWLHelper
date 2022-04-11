@@ -1,4 +1,4 @@
-git+https://github.com/Rapptz/discord.py@66155faf00cfb3d7cfc976c834d85e336c206505
+git+https://github.com/Rapptz/discord.py@6265723a352ee77f418ef3004012cc5693ba390f
 jishaku~=2.4.0
 pytz~=2022.1
 feedparser~=6.0.8
