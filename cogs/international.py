@@ -66,7 +66,7 @@ class International(commands.Cog):
                         if edit:
                             await self.messagecache[message.id].edit(translation["text"])
                         else:
-                            embed = None
+                            embeds = message.embeds
                             if message.reference:
                                 if message.reference.message_id in self.messagecache:
                                     reply = self.messagecache[message.reference.message_id]
@@ -77,13 +77,14 @@ class International(commands.Cog):
                                         reply = await ch.fetch_message(id)
                                     else:
                                         reply = await message.channel.fetch_message(message.reference.message_id)
-                                embed = discord.Embed(description=reply.content)
+                                if len(reply.content) > 0:
+                                    embeds.append(discord.Embed(description=reply.content))
 
                             webhookmsg = await self.webhooks[i11l_channel["EN"]["ID"]].send(
                                 content=translation["text"],
                                 username=f"{message.author.display_name} [{translation['detected_source_language']}]",
                                 avatar_url=message.author.display_avatar,
-                                embed=embed,
+                                embeds=embeds,
                                 wait=True
                             )
 
@@ -113,7 +114,7 @@ class International(commands.Cog):
                     if edit:
                         await self.messagecache[message.id].edit(msg)
                     else:
-                        embed = None
+                        embeds = message.embeds
                         if message.reference:
                             if message.reference.message_id in self.messagecache:
                                 reply = self.messagecache[message.reference.message_id]
@@ -124,13 +125,14 @@ class International(commands.Cog):
                                     reply = await ch.fetch_message(id)
                                 else:
                                     reply = await message.channel.fetch_message(message.reference.message_id)
-                            embed = discord.Embed(description=reply.content)
+                            if len(reply.content) > 0:
+                                embeds.append(discord.Embed(description=reply.content))
 
                         webhookmsg = await self.webhooks[i11l_channel["I11L"]["ID"]].send(
                             content=msg,
                             username=message.author.display_name,
                             avatar_url=message.author.display_avatar,
-                            embed=embed,
+                            embeds=embeds,
                             wait=True
                         )
                         self.messagecache[message.id] = webhookmsg
