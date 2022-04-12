@@ -143,8 +143,8 @@ async def main():
     bot = TWLHelper(settings.PREFIX, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot")
     print('Starting TWLHelper...')
     async with bot:
-        await bot.load_cogs()
         bot.session = aiohttp.ClientSession()
+        await bot.load_cogs()
         await bot.start(settings.TOKEN)
 
 

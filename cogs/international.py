@@ -22,7 +22,8 @@ import re
 import settings
 
 
-from discord.ext import commands
+from datetime import datetime, timezone
+from discord.ext import commands, tasks
 from urllib.parse import quote
 
 
@@ -36,33 +37,59 @@ class International(commands.Cog):
             "FI", "FR", "HU", "IT", "JA", "LT", "LV", "NL", "PL", "PT-PT",
             "PT-BR", "PT", "RO", "RU", "SK", "SL", "SV", "ZH"
         ]
+        self.webhooks = {}
+        for i11l_channel in settings.I11L:
+            for item in i11l_channel:
+                self.webhooks[i11l_channel[item]["ID"]] = discord.Webhook.partial(
+                    i11l_channel[item]["WEBHOOK_ID"],
+                    i11l_channel[item]["WEBHOOK_TOKEN"],
+                    session=self.bot.session
+                )
+        self.messagecache = {}
+        self.cleanup.start()
+
+    @tasks.loop(minutes=10)
+    async def cleanup(self):
+        await self.bot.wait_until_ready()
+        for id, message in dict(self.messagecache).items():
+            if (datetime.now(timezone.utc) - message.created_at).seconds > 10 * 60:
+                del self.messagecache[id]
 
     @commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
+    async def on_message(self, message: discord.Message, edit=False):
         if message.guild.id == settings.GUILD and not message.webhook_id:
             for i11l_channel in settings.I11L:
                 if i11l_channel["I11L"]["ID"] == message.channel.id:
-                    webhook = discord.Webhook.partial(
-                        i11l_channel["EN"]["WEBHOOK_ID"],
-                        i11l_channel["EN"]["WEBHOOK_TOKEN"],
-                        session=self.bot.session
-                    )
-
                     # Translate with DeepL
                     async with self.bot.session.get(f"https://api-free.deepl.com/v2/translate?auth_key={settings.DEEPLTOKEN}&target_lang=EN-US&text={quote(message.content)}") as response:
                         translation = (await response.json())["translations"][0]
-                        await webhook.send(
-                            content=translation["text"],
-                            username=f"{message.author.display_name} [{translation['detected_source_language']}]",
-                            avatar_url=message.author.avatar
-                        )
-                elif i11l_channel["EN"]["ID"] == message.channel.id:
-                    webhook = discord.Webhook.partial(
-                        i11l_channel["I11L"]["WEBHOOK_ID"],
-                        i11l_channel["I11L"]["WEBHOOK_TOKEN"],
-                        session=self.bot.session
-                    )
+                        if edit:
+                            await self.messagecache[message.id].edit(translation["text"])
+                        else:
+                            embed = None
+                            if message.reference:
+                                if message.reference.message_id in self.messagecache:
+                                    reply = self.messagecache[message.reference.message_id]
+                                else:
+                                    id = next((id for id in self.messagecache if self.messagecache[id].id == message.reference.message_id), None)
+                                    if id:
+                                        ch = await message.guild.fetch_channel(i11l_channel["EN"]["ID"])
+                                        reply = await ch.fetch_message(id)
+                                    else:
+                                        reply = await message.channel.fetch_message(message.reference.message_id)
+                                embed = discord.Embed(description=reply.content)
 
+                            webhookmsg = await self.webhooks[i11l_channel["EN"]["ID"]].send(
+                                content=translation["text"],
+                                username=f"{message.author.display_name} [{translation['detected_source_language']}]",
+                                avatar_url=message.author.display_avatar,
+                                embed=embed,
+                                wait=True
+                            )
+
+                            self.messagecache[message.id] = webhookmsg
+                    break
+                elif i11l_channel["EN"]["ID"] == message.channel.id:
                     msg = message.content
 
                     language_code = "EN"
@@ -83,11 +110,42 @@ class International(commands.Cog):
                         async with self.bot.session.get(f"https://api-free.deepl.com/v2/translate?auth_key={settings.DEEPLTOKEN}&target_lang={language_code}&text={quote(msg)}") as response:
                             msg = (await response.json())["translations"][0]["text"]
 
-                    await webhook.send(
-                        content=msg,
-                        username=message.author.display_name,
-                        avatar_url=message.author.avatar
-                    )
+                    if edit:
+                        await self.messagecache[message.id].edit(msg)
+                    else:
+                        embed = None
+                        if message.reference:
+                            if message.reference.message_id in self.messagecache:
+                                reply = self.messagecache[message.reference.message_id]
+                            else:
+                                id = next((id for id in self.messagecache if self.messagecache[id].id == message.reference.message_id), None)
+                                if id:
+                                    ch = await message.guild.fetch_channel(i11l_channel["I11L"]["ID"])
+                                    reply = await ch.fetch_message(id)
+                                else:
+                                    reply = await message.channel.fetch_message(message.reference.message_id)
+                            embed = discord.Embed(description=reply.content)
+
+                        webhookmsg = await self.webhooks[i11l_channel["I11L"]["ID"]].send(
+                            content=msg,
+                            username=message.author.display_name,
+                            avatar_url=message.author.display_avatar,
+                            embed=embed,
+                            wait=True
+                        )
+                        self.messagecache[message.id] = webhookmsg
+                    break
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before: discord.Message, after: discord.Message):
+        if after.id in self.messagecache:
+            await self.on_message(after, True)
+
+    @commands.Cog.listener()
+    async def on_message_delete(self, message: discord.Message):
+        if message.id in self.messagecache:
+            await self.messagecache[message.id].delete()
+            del self.messagecache[message.id]
 
 
 async def setup(bot):
