@@ -80,6 +80,14 @@ class International(commands.Cog):
                                 if len(reply.content) > 0:
                                     embeds.append(discord.Embed(description=reply.content))
 
+                            for attachment in message.attachments:
+                                if attachment.content_type.startswith("image"):
+                                    embed = discord.Embed()
+                                    embed.set_image(url=attachment.url)
+                                    embeds.append(embed)
+                                else:
+                                    embeds.append(discord.Embed(description=f"[{attachment.description}]({attachment.url})"))
+
                             webhookmsg = await self.webhooks[i11l_channel["EN"]["ID"]].send(
                                 content=translation["text"],
                                 username=f"{message.author.display_name} [{translation['detected_source_language']}]",
@@ -127,6 +135,14 @@ class International(commands.Cog):
                                     reply = await message.channel.fetch_message(message.reference.message_id)
                             if len(reply.content) > 0:
                                 embeds.append(discord.Embed(description=reply.content))
+
+                        for attachment in message.attachments:
+                            if attachment.content_type.startswith("image"):
+                                embed = discord.Embed()
+                                embed.set_image(url=attachment.url)
+                                embeds.append(embed)
+                            else:
+                                embeds.append(discord.Embed(description=f"[{attachment.filename}]({attachment.url})"))
 
                         webhookmsg = await self.webhooks[i11l_channel["I11L"]["ID"]].send(
                             content=msg,
