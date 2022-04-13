@@ -64,7 +64,10 @@ class International(commands.Cog):
                     async with self.bot.session.get(f"https://api-free.deepl.com/v2/translate?auth_key={settings.DEEPLTOKEN}&target_lang=EN-US&text={quote(message.content)}") as response:
                         translation = (await response.json())["translations"][0]
                         if edit:
-                            await self.messagecache[message.id].edit(translation["text"])
+                            await self.messagecache[message.id].edit(
+                                content=translation["text"],
+                                embeds=message.embeds + self.messagecache[message.id].embeds[len(message.embeds):]
+                            )
                         else:
                             embeds = message.embeds
                             if message.reference:
@@ -120,7 +123,10 @@ class International(commands.Cog):
                             msg = (await response.json())["translations"][0]["text"]
 
                     if edit:
-                        await self.messagecache[message.id].edit(msg)
+                        await self.messagecache[message.id].edit(
+                            content=msg,
+                            embeds=message.embeds + self.messagecache[message.id].embeds[len(message.embeds):]
+                        )
                     else:
                         embeds = message.embeds
                         if message.reference:
