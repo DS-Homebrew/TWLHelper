@@ -18,7 +18,7 @@
 
 import discord
 from discord.ext import commands
-from utils import is_staff
+from utils import is_staff, create_error_embed
 
 
 class Mod(commands.Cog):
@@ -43,7 +43,7 @@ class Mod(commands.Cog):
             await self.bot.load_extension(module)
             await ctx.send('✅ Extension loaded.')
         except Exception as e:
-            await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
+            await ctx.send(embed=create_error_embed(e, ctx=ctx))
 
     @commands.command()
     @commands.is_owner()
@@ -55,7 +55,7 @@ class Mod(commands.Cog):
             await self.bot.unload_extension(module)
             await ctx.send('✅ Extension unloaded.')
         except Exception as e:
-            await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
+            await ctx.send(embed=create_error_embed(e, ctx=ctx))
 
     @commands.command(name='reload')
     @commands.is_owner()
@@ -67,7 +67,7 @@ class Mod(commands.Cog):
             await self.bot.reload_extension(module)
             await ctx.send('✅ Extension reloaded.')
         except Exception as e:
-            await ctx.send(f'💢 Failed!\n```\n{type(e).__name__}: {e}\n```')
+            await ctx.send(embed=create_error_embed(e, ctx=ctx))
 
     @commands.command()
     @commands.check_any(commands.is_owner(), is_staff())
