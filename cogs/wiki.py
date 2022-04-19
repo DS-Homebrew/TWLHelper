@@ -33,7 +33,7 @@ class Wiki(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def read_rule(self, ctx, file, iter):
+    def read_rule(self, file, iter):
         line = file[iter]
         out = ""
         iter += 1
@@ -135,7 +135,7 @@ class Wiki(commands.Cog):
                 iter += 1
                 if rulenum in rule.lower():
                     message = "**Rule " + rule[4:] + "**\n"
-                    message += self.read_rule(ctx, rulepage, iter)
+                    message += self.read_rule(rulepage, iter)
                     break
             await ctx.send(message)
 
