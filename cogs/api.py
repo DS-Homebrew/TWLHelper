@@ -144,7 +144,7 @@ class API(commands.Cog):
             matchlist.append(game)
         return matchlist
 
-    @commands.command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
+    @commands.hybrid_command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
     @gspreadkey_exists()
     async def ndsbcompat(self, ctx, *, title: Optional[str]):
         """
@@ -232,7 +232,7 @@ class API(commands.Cog):
             embed.description = "No ongoing or upcoming maintenances."
         self.netinfo_embed = embed
 
-    @commands.command()
+    @commands.hybrid_command()
     async def netinfo(self, ctx):
         """Shows the Nintendo Network status information"""
         await ctx.send(embed=self.netinfo_embed)
@@ -243,8 +243,8 @@ class API(commands.Cog):
                 raise commands.CommandError(f"Unable to request the api for some reason. ({r.status})")
             return await r.json()
 
-    @commands.command(aliases=["universaldb"])
-    async def udb(self, ctx, *, application=None):
+    @commands.hybrid_command(aliases=["universaldb"])
+    async def udb(self, ctx, *, application: Optional[str]):
         """Displays an embed with a link to Universal-DB and/or one of the apps.\n
         To show a random app: `udb [-r]`
         To search for an app: `udb [search parameter]`"""
@@ -269,9 +269,10 @@ class API(commands.Cog):
         menu = UDBMenu(source, ctx)
         await menu.start()
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True, fallback="all")
     async def skins(self, ctx):
-        """Displays an embed with a link to a database of TWiLight Menu++ skins and Unlaunch backgrounds\n
+        """Displays an embed with a link to a database of TWiLight Menu++ skins and Unlaunch backgrounds
+
         To show a random skin: `skins [console] -r`
         To search for a skin: `skins [console] [search parameter]`"""
         embed = discord.Embed(title="Skins", colour=0xda4a53)
@@ -328,7 +329,7 @@ class API(commands.Cog):
         await menu.start()
 
     @skins.command(name="unlaunch", extras={"store": "Unlaunch"})
-    async def skin_unlaunch(self, ctx, *, skin=None):
+    async def skin_unlaunch(self, ctx, *, skin: Optional[str] = None):
         """Displays an embed with a link to the Unlaunch backgrounds page.
 
         To show a random background: `skins unlaunch [-r]`
@@ -340,7 +341,7 @@ class API(commands.Cog):
         await self.start_skin_menu(ctx, skin)
 
     @skins.command(name="dsi", aliases=["dsimenu"], extras={"store": "Nintendo DSi"})
-    async def skin_dsimenu(self, ctx, *, skin=None):
+    async def skin_dsimenu(self, ctx, *, skin: Optional[str] = None):
         """Displays an embed with a link to the DSi Menu skins page.
 
         To show a random skin: `skins dsi [-r]`
@@ -352,7 +353,7 @@ class API(commands.Cog):
         await self.start_skin_menu(ctx, skin)
 
     @skins.command(name="3ds", aliases=["3dsmenu"], extras={"store": "Nintendo 3DS"})
-    async def skin_3dsmenu(self, ctx, *, skin=None):
+    async def skin_3dsmenu(self, ctx, *, skin: Optional[str] = None):
         """Displays an embed with a link to the 3DS Menu skins page.
 
         To show a random skin: `skins 3ds [-r]`
@@ -364,7 +365,7 @@ class API(commands.Cog):
         await self.start_skin_menu(ctx, skin)
 
     @skins.command(name="r4", aliases=["r4theme"], extras={"store": "R4 Original"})
-    async def skin_r4menu(self, ctx, *, skin=None):
+    async def skin_r4menu(self, ctx, *, skin: Optional[str] = None):
         """Displays an embed with a link to the R4 Original Menu skins page.
 
         To show a random skin: `skins r4 [-r]`
@@ -376,7 +377,7 @@ class API(commands.Cog):
         await self.start_skin_menu(ctx, skin)
 
     @skins.command(name="font", extras={"store": "Font"})
-    async def skin_font(self, ctx, *, skin=None):
+    async def skin_font(self, ctx, *, skin: Optional[str] = None):
         """Displays an embed with a link to the TWiLight Menu++ fonts page.
 
         To show a random font: `skins fonts [-r]`
@@ -388,7 +389,7 @@ class API(commands.Cog):
         await self.start_skin_menu(ctx, skin)
 
     @skins.command(name="icon", extras={"store": "Icon"})
-    async def skin_icon(self, ctx, *, skin=None):
+    async def skin_icon(self, ctx, *, skin: Optional[str] = None):
         """Displays an embed with a link to the TWiLight Menu++ icons page.
 
         To show a random icon: `skins icon [-r]`
@@ -400,10 +401,10 @@ class API(commands.Cog):
         await self.start_skin_menu(ctx, skin)
 
     # Gamebrew searching
-    @commands.command()
-    async def gamebrew(self, ctx, *args):
+    @commands.hybrid_command()
+    async def gamebrew(self, ctx, *, app: Optional[str]=None):
         """Searches for an app on GameBrew"""
-        if not args:
+        if not app:
             embed = discord.Embed()
             embed.title = "GameBrew"
             embed.description = "A wiki dedicated to Video Game Homebrew."
@@ -412,7 +413,7 @@ class API(commands.Cog):
             return await ctx.send(embed=embed)
 
         async with ctx.typing():
-            r = await self.bot.session.get(f"https://www.gamebrew.org/api.php?action=opensearch&limit=1&namespace=0&format=json&redirects=resolve&search={parse.quote(' '.join(args))}")
+            r = await self.bot.session.get(f"https://www.gamebrew.org/api.php?action=opensearch&limit=1&namespace=0&format=json&redirects=resolve&search={parse.quote(app)}")
             if r.status != 200:
                 return await ctx.send(f"Error {r.status}! Failed to connect to GameBrew API")
 

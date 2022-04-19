@@ -16,16 +16,16 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-import os
 import datetime
 import functools
+import os
 from hashlib import sha256
 from inspect import cleandoc
 from time import mktime
 
 import discord
 import feedparser
-from discord.ext import tasks, commands
+from discord.ext import commands, tasks
 from markdownify import markdownify
 
 import settings

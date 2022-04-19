@@ -16,11 +16,12 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-import discord
 import re
-
-from discord.ext import commands
 from typing import Optional
+
+import discord
+from discord.ext import commands
+
 from utils import check_arg, twilightmenu_alias
 
 
@@ -54,13 +55,13 @@ class Wiki(commands.Cog):
         embed.url = "https://wiki.ds-homebrew.com/"
         return embed
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True, fallback="all")
     async def update(self, ctx):
         """Links and/or information on updating apps or system"""
         await ctx.send_help(ctx.command)
 
     @update.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_update(self, ctx, *, arg=""):
+    async def twilight_update(self, ctx, *, arg: str = ""):
         """TWiLight Menu update guide.
         Usage: update twilight [3ds, dsi, ds]"""
         embed = self.embed("TWiLight Menu++ Update Guide")
@@ -78,7 +79,7 @@ class Wiki(commands.Cog):
         embed.url += ".html"
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["ds-index"])
+    @commands.hybrid_command(aliases=["ds-index"])
     async def dsindex(self, ctx):
         """Links to the DS index"""
         embed = self.embed("Nintendo DS Modding Index")
@@ -86,7 +87,7 @@ class Wiki(commands.Cog):
         embed.description = "An explanation of all things DS modding"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def widescreen(self, ctx):
         """Displays an embed with a link telling you how to play in widescreen"""
         embed = self.embed("Playing in Widescreen")
@@ -94,7 +95,7 @@ class Wiki(commands.Cog):
         embed.description = "Playing in widescreen with TWiLight Menu++ on 3DS"
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["forwarders", "forwarder", "twlforwarders"])
+    @commands.hybrid_command(aliases=["forwarders", "forwarder", "twlforwarders"])
     async def ndsforwarders(self, ctx):
         """Links to the nds-bootstrap forwarder guide"""
         embed = self.embed("NDS Forwarder Guide")
@@ -102,7 +103,7 @@ class Wiki(commands.Cog):
         embed.description = "Creating forwarders for nds-bootstrap"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def hardmod(self, ctx):
         """Links to the DSi hardmod guide"""
         embed = self.embed("Nintendo DSi Hardmod Guide")
@@ -110,7 +111,7 @@ class Wiki(commands.Cog):
         embed.description = "How to hardmod a Nintendo DSi"
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["serverrules", "discordrules"])
+    @commands.hybrid_command(aliases=["serverrules", "discordrules"])
     async def rule(self, ctx, num: Optional[int]):
         """Links to the server rules"""
         embed = self.embed("DS⁽ⁱ⁾ Mode Hacking Rules")
@@ -138,7 +139,7 @@ class Wiki(commands.Cog):
                     break
             await ctx.send(message)
 
-    @commands.command(aliases=["discordinfo"])
+    @commands.hybrid_command(aliases=["discordinfo"])
     async def serverinfo(self, ctx):
         """Links to the DSi hardmod guide"""
         embed = self.embed("DS⁽ⁱ⁾ Mode Hacking Info")
@@ -146,7 +147,7 @@ class Wiki(commands.Cog):
         embed.description = "Information for the DS⁽ⁱ⁾ Mode Hacking Discord server"
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["wi-fi"])
+    @commands.hybrid_command(aliases=["wi-fi"])
     async def wifi(self, ctx):
         """Links to the Wi-Fi tutorial"""
         embed = self.embed("Connecting DS Games to the Internet")
@@ -154,7 +155,7 @@ class Wiki(commands.Cog):
         embed.description = "Connecting your DS⁽ⁱ⁾ to the Internet to play online"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def emulators(self, ctx):
         """Links to the emulator index page"""
         embed = self.embed("Emulators on the DS")
@@ -162,7 +163,7 @@ class Wiki(commands.Cog):
         embed.description = "A reference on Emulators on the DS"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def retail(self, ctx):
         """Links to the list of retail DS games"""
         embed = self.embed("Retail ROMs")
@@ -170,7 +171,7 @@ class Wiki(commands.Cog):
         embed.description = "A reference on retail DS games"
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["special", "specgames"])
+    @commands.hybrid_command(aliases=["special", "specgames"])
     async def specialgames(self, ctx):
         """Links to the list of special games"""
         embed = self.embed("Special Games")
@@ -178,7 +179,7 @@ class Wiki(commands.Cog):
         embed.description = "A list of DS games with special features"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def customskins(self, ctx):
         """Displays an embed with a link to a guide on custom TWiLight Menu++ skins"""
         embed = self.embed("Custom DSi/3DS Skins")
@@ -186,13 +187,13 @@ class Wiki(commands.Cog):
         embed.description = "How to Create DSi/3DS Skins for TWiLight Menu++"
         await ctx.send(embed=embed)
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def bios(self, ctx):
         """BIOS info page"""
         await ctx.send_help(ctx.command)
 
     @bios.command()
-    async def gba(self, ctx, arg=""):
+    async def gba(self, ctx, arg: str = ""):
         """GBA BIOS Info/dump page.
         Usage: bios gba [nds, gba, 3ds, wii]"""
         embed = self.embed("GBA BIOS Info")

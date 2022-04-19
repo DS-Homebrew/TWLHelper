@@ -16,12 +16,13 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-import discord
-
 from inspect import cleandoc
+from typing import Optional
+
+import discord
 from discord.ext import commands
 
-from utils import check_arg, Literal, twilightmenu_alias, ndsbootstrap_alias
+from utils import Literal, check_arg, ndsbootstrap_alias, twilightmenu_alias
 
 
 class General(commands.Cog):
@@ -37,7 +38,7 @@ class General(commands.Cog):
         embed.description = cleandoc(text)
         await ctx.send(embed=embed)
 
-    @commands.command(require_var_positional=True, usage="<3ds|wiiu|vwii|switch|wii|dsi>")
+    @commands.hybrid_command(require_var_positional=True, usage="<3ds|wiiu|vwii|switch|wii|dsi>")
     async def guide(self, ctx, guide: Literal("3ds", "wiiu", "vwii", "switch", "wii", "dsi")) -> None:  # noqa
         """Links to the recommended guides"""
         embed = discord.Embed(title="Guide")
@@ -78,19 +79,19 @@ class General(commands.Cog):
             embed.description = "The complete guide to modding your Nintendo DSi"
             await ctx.send(embed=embed)
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def install(self, ctx):
         """Links and/or information on installing apps"""
         await ctx.send_help(ctx.command)
 
     @install.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_install(self, ctx, *, arg=""):
+    async def twilight_install(self, ctx, *, arg: Optional[str] = None):
         embed = discord.Embed(title="TWiLight Menu++ Installation Guide")
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.url = "https://wiki.ds-homebrew.com/twilightmenu/installing"
         embed.description = "How to install TWiLight Menu++"
-        if arg != "":
+        if arg:
             if check_arg(arg, ("3ds",)):
                 embed.url += "-3ds"
                 embed.description += " on the 3DS"
@@ -166,7 +167,7 @@ class General(commands.Cog):
         embed.description = "How to uninstall hiyaCFW on the DSi"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def twlfix(self, ctx):
         """Information on how to fix a broken TWL Partition"""
         await self.simple_embed(ctx, """
@@ -174,7 +175,7 @@ class General(commands.Cog):
                                 These instructions require that you **perform a system update** after running the app.
                                 """, title="Fix broken TWL")
 
-    @commands.command()
+    @commands.hybrid_command()
     async def twlsettings(self, ctx):
         """How to access TWiLight Menu++ Settings"""
         embed = discord.Embed(title="How to access TWiLight Menu++ Settings")
@@ -185,7 +186,7 @@ class General(commands.Cog):
         embed.add_field(name="R4 Original theme", value=cleandoc("""On the main menu, press the SELECT button\n- If you are on the file explorer, press the START button to return to the main menu"""), inline=False)
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["sd-card-setup", "sdformat"])
+    @commands.hybrid_command(aliases=["sd-card-setup", "sdformat"])
     async def formatsd(self, ctx):
         """Displays an embed with a link that tells you how to properly format your SD card"""
         embed = discord.Embed(title="SD Card Setup")
@@ -195,7 +196,7 @@ class General(commands.Cog):
         embed.description = "How to properly format your SD card"
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["nanddump", "nandbackup"])
+    @commands.hybrid_command(aliases=["nanddump", "nandbackup"])
     async def nand(self, ctx):
         """Links to the NAND dumping guide"""
         embed = discord.Embed(title="Dumping NAND")
@@ -205,7 +206,7 @@ class General(commands.Cog):
         embed.description = "How to dump your DSi's NAND"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def vc(self, ctx):
         """Links to the 3DS Virtual Console Inject guide"""
         embed = discord.Embed(title="Virtual Console Injects for 3DS")
@@ -215,7 +216,7 @@ class General(commands.Cog):
         embed.description = "The recommended way to play old classics on your 3DS"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def dump(self, ctx):
         """How to dump games and data for CFW consoles"""
         await self.simple_embed(ctx, text="""
@@ -224,16 +225,16 @@ class General(commands.Cog):
                                     [Dumping DSiWare](https://dsi.cfw.guide/dsiware-backups.html)
                                     """, title="Dumping Games to ROM files")
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def nightly(self, ctx):
         """Instructions on installing nightly builds"""
         await ctx.send_help(ctx.command)
 
     @nightly.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_nightly(self, ctx, *, arg=""):
+    async def twilight_nightly(self, ctx, *, arg: Optional[str] = None):
         url = "https://github.com/TWLBot/Builds/raw/master/TWiLightMenu"
         console = ""
-        if arg != "":
+        if arg:
             if check_arg(arg, ("3ds",)):
                 return await self.simple_embed(ctx, """
                                                     The latest nightly version of TWiLight Menu++ for 3DS can be downloaded from Universal Updater. \
@@ -258,7 +259,7 @@ class General(commands.Cog):
                         On the 3DS, this can be installed from Universal Updater. Select nds-bootstrap, then install the [nightly] build."
         await self.simple_embed(ctx, description, title="nds-bootstrap nightly")
 
-    @commands.group(aliases=["crowdin"], invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(aliases=["crowdin"], invoke_without_command=True, case_insensitive=True)
     async def translate(self, ctx):
         """Links to Crowdin projects"""
         await ctx.send_help(ctx.command)
@@ -287,8 +288,8 @@ class General(commands.Cog):
     async def dsiguide(self, ctx):
         await self.tlembed(ctx, "DSi Guide", "dsi-guide")
 
-    @commands.command(aliases=["colour"])
-    async def color(self, ctx, *, color):
+    @commands.hybrid_command(aliases=["colour"])
+    async def color(self, ctx, *, color: str):
         """Displays conversions of a color from #RRGGBB, #RGB, RRR GGG BBB, and BGR15"""
 
         arg = color.replace("0x", "").replace("#", "")
@@ -316,14 +317,14 @@ class General(commands.Cog):
         embed.add_field(name="BGR15", value=f"`0x{bgr15:04X}` `0x{bgr15 | 1 << 15:04X}`")
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def sdroot(self, ctx):
         """Displays an image that shows what a root is"""
         embed = discord.Embed()
         embed.set_image(url="https://media.discordapp.net/attachments/489307733074640926/756947922804932739/wherestheroot.png")
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def sdlock(self, ctx):
         """Tells you how to disable write protection on an SD Card"""
         embed = discord.Embed(title="Disable write protection on an SD Card")
@@ -335,7 +336,7 @@ your device will refuse to write to it.
         embed.set_image(url="https://i.imgur.com/RvKjWcz.png")
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["flashcard"])
+    @commands.hybrid_command(aliases=["flashcard"])
     async def flashcart(self, ctx):
         """Links the r/flashcarts flashcart quick start guide"""
         embed = discord.Embed(title="Flashcart Quick Start Guide")

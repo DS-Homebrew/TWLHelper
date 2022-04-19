@@ -15,12 +15,13 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
+import re
+from typing import Optional
 
 import discord
-import re
-
 from discord.ext import commands
-from utils import web_name, twilightmenu_alias, ndsbootstrap_alias
+
+from utils import ndsbootstrap_alias, twilightmenu_alias, web_name
 
 
 class FAQ(commands.Cog):
@@ -48,13 +49,13 @@ class FAQ(commands.Cog):
         else:
             return await ctx.send(embed=embed)
         faqpage = page.splitlines()
-        iter = 0
+        itera = 0
         field_title = None
         for faq in faqpage:
-            iter += 1
+            itera += 1
             if arg.lower() in faq.lower() and "#### " in faq.lower():
                 field_title = faq[5:]
-                embed.url += "?faq=" + web_name(field_title)
+                embed.url += f"?faq={web_name(field_title)}"
                 embed.description = None
                 break
         if embed.description:
@@ -134,13 +135,13 @@ class FAQ(commands.Cog):
         out = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", out)  # Remove self-closing HTML
         return out
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True, fallback="all")
     async def faq(self, ctx):
         """Links to the FAQ for an application"""
         await ctx.send_help(ctx.command)
 
     @faq.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_faq(self, ctx, *, query: str = None):
+    async def twilight_faq(self, ctx, *, query: Optional[str] = None):
         """Shows a FAQ entry from the wiki regarding TWiLight Menu++"""
         embed = self.wikiembed("TWiLight Menu++ FAQ")
         embed.url += "twilightmenu/faq.html"
@@ -151,7 +152,7 @@ class FAQ(commands.Cog):
             await self.read_faq(ctx, "twilightmenu", query, embed)
 
     @faq.command(aliases=ndsbootstrap_alias)
-    async def ndsbootstrap(self, ctx, *, query: str = None):
+    async def ndsbootstrap(self, ctx, *, query: Optional[str] = None):
         """Shows a FAQ entry from the wiki regarding nds-bootstrap"""
         embed = self.wikiembed("nds-bootstrap FAQ")
         embed.url += "nds-bootstrap/faq.html"
@@ -162,7 +163,7 @@ class FAQ(commands.Cog):
             await self.read_faq(ctx, "nds-bootstrap", query, embed)
 
     @faq.command(aliases=["gbar2"])
-    async def gbarunner2(self, ctx, *, query: str = None):
+    async def gbarunner2(self, ctx, *, query: Optional[str] = None):
         """Shows a FAQ entry from the wiki regarding GBARunner2"""
         embed = self.wikiembed("GBARunner2 FAQ")
         embed.url += "gbarunner2/faq.html"
@@ -172,7 +173,7 @@ class FAQ(commands.Cog):
             await self.read_faq(ctx, "gbarunner2", query, embed)
 
     @faq.command(aliases=["gm9i"])
-    async def godmode9i(self, ctx, *, query: str = None):
+    async def godmode9i(self, ctx, *, query: Optional[str] = None):
         """Shows a FAQ entry from the wiki regarding GodMode9i"""
         embed = self.wikiembed("GodMode9i FAQ")
         embed.url += "godmode9i/faq.html"
@@ -183,7 +184,7 @@ class FAQ(commands.Cog):
             await self.read_faq(ctx, "godmode9i", query, embed)
 
     @faq.command(aliases=["hiya"])
-    async def hiyacfw(self, ctx, *, query: str = None):
+    async def hiyacfw(self, ctx, *, query: Optional[str] = None):
         """Displays an embed with a link to the hiyaCFW FAQ"""
         embed = self.wikiembed("hiyaCFW FAQ")
         embed.url += "hiyacfw/faq.html"
@@ -194,7 +195,7 @@ class FAQ(commands.Cog):
             await self.read_faq(ctx, "hiyacfw", query, embed)
 
     @faq.command(name="guide")
-    async def faq_guide(self, ctx, *, query: str = None):
+    async def faq_guide(self, ctx, *, query: Optional[str] = None):
         """Shows a FAQ entry from the DSi CFW Guide"""
         embed = discord.Embed(title="DSi Guide FAQ")
         embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
@@ -206,31 +207,34 @@ class FAQ(commands.Cog):
         else:
             await self.read_guide(ctx, query, embed)
 
-    @commands.command()
-    async def glossary(self, ctx, *, arg=""):
+    @commands.hybrid_command()
+    async def glossary(self, ctx, *, arg: Optional[str]=None):
         """nds-bootstrap Glossary"""
         embed = self.wikiembed("nds-bootstrap Glossary")
         embed.url += "nds-bootstrap/glossary.html"
         embed.description = "Glossary for nds-bootstrap"
-        page = None
-        r = None
-        if arg != "":
-            r = await self.bot.session.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/nds-bootstrap/glossary.md")
-            if r.status == 200:
-                page = await r.text()
-            else:
-                return await ctx.send(embed=embed)
-            glossary = page.splitlines()
-            iter = 0
-            for item in glossary:
-                iter += 1
-                if arg.lower() in item.lower() and "### " in item.lower():
-                    title = item[4:]
-                    embed.url += "#" + web_name(title)
-                    embed.description = None
-                    embed.add_field(name=title, value=self.read_glossary(glossary, iter))
-                    break
+        if not arg:
             await ctx.send(embed=embed)
+            return
+        
+        r = await self.bot.session.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/nds-bootstrap/glossary.md")
+        if r.status == 200:
+            page = await r.text()
+        else:
+            await ctx.send(embed=embed)
+            return
+
+        glossary = page.splitlines()
+        itera = 0
+        for item in glossary:
+            itera += 1
+            if arg.lower() in item.lower() and "### " in item.lower():
+                title = item[4:]
+                embed.url += f"#{web_name(title)}"
+                embed.description = None
+                embed.add_field(name=title, value=self.read_glossary(glossary, iter))
+                break
+        await ctx.send(embed=embed)
 
 
 async def setup(bot):

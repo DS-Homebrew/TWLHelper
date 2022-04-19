@@ -3,9 +3,10 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import os
-import discord
+from inspect import getsourcefile, getsourcelines
+from typing import Optional
 
-from inspect import getsourcelines, getsourcefile
+import discord
 from discord.ext import commands
 
 
@@ -15,7 +16,7 @@ class Meta(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["botinfo", "whoisthisbot"])
+    @commands.hybrid_command(aliases=["botinfo", "whoisthisbot"])
     async def about(self, ctx):
         """About TWLHelper"""
         embed = discord.Embed(title="About TWLHelper")
@@ -25,8 +26,8 @@ class Meta(commands.Cog):
         embed.description = "TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot"
         await ctx.send(embed=embed)
 
-    @commands.command()
-    async def source(self, ctx, *, command: str = None):
+    @commands.hybrid_command()
+    async def source(self, ctx, *, command: Optional[str] = None):
         """
         Source code searching
         """
