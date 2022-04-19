@@ -60,13 +60,13 @@ class FAQ(commands.Cog):
                 break
         if embed.description:
             return await ctx.send(embed=embed)
-        line = faqpage[iter]
+        line = faqpage[itera]
         field_description = ""
         while "#### " not in line or "#####" in line:
-            field_description += '\n' + faqpage[iter]
-            iter += 1
-            if iter < len(faqpage):
-                line = faqpage[iter]
+            field_description += '\n' + faqpage[itera]
+            itera += 1
+            if itera < len(faqpage):
+                line = faqpage[itera]
             else:
                 break
         field_description = re.sub("##### (.*)", "**\\1**", field_description)  # Change h5 to bold
@@ -88,24 +88,24 @@ class FAQ(commands.Cog):
         else:
             return await ctx.send(embed=embed)
         faqpage = page.splitlines()
-        iter = 0
+        itera = 0
         field_title = None
         for faq in faqpage:
-            iter += 1
+            itera += 1
             if arg.lower() in faq.lower() and "## " in faq.lower():
                 field_title = faq[3:]
-                embed.url += "#" + web_name(field_title)
+                embed.url += f"#{web_name(field_title)}"
                 embed.description = None
                 break
         if embed.description:
             return await ctx.send(embed=embed)
-        line = faqpage[iter]
+        line = faqpage[itera]
         field_description = ""
         while "## " not in line or "###" in line:
-            field_description += '\n' + faqpage[iter]
-            iter += 1
-            if iter < len(faqpage):
-                line = faqpage[iter]
+            field_description += '\n' + faqpage[itera]
+            itera += 1
+            if itera < len(faqpage):
+                line = faqpage[itera]
             else:
                 break
         field_description = re.sub("##### (.*)", "**\\1**", field_description)  # Change h5 to bold
@@ -232,7 +232,7 @@ class FAQ(commands.Cog):
                 title = item[4:]
                 embed.url += f"#{web_name(title)}"
                 embed.description = None
-                embed.add_field(name=title, value=self.read_glossary(glossary, iter))
+                embed.add_field(name=title, value=self.read_glossary(glossary, itera))
                 break
         await ctx.send(embed=embed)
 
