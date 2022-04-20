@@ -32,8 +32,9 @@ __all__ = ("create_error_embed",
 def create_error_embed(exc: Any, *, ctx: Optional[commands.Context] = None, interaction: Optional[discord.Interaction] = None) -> discord.Embed:
     trace = "".join(traceback.format_exception(type(exc), value=exc, tb=exc.__traceback__, chain=False))
     embed = discord.Embed(title="Unexpected exception", description=f"```py\n{trace}```", color=0xe50730)
+    interaction = interaction or getattr(ctx, "interaction", None)
 
-    if ctx:
+    if ctx and ctx.interaction is None:
         embed.title += f" in command {ctx.command}"
         channelfmt = ctx.channel.mention if ctx.guild else "Direct Message"
         embed.add_field(name="Channel", value=channelfmt)
@@ -43,9 +44,12 @@ def create_error_embed(exc: Any, *, ctx: Optional[commands.Context] = None, inte
         embed.title += " in interaction"
         channelfmt = interaction.channel.mention if interaction.guild else "Direct Message"
         embed.add_field(name="Channel", value=channelfmt)
-        if interaction.message.content:
+        if interaction.message is not None:
             embed.add_field(name="Invocation", value=interaction.message.content)
         embed.set_author(name=interaction.user.name, icon_url=interaction.user.display_avatar.url)
+
+        if ctx.interaction:
+            embed.add_field(name="Command", value=ctx.command)
 
     embed.add_field(name="Exception Type", value=exc.__class__.__name__)
     return embed
