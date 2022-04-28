@@ -178,12 +178,11 @@ class General(commands.Cog):
     async def twlsettings(self, ctx):
         """How to access TWiLight Menu++ Settings"""
         embed = discord.Embed(title="How to access TWiLight Menu++ Settings")
-        embed.description = "The way to access the TWiLight Menu++ settings varies between your configuration."
-        embed.add_field(name="DS Classic Menu", value=cleandoc("""Hit the DS icon at the bottom of the lower screen"""), inline=False)
-        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher themes using SELECT Menu", value=cleandoc("""Hit SELECT, then launch the Settings Applet (use the D-PAD to highlight options)"""), inline=False)
-        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher themes not using SELECT Menu", value=cleandoc("""Hitting SELECT will bring you to the DS Classic Menu"""), inline=False)
-        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Use the touch screen to touch the wrench"""), inline=False)
-        embed.add_field(name="R4 Original theme", value=cleandoc("""Hit START (if you’re in the file browser), then hit SELECT"""), inline=False)
+        embed.description = "To access TWiLight Menu++ settings, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
+        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher theme", value=cleandoc("""Press the SELECT button""" + "\n" + """- If you are met with a list of options, select **TWLMenu++ Settings**""" + "\n" + """- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below"""), inline=False)
+        embed.add_field(name="DS Classic Menu", value=cleandoc("""Tap the small icon in the bottom center of the touchscreen"""), inline=False)
+        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the icon on the top right corner of the touchscreen"""), inline=False)
+        embed.add_field(name="R4 Original theme", value=cleandoc("""On the main menu, press the SELECT button""" + "\n" + """- If you are on the file explorer, press the START button to return to the main menu"""), inline=False)
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["sd-card-setup", "sdformat"])
