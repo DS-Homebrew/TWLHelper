@@ -9,8 +9,7 @@
     - It is recommended to use IDs rather than names for Moderator Roles to make sure jishaku can't be hijacked.
     - If none are set, all moderation permissions will default to either the guild owner or the bot owner.
 1. Install the following for your host:
-    - Python 3.9.x (and its respective pip)
-        - This must be 3.9.x as exception parser is broken as of 3.10.x.
+    - Python 3.10.x (and its respective pip)
 1. Create a venv and activate it
     - UNIX-based: `python3 -m venv venv`, `source venv/bin/activate`
     - Windows `py -m venv venv`, `.\venv\Scripts\activate`
