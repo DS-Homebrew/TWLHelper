@@ -33,7 +33,7 @@ class CustomView(discord.ui.View):
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         return self.ctx.author == interaction.user
 
-    async def on_error(self, exc: Any, item: discord.ui.Item, interaction: discord.Interaction):
+    async def on_error(self, interaction: discord.Interaction, exc: Any, item: discord.ui.Item):
         exc = getattr(exc, 'original', exc)
         if isinstance(exc, discord.Forbidden):
             await interaction.channel.send_message(f"💢 I can't help you if you don't let me!\n`{exc.text}`.")
