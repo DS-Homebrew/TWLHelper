@@ -28,6 +28,7 @@ __all__ = ("CustomView", "ViewPages")
 
 class CustomView(discord.ui.View):
     def __init__(self):
+        self.message: discord.Message = None
         super().__init__(timeout=60)
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
@@ -87,9 +88,9 @@ class ViewPages(CustomView):
         """
         kwargs = {'embed': await self.get_page(), 'view': self}
         if destination:
-            await destination.send(**kwargs)
+            self.message = await destination.send(**kwargs)
         else:
-            await self.ctx.send(**kwargs)
+            self.message = await self.ctx.send(**kwargs)
 
     async def get_page(self):
         page = self.source[self.current_page]
