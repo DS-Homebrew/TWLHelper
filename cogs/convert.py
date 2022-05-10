@@ -117,15 +117,15 @@ class Convert(commands.Cog):
                     pixfmt = "rgb565" if new_extension == "bmp" else None
                     err = await self.ffmpeg_img(fileName, newFileName, scale=scale, pixfmt=pixfmt)
                     if err == 1:
-                        await outputtext.edit(f"`Failed to convert to {new_extension.upper()}`")
+                        await outputtext.edit(content=f"`Failed to convert to {new_extension.upper()}`")
                         return self.yeet([fileName, newFileName])
-                    await outputtext.edit(f"`Converted to {new_extension.upper()}`")
-                    await outputtext.edit(f"`Uploading {new_extension.upper()}...`")
+                    await outputtext.edit(content=f"`Converted to {new_extension.upper()}`")
+                    await outputtext.edit(content=f"`Uploading {new_extension.upper()}...`")
                     if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
                         await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                        await outputtext.edit(f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
+                        await outputtext.edit(content=f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
                     else:
-                        await outputtext.edit("`Converted image is too large! Cannot send image.`")
+                        await outputtext.edit(content="`Converted image is too large! Cannot send image.`")
                     self.yeet([fileName, newFileName])
                 else:
                     await ctx.send(f"`You asked to convert a {new_extension.upper()} into a ...{new_extension.upper()}?`")
@@ -181,12 +181,12 @@ class Convert(commands.Cog):
                 command.append(newFileName)
                 proc = await create_subprocess_exec(*command)
                 await proc.wait()
-                await outputtext.edit("`Uploading Video...`")
+                await outputtext.edit(content="`Uploading Video...`")
                 if (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize(newFileName) > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
-                    await outputtext.edit("`Converted video is too large! Cannot send video.`")
+                    await outputtext.edit(content="`Converted video is too large! Cannot send video.`")
                 else:
                     await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                    await outputtext.edit(f"`Done! Completed in {round(time() - start_time, 2)} seconds`")
+                    await outputtext.edit(content=f"`Done! Completed in {round(time() - start_time, 2)} seconds`")
                 self.yeet([fileName, newFileName])
         else:
             await self.download_media_error(ctx, fileName)
@@ -211,19 +211,19 @@ class Convert(commands.Cog):
                     proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-filter_complex", f"color=black,format=rgb24[c];[c][0]scale2ref[c][i];[c][i]overlay=format=auto:shortest=1,setsar=1[o];[o]crop='if(gte(ih,iw*3/4),iw,if(gte(iw,ih*4/3),ih*4/3,ih))':'if(gte(ih,iw*3/4),iw*3/4,if(gte(iw,ih*4/3),ih,ih*3/4))',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors={maxcolors}:reserve_transparent=0[p];[s1][p]paletteuse", "-frames", "1", newFileName)
                     await proc.wait()
                 except Exception:
-                    await outputtext.edit("`Failed to convert to GIF`")
+                    await outputtext.edit(content="`Failed to convert to GIF`")
                     return self.yeet([fileName, newFileName])
-                await outputtext.edit("`Converted to GIF...`")
-                await outputtext.edit("`Colour Mapping GIF...`")
+                await outputtext.edit(content="`Converted to GIF...`")
+                await outputtext.edit(content="`Colour Mapping GIF...`")
                 try:
                     gifsicle_args = ["gifsicle", newFileName, "-O3", "--no-extensions", "-k31", "#0", "-o", newFileName]
                     proc = await create_subprocess_exec(*gifsicle_args)
                     await proc.wait()
                 except Exception:
-                    await outputtext.edit("`Failed to map GIF colour...`")
+                    await outputtext.edit(content="`Failed to map GIF colour...`")
                     return self.yeet([fileName, newFileName])
-                await outputtext.edit("`GIF colour mapped...`")
-                await outputtext.edit("`Optimising GIF size...`")
+                await outputtext.edit(content="`GIF colour mapped...`")
+                await outputtext.edit(content="`Optimising GIF size...`")
 
                 UNLAUNCH_GIF_SIZE = 15472
                 size = os.stat(newFileName).st_size
@@ -261,10 +261,10 @@ class Convert(commands.Cog):
                     os.rename(newFileName + "_lossy", newFileName)
 
                 warning = os.stat(newFileName).st_size > UNLAUNCH_GIF_SIZE
-                await outputtext.edit("`GIF size optimised`")
-                await outputtext.edit("`Uploading GIF...`")
+                await outputtext.edit(content="`GIF size optimised`")
+                await outputtext.edit(content="`Uploading GIF...`")
                 await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                await outputtext.edit(f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
+                await outputtext.edit(content=f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
                 if warning:
                     await ctx.send("`[Warning] : File size was not reduced to less than 15KiB.\n[Warning] : Converted GIF won't work with Unlaunch (try something less complicated)`")
                 self.yeet([fileName, newFileName])
@@ -312,7 +312,7 @@ class Convert(commands.Cog):
             async with ctx.typing():
                 outputtext = await ctx.send("`Image downloaded...`")
                 if not fileName.endswith('.gif'):
-                    await outputtext.edit("`Converting to GIF...`")
+                    await outputtext.edit(content="`Converting to GIF...`")
                     newFileName = f"senpai_converted_{fileName}_.gif"
                     try:
                         proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-vf", "palettegen", "downloads/palette.png")
@@ -320,18 +320,18 @@ class Convert(commands.Cog):
                         proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-i", "downloads/palette.png", "-filter_complex", "paletteuse", newFileName)
                         await proc.wait()
                     except Exception:
-                        await outputtext.edit("`Failed to convert to GIF`")
+                        await outputtext.edit(content="`Failed to convert to GIF`")
                         return self.yeet([fileName, newFileName, "downloads/palette.png"])
-                    await outputtext.edit("`Converted to GIF`")
-                    await outputtext.edit("`Uploading GIF...`")
+                    await outputtext.edit(content="`Converted to GIF`")
+                    await outputtext.edit(content="`Uploading GIF...`")
                     if os.path.getsize(newFileName) < ctx.guild.filesize_limit:
                         await ctx.send(file=discord.File(newFileName), reference=ctx.message)
-                        await outputtext.edit(f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
+                        await outputtext.edit(content=f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
                     else:
-                        await outputtext.edit("`Converted GIF is too large! Cannot send GIF.`")
+                        await outputtext.edit(content="`Converted GIF is too large! Cannot send GIF.`")
                     self.yeet([fileName, newFileName, "downloads/palette.png"])
                 else:
-                    return await outputtext.edit("`You asked me to convert a GIF into a ... GIF`")
+                    return await outputtext.edit(content="`You asked me to convert a GIF into a ... GIF`")
         else:
             await self.download_media_error(ctx, fileName)
 
@@ -415,14 +415,14 @@ class Convert(commands.Cog):
                 proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-f", "s16le", "-acodec", "pcm_s16le", "-ac", "1", "-ar", "16k", "downloads/bgm.pcm.raw")
                 await proc.wait()
 
-                await outputtext.edit("`Uploading BGM...`")
+                await outputtext.edit(content="`Uploading BGM...`")
                 if not os.path.exists("downloads/bgm.pcm.raw"):
-                    await outputtext.edit("`Conversion failed. Is the attachment an audio stream?`")
+                    await outputtext.edit(content="`Conversion failed. Is the attachment an audio stream?`")
                 elif (not isinstance(ctx.channel, discord.channel.DMChannel) and os.path.getsize("downloads/bgm.pcm.raw") > ctx.guild.filesize_limit) or isinstance(ctx.channel, discord.channel.DMChannel):
-                    await outputtext.edit("`Converted BGM is too large! Cannot send BGM.`")
+                    await outputtext.edit(content="`Converted BGM is too large! Cannot send BGM.`")
                 else:
                     await ctx.send(file=discord.File("downloads/bgm.pcm.raw"), reference=ctx.message)
-                    await outputtext.edit(f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
+                    await outputtext.edit(content=f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
                 self.yeet(["downloads/bgm.pcm.raw", fileName])
         elif fileName == 1:
             embed = self.embed("DSi/3DS Skins - Custom SFX")
@@ -453,19 +453,19 @@ class Convert(commands.Cog):
                 for output in outputs:
                     if not os.path.exists(output):
                         failed = True
-                        await outputtext.edit("`Conversion failed. Is the attachment an image?`")
+                        await outputtext.edit(content="`Conversion failed. Is the attachment an image?`")
                         break
 
                 if not failed:
-                    await outputtext.edit("`Combining image...`")
+                    await outputtext.edit(content="`Combining image...`")
                     with open("downloads/gbaborder.bin", "wb") as borderbin:
                         for output in outputs:
                             with open(output, "rb") as f:
                                 borderbin.write(f.read())
 
-                    await outputtext.edit("`Uploading border...`")
+                    await outputtext.edit(content="`Uploading border...`")
                     await ctx.send(file=discord.File("downloads/gbaborder.bin"), reference=ctx.message)
-                    await outputtext.edit(f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
+                    await outputtext.edit(content=f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
                 self.yeet([fileName, *outputs])
         elif fileName == 1:
             embed = discord.Embed(title="GBARunner2 Frames & Border Guide")
