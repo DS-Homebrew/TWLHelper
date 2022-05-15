@@ -45,6 +45,7 @@ class Mod(commands.Cog):
             await ctx.send('✅ Extension loaded.')
         except Exception as e:
             await ctx.send(embed=create_error_embed(e, ctx=ctx))
+        await self.bot.tree.sync()
 
     @commands.command()
     @commands.is_owner()
@@ -57,6 +58,7 @@ class Mod(commands.Cog):
             await ctx.send('✅ Extension unloaded.')
         except Exception as e:
             await ctx.send(embed=create_error_embed(e, ctx=ctx))
+        await self.bot.tree.sync()
 
     @commands.command(name='reload')
     @commands.is_owner()
@@ -69,6 +71,7 @@ class Mod(commands.Cog):
             await ctx.send('✅ Extension reloaded.')
         except Exception as e:
             await ctx.send(embed=create_error_embed(e, ctx=ctx))
+        await self.bot.tree.sync()
 
     @commands.command()
     @commands.check_any(commands.is_owner(), is_staff())
