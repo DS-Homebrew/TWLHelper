@@ -208,7 +208,7 @@ class FAQ(commands.Cog):
             await self.read_guide(ctx, query, embed)
 
     @commands.hybrid_command()
-    async def glossary(self, ctx, *, arg: Optional[str]=None):
+    async def glossary(self, ctx, *, arg: Optional[str] = None):
         """nds-bootstrap Glossary"""
         embed = self.wikiembed("nds-bootstrap Glossary")
         embed.url += "nds-bootstrap/glossary.html"
@@ -216,7 +216,7 @@ class FAQ(commands.Cog):
         if not arg:
             await ctx.send(embed=embed)
             return
-        
+
         r = await self.bot.session.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/nds-bootstrap/glossary.md")
         if r.status == 200:
             page = await r.text()

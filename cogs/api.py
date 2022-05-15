@@ -402,7 +402,7 @@ class API(commands.Cog):
 
     # Gamebrew searching
     @commands.hybrid_command()
-    async def gamebrew(self, ctx, *, app: Optional[str]=None):
+    async def gamebrew(self, ctx, *, app: Optional[str] = None):
         """Searches for an app on GameBrew"""
         if not app:
             embed = discord.Embed()
