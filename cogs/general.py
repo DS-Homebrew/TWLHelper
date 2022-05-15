@@ -85,20 +85,20 @@ class General(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @install.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_install(self, ctx, *, arg: Optional[str] = None):
+    async def twilight_install(self, ctx, *, console: Optional[str] = None):
         embed = discord.Embed(title="TWiLight Menu++ Installation Guide")
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.url = "https://wiki.ds-homebrew.com/twilightmenu/installing"
         embed.description = "How to install TWiLight Menu++"
-        if arg:
-            if check_arg(arg, ("3ds",)):
+        if console:
+            if check_arg(console, ("3ds",)):
                 embed.url += "-3ds"
                 embed.description += " on the 3DS"
-            elif check_arg(arg, ("dsi",)):
+            elif check_arg(console, ("dsi",)):
                 embed.url += "-dsi"
                 embed.description += " on the DSi"
-            elif check_arg(arg, ("flashcard", "flashcart", "ds")):
+            elif check_arg(console, ("flashcard", "flashcart", "ds")):
                 embed.url += "-flashcard"
                 embed.description += " on flashcards"
         embed.url += ".html"
@@ -123,7 +123,7 @@ class General(commands.Cog):
         embed.description = "How to install Unlaunch on the DSi"
         await ctx.send(embed=embed)
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def uninstall(self, ctx):
         """Links and/or information on uninstalling apps"""
         await ctx.send_help(ctx.command)
