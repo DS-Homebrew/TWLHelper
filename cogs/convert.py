@@ -170,7 +170,6 @@ class Convert(commands.Cog):
         start_time = time()
         new_extension = new_extension.lower()
         fileName = await self.download_media(ctx, filelink)
-        print(fileName)
         if isinstance(fileName, str):
             async with ctx.typing():
                 outputtext = await ctx.send("`Converting video...`")

@@ -51,7 +51,6 @@ class SkinsMenu(ViewPages):
         embed.set_thumbnail(url=entry["icon"] if "icon" in entry else (entry["image"] if "image" in entry else (entry["avatar"] if "avatar" in entry else None)))
         embed.description = entry["description"] if "description" in entry else None
         embed.url = f'https://skins.ds-homebrew.com/{store_name}/{web_name(entry["title"])}'
-        print(embed.url)
         return embed
 
 
