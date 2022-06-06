@@ -307,7 +307,7 @@ class General(commands.Cog):
             else:
                 return await ctx.send_help(ctx.command)
         except ValueError:
-            return await ctx.send("Invalid colour. Please try again.")
+            return await ctx.send_help(ctx.command)
         embed = discord.Embed(title="Color conversions")
         if ctx.invoked_with == "colour":
             embed.title = "Colour conversions"
