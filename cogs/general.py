@@ -293,19 +293,21 @@ class General(commands.Cog):
 
         arg = color.replace("0x", "").replace("#", "")
 
-        if len(arg) == 6:  # #RRGGBB
-            rgb = int(arg[:2], 16), int(arg[2:4], 16), int(arg[4:6], 16)
-        elif len(arg) == 3:  # #RGB
-            rgb = (int(arg[0], 16) * 0x11, int(arg[1], 16) * 0x11, int(arg[2], 16) * 0x11)
-        elif len(arg.split()) == 3:  # RRR GGG BBB
-            split = arg.split()
-            rgb = (max(min(int(split[0]), 0xFF), 0), max(min(int(split[1]), 0xFF), 0), max(min(int(split[2]), 0xFF), 0))
-        elif len(arg) == 4:  # BGR15
-            bgr15 = int(arg, 16)
-            rgb = (round((bgr15 & 0x1F) * 0xFF / 0x1F), round(((bgr15 >> 5) & 0x1F) * 0xFF / 0x1F), round(((bgr15 >> 10) & 0x1F) * 0xFF / 0x1F))
-        else:
-            await ctx.send_help(ctx.command)
-            return
+        try:
+            if len(arg) == 6:  # #RRGGBB
+                rgb = int(arg[:2], 16), int(arg[2:4], 16), int(arg[4:6], 16)
+            elif len(arg) == 3:  # #RGB
+                rgb = (int(arg[0], 16) * 0x11, int(arg[1], 16) * 0x11, int(arg[2], 16) * 0x11)
+            elif len(arg.split()) == 3:  # RRR GGG BBB
+                split = arg.split()
+                rgb = (max(min(int(split[0]), 0xFF), 0), max(min(int(split[1]), 0xFF), 0), max(min(int(split[2]), 0xFF), 0))
+            elif len(arg) == 4:  # BGR15
+                bgr15 = int(arg, 16)
+                rgb = (round((bgr15 & 0x1F) * 0xFF / 0x1F), round(((bgr15 >> 5) & 0x1F) * 0xFF / 0x1F), round(((bgr15 >> 10) & 0x1F) * 0xFF / 0x1F))
+            else:
+                return await ctx.send_help(ctx.command)
+        except ValueError:
+            return await ctx.send("Invalid colour. Please try again.")
         embed = discord.Embed(title="Color conversions")
         if ctx.invoked_with == "colour":
             embed.title = "Colour conversions"
