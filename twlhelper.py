@@ -29,7 +29,7 @@ import discord
 import gspread
 from discord.ext import commands
 
-import settings
+from settings import loadSettings
 from utils.utils import create_error_embed
 
 
@@ -43,13 +43,14 @@ class EmbedHelp(commands.MinimalHelpCommand):
 
 
 class TWLHelper(commands.Bot):
-    def __init__(self, command_prefix, description):
+    def __init__(self, settings, description):
         intents = discord.Intents(guilds=True, members=True, bans=True, messages=True, message_content=True)
         allowed_mentions = discord.AllowedMentions(everyone=False, roles=False)
-        activity = discord.Game(settings.STATUS)
+        activity = discord.Game(settings['STATUS'])
         status = discord.Status.online
+        self.settings = settings
         super().__init__(
-            command_prefix=command_prefix,
+            command_prefix=settings['PREFIX'],
             help_command=EmbedHelp(),
             description=description,
             intents=intents,
@@ -58,8 +59,8 @@ class TWLHelper(commands.Bot):
             status=status,
             case_insensitive=True
         )
-        if settings.GSPREADKEY is not None:
-            self.gspread = gspread.service_account(filename=settings.GSPREADKEY)
+        if settings['GSPREADKEY'] is not None:
+            self.gspread = gspread.service_account(filename=settings['GSPREADKEY'])
 
     async def load_cogs(self):
         cog = ""
@@ -83,11 +84,11 @@ class TWLHelper(commands.Bot):
         await super().close()
 
     async def is_owner(self, user: discord.User):
-        if settings.GUILD:
-            g = self.get_guild(settings.GUILD)
+        if self.settings['GUILD']:
+            g = self.get_guild(self.settings['GUILD'])
             if g:
                 member = g.get_member(user.id)
-                if member and any(role.id in settings.staff_roles for role in member.roles):
+                if member and any(role.id in self.settings['staff_roles'] for role in member.roles):
                     return True
         return await super().is_owner(user)
 
@@ -140,12 +141,13 @@ class TWLHelper(commands.Bot):
 
 
 async def main():
-    bot = TWLHelper(settings.PREFIX, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot")
+    settings = loadSettings()
+    bot = TWLHelper(settings, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot")
     print('Starting TWLHelper...')
     async with bot:
         await bot.load_cogs()
         bot.session = aiohttp.ClientSession()
-        await bot.start(settings.TOKEN)
+        await bot.start(settings['TOKEN'])
 
 
 if __name__ == '__main__':

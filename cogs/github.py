@@ -20,8 +20,6 @@ import discord
 import yarl
 from discord.ext import commands
 
-import settings
-
 
 class GitHub(commands.Cog):
     """GitHub Webhook distribution"""
@@ -38,25 +36,25 @@ class GitHub(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if message.guild.id != settings.GUILD:
+        if message.guild.id != self.bot.settings['GUILD']:
             return
 
-        if message.channel.id == settings.GITHUBUPDATES and message.embeds is not None:
+        if message.channel.id == self.bot.settings['GITHUBUPDATES'] and message.embeds is not None:
             giturl = yarl.URL(message.embeds[0].url).path
             if "DS-Homebrew/TWiLightMenu" in giturl or "[DS-Homebrew/TWiLightMenu]" in message.embeds[0].title:
-                if settings.TWLUPDATES is not None:
-                    thread = message.guild.get_thread(settings.TWLUPDATES)
+                if self.bot.settings['TWLUPDATES'] is not None:
+                    thread = message.guild.get_thread(self.bot.settings['TWLUPDATES'])
                     await thread.send(embeds=message.embeds)
             elif "DS-Homebrew/nds-bootstrap" in giturl or "[DS-Homebrew/nds-bootstrap]" in message.embeds[0].title:
-                if settings.NDSBUPDATES is not None:
-                    thread = message.guild.get_thread(settings.NDSBUPDATES)
+                if self.bot.settings['NDSBUPDATES'] is not None:
+                    thread = message.guild.get_thread(self.bot.settings['NDSBUPDATES'])
                     await thread.send(embeds=message.embeds)
             elif any(update in giturl for update in self.webupdate_list) or any(f"[{update}]" in message.embeds[0].title for update in self.webupdate_list):
-                if settings.WEBUPDATES is not None:
-                    thread = message.guild.get_thread(settings.WEBUPDATES)
+                if self.bot.settings['WEBUPDATES'] is not None:
+                    thread = message.guild.get_thread(self.bot.settings['WEBUPDATES'])
                     await thread.send(embeds=message.embeds)
-            elif settings.MISCUPDATES is not None:
-                thread = message.guild.get_thread(settings.MISCUPDATES)
+            elif self.bot.settings['MISCUPDATES'] is not None:
+                thread = message.guild.get_thread(self.bot.settings['MISCUPDATES'])
                 await thread.send(embeds=message.embeds)
 
 

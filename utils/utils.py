@@ -19,7 +19,6 @@
 
 import traceback
 import discord
-import settings
 
 from typing import Any, Optional
 from discord.ext import commands
@@ -54,7 +53,7 @@ def create_error_embed(exc: Any, *, ctx: Optional[commands.Context] = None, inte
 
 def is_staff():
     def predicate(ctx):
-        return any((role.id in settings.staff_roles or role.name in settings.staff_roles) for role in ctx.message.author.roles) if not ctx.author == ctx.guild.owner else True
+        return any((role.id in ctx.bot.settings['staff_roles'] or role.name in ctx.bot.settings['staff_roles']) for role in ctx.message.author.roles) if not ctx.author == ctx.guild.owner else True
     return commands.check(predicate)
 
 

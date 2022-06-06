@@ -27,7 +27,6 @@ from discord.ext import commands, tasks
 from pytz import timezone
 from rapidfuzz import process
 
-import settings
 from utils import ViewPages, web_name
 
 
@@ -78,14 +77,14 @@ class API(commands.Cog):
 
     def gspreadkey_exists():
         def predicate(ctx):
-            return settings.GSPREADKEY is not None
+            return ctx.bot.settings['GSPREADKEY'] is not None
         return commands.check(predicate)
 
     @tasks.loop(hours=1)
     async def loop(self):
         await self.bot.wait_until_ready()
         await self.update_netinfo()
-        if settings.GSPREADKEY:
+        if self.bot.settings['GSPREADKEY']:
             await self.asyncDumpWorksheet()
 
     # nds-bootstrap Compatibility list searching

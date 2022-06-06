@@ -28,8 +28,6 @@ import feedparser
 from discord.ext import tasks, commands
 from markdownify import markdownify
 
-import settings
-
 
 class RSS(commands.Cog):
     """RSS feeds"""
@@ -41,9 +39,9 @@ class RSS(commands.Cog):
     @tasks.loop(minutes=10)
     async def loop(self):
         await self.bot.wait_until_ready()
-        if settings.NINUPDATE:
+        if self.bot.settings['NINUPDATE']:
             await self.ninupdates()
-        if settings.SUBREDDIT:
+        if self.bot.settings['SUBREDDIT']:
             await self.subreddit()
 
     def digest_check(self, new, old):
@@ -95,12 +93,12 @@ class RSS(commands.Cog):
                 if systemold not in consoles:
                     continue
                 elif system == systemold and ver != verold:
-                    channel = self.bot.get_channel(settings.NINUPDATE)
+                    channel = self.bot.get_channel(self.bot.settings['NINUPDATE'])
                     await channel.send(embed=discord.Embed(description=f"ℹ️ New update version for {system}: [{ver}]({entry['link']})"))
                     continue
 
     async def subredditEmbed(self, rss, idx):
-        channel = self.bot.get_channel(settings.SUBREDDIT)
+        channel = self.bot.get_channel(self.bot.settings['SUBREDDIT'])
         entry = rss['entries'][idx]
         embed = discord.Embed(colour=15549999, timestamp=datetime.datetime.fromtimestamp(mktime(entry['updated_parsed'])))
         embed.title = entry['title']

@@ -17,31 +17,33 @@
 #
 
 import json
-import os
 
-IS_DOCKER = os.environ.get('IS_DOCKER', '')
 
-# Load config
-with open("settings.json", "r") as f:
-    settings = json.load(f)
+def loadSettings():
+    # Load config
+    with open("settings.json", "r") as f:
+        settings = json.load(f)
 
-# bot internals
-TOKEN = settings['DEFAULT']['TOKEN']
-PREFIX = [x for x in settings['DEFAULT']['PREFIX']]
-STATUS = settings['DEFAULT']['STATUS']
-GSPREADKEY = settings.get('GSPREADKEY')
+    ret = {}
+    # bot internals
+    ret['TOKEN'] = settings['DEFAULT']['TOKEN']
+    ret['PREFIX'] = [x for x in settings['DEFAULT']['PREFIX']]
+    ret['STATUS'] = settings['DEFAULT']['STATUS']
+    ret['GSPREADKEY'] = settings.get('GSPREADKEY')
 
-# server specifics
-GUILD = settings.get('GUILD')
-staff_roles = [x for x in settings['MODERATOR']]
+    # server specifics
+    ret['GUILD'] = settings.get('GUILD')
+    ret['staff_roles'] = [x for x in settings['MODERATOR']]
 
-# channels
-NINUPDATE = settings['CHANNEL']['NINUPDATES']
-SUBREDDIT = settings['CHANNEL']['SUBREDDIT']
-GITHUBUPDATES = settings['CHANNEL']['GITHUBUPDATES']
+    # channels
+    ret['NINUPDATE'] = settings['CHANNEL']['NINUPDATES']
+    ret['SUBREDDIT'] = settings['CHANNEL']['SUBREDDIT']
+    ret['GITHUBUPDATES'] = settings['CHANNEL']['GITHUBUPDATES']
 
-# threads
-TWLUPDATES = settings['THREAD']['TWLUPDATES']
-NDSBUPDATES = settings['THREAD']['NDSBUPDATES']
-WEBUPDATES = settings['THREAD']['WEBUPDATES']
-MISCUPDATES = settings['THREAD']['MISCUPDATES']
+    # threads
+    ret['TWLUPDATES'] = settings['THREAD']['TWLUPDATES']
+    ret['NDSBUPDATES'] = settings['THREAD']['NDSBUPDATES']
+    ret['WEBUPDATES'] = settings['THREAD']['WEBUPDATES']
+    ret['MISCUPDATES'] = settings['THREAD']['MISCUPDATES']
+
+    return ret
