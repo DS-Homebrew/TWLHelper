@@ -156,6 +156,18 @@ class Convert(commands.Cog):
                     "-ac", "1",
                     "-slices", "1",
                     "-g", "50"]
+        elif preset_name == "xvid":
+            return ['-f', 'avi',
+                    '-r', "12",
+                    '-vf', "scale=256:-2",
+                    '-b', "192k",
+                    '-bt', "64k",
+                    '-vcodec', 'libxvid',
+                    '-deinterlace',
+                    "-acodec", "libmp3lame",
+                    "-ar", "32000",
+                    "-ab", "96k",
+                    "-ac", "2"]
         elif preset_name == "xvid-full":
             return ['-f', 'avi',
                     '-r', "12",
@@ -433,11 +445,14 @@ class Convert(commands.Cog):
         Converts an attached, or linked, video to a DS(i)-compatible Xvid Video for tuna-viDS
 
         Usage:
+        `.xvid <video>`: Original aspect ratio
         `.xvid full <video>`: 4:3 format
         `.xvid wide <video>`: 16:9 format
         `.xvid cinema <video>`: CinemaScope (21:9) format
         """
         if ctx.invoked_subcommand is None:
+            await self.convert_vid(ctx, "avi", filelink, "xvid")
+        if ctx.invoked_subcommand is "help":
             await ctx.send_help(ctx.command)
 
     @xvid.command(name="full")
