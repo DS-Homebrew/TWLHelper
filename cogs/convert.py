@@ -452,8 +452,6 @@ class Convert(commands.Cog):
         """
         if ctx.invoked_subcommand is None:
             await self.convert_vid(ctx, "avi", filelink, "xvid")
-        if ctx.invoked_subcommand is "help":
-            await ctx.send_help(ctx.command)
 
     @xvid.command(name="full")
     @software_exists(['ffmpeg'])
