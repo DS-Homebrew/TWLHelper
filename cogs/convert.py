@@ -168,42 +168,6 @@ class Convert(commands.Cog):
                     "-ar", "32000",
                     "-ab", "96k",
                     "-ac", "2"]
-        elif preset_name == "xvid-full":
-            return ['-f', 'avi',
-                    '-r', "12",
-                    '-s', "256x192",
-                    '-b', "192k",
-                    '-bt', "64k",
-                    '-vcodec', 'libxvid',
-                    '-deinterlace',
-                    "-acodec", "libmp3lame",
-                    "-ar", "32000",
-                    "-ab", "96k",
-                    "-ac", "2"]
-        elif preset_name == "xvid-wide":
-            return ['-f', 'avi',
-                    '-r', "12",
-                    '-s', "256x144",
-                    '-b', "192k",
-                    '-bt', "64k",
-                    '-vcodec', 'libxvid',
-                    '-deinterlace',
-                    "-acodec", "libmp3lame",
-                    "-ar", "32000",
-                    "-ab", "96k",
-                    "-ac", "2"]
-        elif preset_name == "xvid-cinema":
-            return ['-f', 'avi',
-                    '-r', "12",
-                    '-s', "256x108",
-                    '-b', "192k",
-                    '-bt', "64k",
-                    '-vcodec', 'libxvid',
-                    '-deinterlace',
-                    "-acodec", "libmp3lame",
-                    "-ar", "32000",
-                    "-ab", "96k",
-                    "-ac", "2"]
         elif preset_name is None:
             return []
 
@@ -438,44 +402,13 @@ class Convert(commands.Cog):
         """
         await self.convert_vid(ctx, "mp4", filelink, "dsmp4")
 
-    @commands.group()
+    @commands.command()
     @software_exists(['ffmpeg'])
-    async def xvid(self, ctx):
+    async def xvid(self, ctx, filelink=None):
         """
         Converts an attached, or linked, video to a DS(i)-compatible Xvid Video for tuna-viDS
-
-        Usage:
-        `.xvid <video>`: Original aspect ratio
-        `.xvid full <video>`: 4:3 format
-        `.xvid wide <video>`: 16:9 format
-        `.xvid cinema <video>`: CinemaScope (21:9) format
         """
-        if ctx.invoked_subcommand is None:
-            await self.convert_vid(ctx, "avi", filelink, "xvid")
-
-    @xvid.command(name="full")
-    @software_exists(['ffmpeg'])
-    async def xvid_full(self, ctx, filelink=None):
-        """
-        Converts an attached, or linked, video to a DS(i)-compatible Xvid Video in 4:3 for tuna-viDS
-        """
-        await self.convert_vid(ctx, "avi", filelink, "xvid-full")
-
-    @xvid.command(name="wide")
-    @software_exists(['ffmpeg'])
-    async def xvid_wide(self, ctx, filelink=None):
-        """
-        Converts an attached, or linked, video to a DS(i)-compatible Xvid Video in 16:9 for tuna-viDS
-        """
-        await self.convert_vid(ctx, "avi", filelink, "xvid-wide")
-
-    @xvid.command(name="cinema")
-    @software_exists(['ffmpeg'])
-    async def xvid_cinema(self, ctx, filelink=None):
-        """
-        Converts an attached, or linked, video to a DS(i)-compatible Xvid Video in CinemaScope (21:9) for tuna-viDS
-        """
-        await self.convert_vid(ctx, "avi", filelink, "xvid-cinema")
+        await self.convert_vid(ctx, "avi", filelink, "xvid")
 
     @commands.command(aliases=["mp4"])
     @software_exists(['ffmpeg'])
