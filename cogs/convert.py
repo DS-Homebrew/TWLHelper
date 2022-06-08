@@ -165,7 +165,7 @@ class Convert(commands.Cog):
                     '-vcodec', 'libxvid',
                     '-deinterlace',
                     "-acodec", "libmp3lame",
-                    "-ar", "32k",
+                    "-ar", "32000",
                     "-ab", "96k",
                     "-ac", "2"]
         elif preset_name == "xvid-wide":
@@ -177,7 +177,7 @@ class Convert(commands.Cog):
                     '-vcodec', 'libxvid',
                     '-deinterlace',
                     "-acodec", "libmp3lame",
-                    "-ar", "32k",
+                    "-ar", "32000",
                     "-ab", "96k",
                     "-ac", "2"]
         elif preset_name == "xvid-cinema":
@@ -189,7 +189,7 @@ class Convert(commands.Cog):
                     '-vcodec', 'libxvid',
                     '-deinterlace',
                     "-acodec", "libmp3lame",
-                    "-ar", "32k",
+                    "-ar", "32000",
                     "-ab", "96k",
                     "-ac", "2"]
         elif preset_name is None:
