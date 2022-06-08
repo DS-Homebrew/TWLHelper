@@ -426,7 +426,21 @@ class Convert(commands.Cog):
         """
         await self.convert_vid(ctx, "mp4", filelink, "dsmp4")
 
-    @commands.command()
+    @commands.group()
+    @software_exists(['ffmpeg'])
+    async def xvid(self, ctx):
+        """
+        Converts an attached, or linked, video to a DS(i)-compatible Xvid Video for tuna-viDS
+
+        Usage:
+        `.xvid full <video>`: 4:3 format
+        `.xvid wide <video>`: 16:9 format
+        `.xvid cinema <video>`: CinemaScope (21:9) format
+        """
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(ctx.command)
+
+    @xvid.command(name="full")
     @software_exists(['ffmpeg'])
     async def xvid_full(self, ctx, filelink=None):
         """
@@ -434,7 +448,7 @@ class Convert(commands.Cog):
         """
         await self.convert_vid(ctx, "avi", filelink, "xvid-full")
 
-    @commands.command()
+    @xvid.command(name="wide")
     @software_exists(['ffmpeg'])
     async def xvid_wide(self, ctx, filelink=None):
         """
@@ -442,7 +456,7 @@ class Convert(commands.Cog):
         """
         await self.convert_vid(ctx, "avi", filelink, "xvid-wide")
 
-    @commands.command()
+    @xvid.command(name="cinema")
     @software_exists(['ffmpeg'])
     async def xvid_cinema(self, ctx, filelink=None):
         """
