@@ -156,11 +156,23 @@ class Convert(commands.Cog):
                     "-ac", "1",
                     "-slices", "1",
                     "-g", "50"]
-        elif preset_name == "xvid":
+        elif preset_name == "xvid-ds":
             return ['-f', 'avi',
                     '-r', "12",
                     '-vf', "scale=256:-2",
                     '-b', "192k",
+                    '-bt', "64k",
+                    '-vcodec', 'libxvid',
+                    '-deinterlace',
+                    "-acodec", "libmp3lame",
+                    "-ar", "32000",
+                    "-ab", "96k",
+                    "-ac", "2"]
+        elif preset_name == "xvid-dsi":
+            return ['-f', 'avi',
+                    '-r', "12",
+                    '-vf', "scale=256:-2",
+                    '-b', "512k",
                     '-bt', "64k",
                     '-vcodec', 'libxvid',
                     '-deinterlace',
@@ -402,13 +414,34 @@ class Convert(commands.Cog):
         """
         await self.convert_vid(ctx, "mp4", filelink, "dsmp4")
 
-    @commands.command()
+    @commands.group()
     @software_exists(['ffmpeg'])
-    async def xvid(self, ctx, filelink=None):
+    async def xvid(self, ctx):
         """
         Converts an attached, or linked, video to a DS(i)-compatible Xvid Video for tuna-viDS
+
+        Usage:
+        `.xvid ds <video>`: Optimal for DS consoles
+        `.xvid dsi <video>`: Optimal for DSi consoles
         """
-        await self.convert_vid(ctx, "avi", filelink, "xvid")
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(ctx.command)
+
+    @xvid.command(name="ds")
+    @software_exists(['ffmpeg'])
+    async def xvid_full(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, video to a DS-compatible Xvid Video for tuna-viDS
+        """
+        await self.convert_vid(ctx, "avi", filelink, "xvid-ds")
+
+    @xvid.command(name="dsi")
+    @software_exists(['ffmpeg'])
+    async def xvid_wide(self, ctx, filelink=None):
+        """
+        Converts an attached, or linked, video to a DSi-compatible Xvid Video for tuna-viDS
+        """
+        await self.convert_vid(ctx, "avi", filelink, "xvid-dsi")
 
     @commands.command(aliases=["mp4"])
     @software_exists(['ffmpeg'])
