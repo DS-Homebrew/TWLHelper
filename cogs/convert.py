@@ -421,15 +421,15 @@ class Convert(commands.Cog):
         Converts an attached, or linked, video to a DS(i)-compatible Xvid Video for tuna-viDS
 
         Usage:
-        `.xvid ds <video>`: Optimal for DS consoles
+        `.xvid nds <video>`: Optimal for DS consoles
         `.xvid dsi <video>`: Optimal for DSi consoles
         """
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
-    @xvid.command(name="ds")
+    @xvid.command(name="nds", aliases=["ds"])
     @software_exists(['ffmpeg'])
-    async def xvid_full(self, ctx, filelink=None):
+    async def xvid_nds(self, ctx, filelink=None):
         """
         Converts an attached, or linked, video to a DS-compatible Xvid Video for tuna-viDS
         """
@@ -437,7 +437,7 @@ class Convert(commands.Cog):
 
     @xvid.command(name="dsi")
     @software_exists(['ffmpeg'])
-    async def xvid_wide(self, ctx, filelink=None):
+    async def xvid_dsi(self, ctx, filelink=None):
         """
         Converts an attached, or linked, video to a DSi-compatible Xvid Video for tuna-viDS
         """
