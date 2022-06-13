@@ -111,7 +111,7 @@ class Wiki(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["serverrules", "discordrules"])
-    async def rule(self, ctx, num: Optional[int]):
+    async def rule(self, ctx: commands.Context, num: Optional[int]):
         """Links to the server rules"""
         embed = self.embed("DS⁽ⁱ⁾ Mode Hacking Rules")
         embed.url += "community/discord-rules.html"
@@ -136,7 +136,7 @@ class Wiki(commands.Cog):
                     message = "**Rule " + rule[4:] + "**\n"
                     message += self.read_rule(ctx, rulepage, iter)
                     break
-            await ctx.send(message)
+            await ctx.send(message, suppress_embeds=True)
 
     @commands.command(aliases=["discordinfo"])
     async def serverinfo(self, ctx):
