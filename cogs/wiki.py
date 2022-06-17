@@ -159,12 +159,12 @@ class Wiki(commands.Cog):
         """Links to the emulator index page"""
         embed = self.embed("Emulators on the DS")
         embed.url += "ds-index/emulators.html"
-        embed.description = "A reference on Emulators on the DS"
+        embed.description = "A reference on emulators & loaders on the DS"
         await ctx.send(embed=embed)
 
     @commands.command()
     async def retail(self, ctx):
-        """Links to the list of retail DS games"""
+        """Links to the reference page for miscellaneous information on DS games"""
         embed = self.embed("Retail ROMs")
         embed.url += "ds-index/retail-roms.html"
         embed.description = "A reference on retail DS games"
@@ -184,6 +184,30 @@ class Wiki(commands.Cog):
         embed = self.embed("Custom DSi/3DS Skins")
         embed.url += "twilightmenu/custom-dsi-3ds-skins.html"
         embed.description = "How to Create DSi/3DS Skins for TWiLight Menu++"
+        await ctx.send(embed=embed)
+        
+         @commands.command(aliases=["ramdisks"])
+    async def ramdisk(self, ctx):
+        """Links to the RAM Disk creation tutorial"""
+        embed = self.embed("Creating RAM Disks")
+        embed.url += "twilightmenu/creating-ram-disks.html"
+        embed.description = "How to create RAM Disks for using older homebrew with nds-bootstrap"
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=["icons", "banner", "banners", "customicon", "customicons", "custombanner", "custombanners"])
+    async def icon(self, ctx):
+        """Links to the custom icons and banners page"""
+        embed = self.embed("How to Get custom Icons and Banners")
+        embed.url += "twilightmenu/how-to-get-custom-icons.html"
+        embed.description = "How to get custom icons and banners for TWiLight Menu++"
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=["dlp", "downloadplay"])
+    async def pictochat(self, ctx):
+        """Links to the page for getting PictoChat and DS Download Play on the DS Classic Menu"""
+        embed = self.embed("Download Play/PictoChat in the DS Classic Menu")
+        embed.url += "twilightmenu/download-play-pictochat.html"
+        embed.description = "How to get PictoChat and DS Download Play on the DS Classic Menu in TWiLight Menu++"
         await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
