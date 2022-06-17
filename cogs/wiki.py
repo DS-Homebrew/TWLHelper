@@ -185,7 +185,7 @@ class Wiki(commands.Cog):
         embed.url += "twilightmenu/custom-dsi-3ds-skins.html"
         embed.description = "How to Create DSi/3DS Skins for TWiLight Menu++"
         await ctx.send(embed=embed)
-        
+
     @commands.command(aliases=["ramdisks"])
     async def ramdisk(self, ctx):
         """Links to the RAM Disk creation tutorial"""
