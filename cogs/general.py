@@ -337,7 +337,7 @@ your device will refuse to write to it.
         embed.set_image(url="https://i.imgur.com/RvKjWcz.png")
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["flashcard"])
+    @commands.command(aliases=["flashcard", "flashcards", "flashcarts"])
     async def flashcart(self, ctx):
         """Links the r/flashcarts flashcart quick start guide"""
         embed = discord.Embed(title="Flashcart Quick Start Guide")
