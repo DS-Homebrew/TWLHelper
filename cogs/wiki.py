@@ -186,7 +186,7 @@ class Wiki(commands.Cog):
         embed.description = "How to Create DSi/3DS Skins for TWiLight Menu++"
         await ctx.send(embed=embed)
         
-         @commands.command(aliases=["ramdisks"])
+    @commands.command(aliases=["ramdisks"])
     async def ramdisk(self, ctx):
         """Links to the RAM Disk creation tutorial"""
         embed = self.embed("Creating RAM Disks")
