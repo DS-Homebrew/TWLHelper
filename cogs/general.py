@@ -359,6 +359,5 @@ If you do not know how to open Unlaunch, **turn off your DSi completely off**, \
                                     """)
         await ctx.send(embed=embed)
 
-async def setup(bot):
-    await bot.add_cog(General(bot))
-
+    async def setup(bot):
+        await bot.add_cog(General(bot))
