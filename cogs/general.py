@@ -346,7 +346,7 @@ your device will refuse to write to it.
         embed.set_author(name="r/flashcarts")
         embed.set_thumbnail(url="https://b.thumbs.redditmedia.com/lBsOPXDyCx0p1MSx1qCdAtglHB4nineg5w9-3KHzO2A.png")
         await ctx.send(embed=embed)
-        
+
     @commands.command(aliases=["dsiboot", "twlboot"])
     async def dsiboot(self, ctx):
         """Tells you how to automatically boot TWiLight Menu++ with Unlaunch"""
