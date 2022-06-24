@@ -257,6 +257,7 @@ class Wiki(commands.Cog):
         """Links to the video players page on the wiki"""
         embed = self.embed("Homebrew Video Players for the DS(i)")
         embed.url = "https://wiki.ds-homebrew.com/ds-index/videoplayers"
+        embed.description = "How to play videos on the DS(i)"
         await ctx.send(embed=embed)
 
 
