@@ -346,7 +346,22 @@ your device will refuse to write to it.
         embed.set_author(name="r/flashcarts")
         embed.set_thumbnail(url="https://b.thumbs.redditmedia.com/lBsOPXDyCx0p1MSx1qCdAtglHB4nineg5w9-3KHzO2A.png")
         await ctx.send(embed=embed)
-
+        
+    @commands.command(aliases=["dsiboot", "twlboot"])
+    async def dsiboot(self, ctx):
+        """Tells you how to automatically boot TWiLight Menu++ with Unlaunch"""
+        embed = discord.Embed(title="How to launch TWiLight Menu++ automatically with Unlaunch")
+        embed.description = cleandoc("""
+                                    In Unlaunch, select Options, then set `TWiLight Menu++` (`boot.nds`) as `No Button`. \
+                                    
+                                    If you do not know how to open Unlaunch, **turn off your DSi completely off, \
+                                    hold `A` and `B` together and press power while holding said buttons.
+                                    
+                                    If done correctly, your DSi should automatically boot into TWiLight Menu++.
+                                    """)
+        # We don't have a screenshot of it for the time being
+        # embed.set_image(url="");
+        await ctx.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(General(bot))
