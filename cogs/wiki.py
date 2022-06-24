@@ -252,6 +252,13 @@ class Wiki(commands.Cog):
         embed.description = "How to dump the NDS BIOS from a DS, DSi or 3DS"
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=['vp'])
+    async def videoplayers(self, ctx: commands.Context):
+        """Links to the video players page on the wiki"""
+        embed = self.embed("Homebrew Video Players for the DS(i)")
+        embed.url = "https://wiki.ds-homebrew.com/ds-index/videoplayers"
+        await ctx.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(Wiki(bot))
