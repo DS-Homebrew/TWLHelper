@@ -20,6 +20,7 @@
 
 import asyncio
 import contextlib
+import logging
 import os
 from shutil import rmtree
 from typing import Any, Dict, Union
@@ -31,6 +32,8 @@ from discord.ext import commands
 
 from settings import loadSettings
 from utils.utils import create_error_embed
+
+log = logging.getLogger("bot")
 
 
 class EmbedHelp(commands.MinimalHelpCommand):
@@ -69,15 +72,15 @@ class TWLHelper(commands.Bot):
                 if filename.endswith(".py"):
                     cog = f"cogs.{filename[:-3]}"
                     await self.load_extension(cog)
-                    print(f"Loaded cog cogs.{filename[:-3]}")
+                    log.info(f"Loaded cog cogs.{filename[:-3]}")
             except Exception as e:
-                print(f"Failed to load cog {cog}\n{type(e).__name__}: {e}")
+                log.info(f"Failed to load cog {cog}\n{type(e).__name__}: {e}")
         try:
             cog = "jishaku"
             await self.load_extension("jishaku")
-            print("Loaded cog jishaku")
+            log.info("Loaded cog jishaku")
         except Exception as e:
-            print(f"Failed to load cog {cog}\n{type(e).__name__}: {e}")
+            log.exception(f"Failed to load cog {cog}\n{type(e).__name__}", exc_info=e)
 
     async def close(self):
         await self.session.close()
@@ -140,7 +143,22 @@ class TWLHelper(commands.Bot):
                            embed=create_error_embed(exc, ctx=ctx))
 
 
+def setup_logging():
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    handler = logging.FileHandler(filename='bot.log', encoding='utf-8', mode='w')
+    formatter = logging.Formatter('[{asctime}] [{levelname:<8}] {name}: {message}', style='{')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    # Console logger
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return logger
+
+
 async def main():
+    setup_logging()
     settings = loadSettings()
     bot = TWLHelper(settings, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot")
     print('Starting TWLHelper...')

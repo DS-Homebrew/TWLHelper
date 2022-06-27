@@ -7,3 +7,4 @@ __pycache__
 downloads
 senpai_converted_downloads
 venv/
+*.log
