@@ -42,6 +42,9 @@ class GitHub(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
+        if message.guild is None:
+            return
+
         if message.guild.id != self.bot.settings['GUILD']:
             return
 
