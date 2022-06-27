@@ -16,16 +16,21 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+from typing import TYPE_CHECKING
+
 import discord
 import yarl
 from discord.ext import commands
+
+if TYPE_CHECKING:
+    from ..twlhelper import TWLHelper
 
 
 class GitHub(commands.Cog):
     """GitHub Webhook distribution"""
 
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: TWLHelper = bot
 
     webupdate_list = [
         "DS-Homebrew/wiki",
@@ -55,6 +60,10 @@ class GitHub(commands.Cog):
                     await thread.send(embeds=message.embeds)
             elif self.bot.settings['MISCUPDATES'] is not None:
                 thread = message.guild.get_thread(self.bot.settings['MISCUPDATES'])
+                await thread.send(embeds=message.embeds)
+            elif "DS-Homebrew/ChroniclesDX" in giturl or "[DS-Homebrew/ChroniclesDX]" in message.embeds[0].title:
+                thread_id = self.bot.settings.get("SONIC-DX", 989717506912555048)
+                thread = message.guild.get_thread(thread_id)
                 await thread.send(embeds=message.embeds)
 
 
