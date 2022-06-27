@@ -17,9 +17,10 @@
 #
 
 import json
+from typing import Any, Dict
 
 
-def loadSettings():
+def loadSettings() -> Dict[str, Any]:
     # Load config
     with open("settings.json", "r") as f:
         settings = json.load(f)

@@ -22,7 +22,7 @@ import asyncio
 import contextlib
 import os
 from shutil import rmtree
-from typing import Union
+from typing import Any, Dict, Union
 
 import aiohttp
 import discord
@@ -43,7 +43,7 @@ class EmbedHelp(commands.MinimalHelpCommand):
 
 
 class TWLHelper(commands.Bot):
-    def __init__(self, settings, description):
+    def __init__(self, settings: Dict[str, Any], description: str):
         intents = discord.Intents(guilds=True, members=True, bans=True, messages=True, message_content=True)
         allowed_mentions = discord.AllowedMentions(everyone=False, roles=False)
         activity = discord.Game(settings['STATUS'])
