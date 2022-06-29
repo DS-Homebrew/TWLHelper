@@ -18,15 +18,16 @@
 
 
 import traceback
-import discord
-
 from typing import Any, Optional
+
+import discord
 from discord.ext import commands
 
 __all__ = ("create_error_embed",
            "is_staff",
            "check_arg",
-           "web_name")
+           "web_name",
+           "build_wiki_embed")
 
 
 def create_error_embed(exc: Any, *, ctx: Optional[commands.Context] = None, interaction: Optional[discord.Interaction] = None) -> discord.Embed:
@@ -75,3 +76,12 @@ def web_name(name):
         elif letter in ". ":
             out += "-"
     return out
+
+
+def build_wiki_embed(title: str, url: Optional[str] = None) -> discord.Embed:
+    embed = discord.Embed(title=title)
+    embed.set_author(name="DS-Homebrew Wiki")
+    embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+    if url:
+        embed.url = f"https://wiki.ds-homebrew.com/{url}"
+    return embed

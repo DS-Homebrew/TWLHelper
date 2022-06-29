@@ -15,13 +15,14 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
+from inspect import cleandoc
+from typing import Optional
 
 import discord
-
-from inspect import cleandoc
 from discord.ext import commands
 
-from utils import check_arg, Literal, twilightmenu_alias, ndsbootstrap_alias
+from utils import (Literal, build_wiki_embed, check_arg, ndsbootstrap_alias,
+                   twilightmenu_alias)
 
 
 class General(commands.Cog):
@@ -83,23 +84,30 @@ class General(commands.Cog):
         """Links and/or information on installing apps"""
         await ctx.send_help(ctx.command)
 
-    @install.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_install(self, ctx, *, arg=""):
+    @install.command(name="twilight", aliases=twilightmenu_alias, usage="[3ds|ds|dsi|flashcard|flashcart]")
+    async def twilight_install(self, ctx, system: Literal("3ds", "dsi", "flashcard", "flashcart", "ds") = None):
+        if not system:
+            embed = build_wiki_embed(title="TWiLight Menu++ Installation Guide")
+            embed.description = "**3DS**: https://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html\n"\
+                                "**DSi**: https://wiki.ds-homebrew.com/twilightmenu/installing-dsi.html\n"\
+                                "**Flashcards**: https://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"
+            await ctx.send(embed=embed)
+            return
+
         embed = discord.Embed(title="TWiLight Menu++ Installation Guide")
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.url = "https://wiki.ds-homebrew.com/twilightmenu/installing"
         embed.description = "How to install TWiLight Menu++"
-        if arg != "":
-            if check_arg(arg, ("3ds",)):
-                embed.url += "-3ds"
-                embed.description += " on the 3DS"
-            elif check_arg(arg, ("dsi",)):
-                embed.url += "-dsi"
-                embed.description += " on the DSi"
-            elif check_arg(arg, ("flashcard", "flashcart", "ds")):
-                embed.url += "-flashcard"
-                embed.description += " on flashcards"
+        if system == "3ds":
+            embed.url += "-3ds"
+            embed.description += " on the 3DS"
+        elif system == "dsi":
+            embed.url += "-dsi"
+            embed.description += " on the DSi"
+        elif system in ("flashcard", "flashcart", "ds"):
+            embed.url += "-flashcard"
+            embed.description += " on flashcards"
         embed.url += ".html"
         await ctx.send(embed=embed)
 
