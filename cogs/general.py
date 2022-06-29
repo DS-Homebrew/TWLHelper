@@ -16,7 +16,6 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 from inspect import cleandoc
-from typing import Optional
 
 import discord
 from discord.ext import commands
