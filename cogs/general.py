@@ -84,7 +84,7 @@ class General(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @install.command(name="twilight", aliases=twilightmenu_alias, usage="[3ds|ds|dsi|flashcard|flashcart]")
-    async def twilight_install(self, ctx, system: Literal("3ds", "dsi", "flashcard", "flashcart", "ds") = None):
+    async def twilight_install(self, ctx, system: Literal("3ds", "dsi", "flashcard", "flashcart", "ds") = None):  # noqa
         if not system:
             embed = build_wiki_embed(title="TWiLight Menu++ Installation Guide")
             embed.description = "**3DS**: https://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html\n"\
