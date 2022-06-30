@@ -66,9 +66,9 @@ class GitHub(commands.Cog):
                 thread = message.guild.get_thread(self.bot.settings['MISCUPDATES'])
                 await thread.send(embeds=message.embeds)
             elif "DS-Homebrew/ChroniclesDX" in giturl or "[DS-Homebrew/ChroniclesDX]" in message.embeds[0].title:
-                thread_id = self.bot.settings.get("SONIC-DX", 989717506912555048)
-                thread = message.guild.get_thread(thread_id)
-                await thread.send(embeds=message.embeds)
+                if self.bot.settings['DXUPDATES'] is not None:
+                    thread = message.guild.get_thread(self.bot.settings['DXUPDATES'])
+                    await thread.send(embeds=message.embeds)
 
 
 async def setup(bot):

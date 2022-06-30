@@ -46,5 +46,6 @@ def loadSettings() -> Dict[str, Any]:
     ret['NDSBUPDATES'] = settings['THREAD']['NDSBUPDATES']
     ret['WEBUPDATES'] = settings['THREAD']['WEBUPDATES']
     ret['MISCUPDATES'] = settings['THREAD']['MISCUPDATES']
+    ret['DXUPDATES'] = settings['THREAD']['DXUPDATES']
 
     return ret
