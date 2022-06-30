@@ -49,7 +49,7 @@ class GitHub(commands.Cog):
             return
 
         if message.channel.id == self.bot.settings['GITHUBUPDATES'] and message.embeds is not None:
-            giturl = yarl.URL(message.embeds[0].url).path
+            giturl = yarl.URL(message.embeds[0].url).path if message.embeds[0].url else ""
             if "DS-Homebrew/TWiLightMenu" in giturl or "[DS-Homebrew/TWiLightMenu]" in message.embeds[0].title:
                 if self.bot.settings['TWLUPDATES'] is not None:
                     thread = message.guild.get_thread(self.bot.settings['TWLUPDATES'])
