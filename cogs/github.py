@@ -62,13 +62,13 @@ class GitHub(commands.Cog):
                 if self.bot.settings['WEBUPDATES'] is not None:
                     thread = message.guild.get_thread(self.bot.settings['WEBUPDATES'])
                     await thread.send(embeds=message.embeds)
-            elif self.bot.settings['MISCUPDATES'] is not None:
-                thread = message.guild.get_thread(self.bot.settings['MISCUPDATES'])
-                await thread.send(embeds=message.embeds)
             elif "DS-Homebrew/ChroniclesDX" in giturl or "[DS-Homebrew/ChroniclesDX]" in message.embeds[0].title:
                 if self.bot.settings['DXUPDATES'] is not None:
                     thread = message.guild.get_thread(self.bot.settings['DXUPDATES'])
                     await thread.send(embeds=message.embeds)
+            elif self.bot.settings['MISCUPDATES'] is not None:
+                thread = message.guild.get_thread(self.bot.settings['MISCUPDATES'])
+                await thread.send(embeds=message.embeds)
 
 
 async def setup(bot):
