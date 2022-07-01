@@ -5,5 +5,5 @@ feedparser~=6.0.10
 psutil~=5.9.1
 markdownify~=0.11.2
 gspread~=5.4.0
-rapidfuzz~=2.1.0
+rapidfuzz~=2.1.1
 yarl~=1.7.2
