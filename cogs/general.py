@@ -199,8 +199,8 @@ class General(commands.Cog):
         embed.description = "To access TWiLight Menu++ Instruction Manual, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
         embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher theme", value=cleandoc("""Press the SELECT button\n- If you are met with a list of options, select **Open Manual**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below"""), inline=False)
         embed.add_field(name="DS Classic Menu", value=cleandoc("""Tap the green book icon in the bottom right of the touchscreen"""), inline=False)
-        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the green book icon in the top middle corner of the touchscreen"""), inline=False)
-        embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, touch the green book icon\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
+        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the green book icon in the top middle of the touchscreen"""), inline=False)
+        embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, tap the green book icon\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["sd-card-setup", "sdformat"])
