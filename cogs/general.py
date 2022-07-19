@@ -201,6 +201,7 @@ class General(commands.Cog):
         embed.add_field(name="DS Classic Menu", value=cleandoc("""Tap the green book icon in the bottom right of the touchscreen"""), inline=False)
         embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the green book icon in the top middle of the touchscreen"""), inline=False)
         embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, tap the green book icon\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
+        embed.add_field(name="Online", value=cleandoc("""The TWiLight Menu++ manual is also available online at https://manual.ds-homebrew.com."""), inline=False)
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["sd-card-setup", "sdformat"])
