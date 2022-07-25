@@ -1,5 +1,5 @@
 git+https://github.com/Rapptz/discord.py@9fe19dcc6923e4b6133bdedafb33658bf37c9ab7
-jishaku~=2.5.0
+jishaku~=2.5.1
 pytz~=2022.1
 feedparser~=6.0.10
 psutil~=5.9.1
