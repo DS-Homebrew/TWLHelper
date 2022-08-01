@@ -3,9 +3,10 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import os
-import discord
+from inspect import getsourcefile, getsourcelines
+from typing import Optional
 
-from inspect import getsourcelines, getsourcefile
+import discord
 from discord.ext import commands
 
 
@@ -26,9 +27,9 @@ class Meta(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def source(self, ctx, *, command: str = None):
+    async def source(self, ctx, *, command: Optional[str] = None):
         """
-        Source code searching
+        Gets the source code for a command
         """
         source_url = 'https://github.com/DS-Homebrew/TWLHelper'
         branch = 'main'
@@ -53,7 +54,7 @@ class Meta(commands.Cog):
         lines, firstlineno = getsourcelines(src)
         if not module.startswith('discord'):
             # not a built-in command
-            location = os.path.relpath(filename).replace('\\', '/')
+            location = os.path.relpath(filename).replace('\\', '/')  # type: ignore
         else:
             location = module.replace('.', '/') + '.py'
             source_url = 'https://github.com/Rapptz/discord.py'
