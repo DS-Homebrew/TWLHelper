@@ -26,6 +26,7 @@ import discord
 from discord.ext import commands, tasks
 from pytz import timezone
 from rapidfuzz import process
+from re import findall
 
 from utils import ViewPages, web_name
 
@@ -62,6 +63,14 @@ class NBCompatMenu(ViewPages):
         if entry[14] != '':
             embed.add_field(name="Notes", value=f"{entry[14]}", inline=False)
         embed.add_field(name="Link", value=f"{entry[16]}", inline=False)
+        return embed
+
+
+class GbatekMenu(ViewPages):
+    async def format_page(self, link: Any):
+        embed = discord.Embed(title=f"GBATEK – {link[1]}", url=f'https://problemkaputt.de/{link[0]}')
+        embed.set_author(name="Nocash")
+        embed.set_thumbnail(url="https://i.imgur.com/03jnZtC.png")
         return embed
 
 
@@ -424,6 +433,37 @@ class API(commands.Cog):
                 await ctx.send(embed=embed)
             else:
                 await ctx.send("App cannot be found. Please try again.")
+
+    # GBATEK searching
+
+    # This function is based on UDB-API, licensed Apache-2.0.
+    # https://github.com/LightSage/UDB-API
+    def search_link(self, query, list):
+        matchlist = []
+        results = process.extract(query.lower().strip(), [link[1].lower() for link in list])
+        for _, score, idx in results:
+            if score < 70:
+                continue
+            matchlist.append(list[idx])
+        return matchlist
+
+    @commands.command()
+    async def gbatek(self, ctx, *, page):
+        """Links to a page on GBATEK"""
+
+        async with self.bot.session.get("https://problemkaputt.de/gbatek-index.htm") as r:
+            if r.status == 200:
+                content = await r.text()
+                link_list = findall(r'<A HREF="([\w\-]+\.htm)">([^<]+)</A>', content)
+            else:
+                return await ctx.send("Error: Unable to access GBATEK")
+
+        links = self.search_link(page, link_list)
+        if not links:
+            return await ctx.send("No pages found. Please try again.")
+
+        menu = GbatekMenu(links, ctx)
+        await menu.start()
 
 
 async def setup(bot):
