@@ -330,7 +330,7 @@ class API(commands.Cog):
         resp = await self.request(url)
         source = resp['results'] if type(resp) == dict else resp
         if not source:
-            return await ctx.send("App not found. Please try again.")
+            return await ctx.send("Skin not found. Please try again.")
         menu = SkinsMenu(source, ctx)
         await menu.start()
 
