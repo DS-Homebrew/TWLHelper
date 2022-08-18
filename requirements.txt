@@ -1,4 +1,4 @@
-git+https://github.com/Rapptz/discord.py@668196c14c525b40d8217995c9413f49344629d4
+discord.py~=2.0.0
 feedparser~=6.0.10
 gspread~=5.4.0
 jishaku~=2.5.1
