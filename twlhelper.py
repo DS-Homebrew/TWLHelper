@@ -46,6 +46,8 @@ class EmbedHelp(commands.MinimalHelpCommand):
 
 
 class TWLHelper(commands.Bot):
+    session: aiohttp.ClientSession
+
     def __init__(self, settings: Dict[str, Any], description: str):
         intents = discord.Intents(guilds=True, members=True, bans=True, messages=True, message_content=True)
         allowed_mentions = discord.AllowedMentions(everyone=False, roles=False)
@@ -143,22 +145,12 @@ class TWLHelper(commands.Bot):
                            embed=create_error_embed(exc, ctx=ctx))
 
 
-def setup_logging():
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-    handler = logging.FileHandler(filename='bot.log', encoding='utf-8', mode='w')
-    formatter = logging.Formatter('[{asctime}] [{levelname:<8}] {name}: {message}', style='{')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    # Console logger
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    return logger
-
-
 async def main():
-    setup_logging()
+    # bot.log
+    discord.utils.setup_logging(handler=logging.FileHandler('bot.log', encoding='utf-8', mode='w'))
+    # Stream Handler
+    discord.utils.setup_logging()
+
     settings = loadSettings()
     bot = TWLHelper(settings, description="TWLHelper, DS⁽ⁱ⁾ Mode Hacking Discord server bot")
     print('Starting TWLHelper...')
