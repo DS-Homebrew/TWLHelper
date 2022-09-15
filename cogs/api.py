@@ -80,9 +80,9 @@ class API(commands.Cog):
     @tasks.loop(hours=1)
     async def loop(self):
         await self.bot.wait_until_ready()
-        await self.update_netinfo()
         if self.bot.settings['GSPREADKEY']:
             await self.asyncDumpWorksheet()
+        await self.update_netinfo()
 
     # nds-bootstrap Compatibility list searching
     def dumpWorksheet(self):
