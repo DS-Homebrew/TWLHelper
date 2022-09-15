@@ -43,7 +43,7 @@ Each function and related commands will be disabled until the instructions are f
 ```
 ISC License
 
-Copyright (C) 2021-present DS-Homebrew
+Copyright (C) 2021-2022 DS-Homebrew
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
