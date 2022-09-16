@@ -19,14 +19,14 @@ class FAQ(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def wikiembed(self, title):
+    def wikiembed(self, title) -> discord.Embed:
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.url = "https://wiki.ds-homebrew.com/"
         return embed
 
-    async def read_faq(self, ctx, console, arg, embed):
+    async def read_faq(self, ctx, console, arg, embed: discord.Embed):
         page = None
         r = await self.bot.session.get(f"https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/{console.lower()}/faq.md")
         if r.status == 200:
@@ -60,14 +60,15 @@ class FAQ(commands.Cog):
         field_description = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", field_description)  # Remove self-closing HTML
         embed.description = f"**{field_title}**"
         if len(embed.description) + len(field_description) > 650:
-            embed.description += f"{field_description[:650]}...\nClick the button below to view the whole content."
+            embed.description += f"{field_description[:650]}..."
+            embed.set_footer(text="Click the button below to view the whole content.")
         else:
             embed.description += field_description
 
         view = discord.ui.View(timeout=None).add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="View Page", url=embed.url))
         await ctx.send(embed=embed, view=view)
 
-    async def read_guide(self, ctx, arg, embed):
+    async def read_guide(self, ctx, arg, embed: discord.Embed):
         page = None
         r = await self.bot.session.get("https://raw.githubusercontent.com/cfw-guide/dsi.cfw.guide/master/docs/faq.md")
         if r.status == 200:
@@ -101,7 +102,8 @@ class FAQ(commands.Cog):
         field_description = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", field_description)  # Remove self-closing HTML
         embed.description = f"**{field_title}**"
         if len(embed.description) + len(field_description) > 650:
-            embed.description += f"{field_description[:650]}...\nClick the button below to view the whole content."
+            embed.description += f"{field_description[:650]}..."
+            embed.set_footer(text="Click the button below to view the whole content.")
         else:
             embed.description += field_description
 
