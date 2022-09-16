@@ -19,8 +19,6 @@ class FAQ(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    descriptionMaxSize = 750
-
     def wikiembed(self, title):
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew Wiki")
@@ -61,11 +59,13 @@ class FAQ(commands.Cog):
         field_description = re.sub("<.*?>(.*?)</.*?>", "\\1", field_description)  # Remove other HTML
         field_description = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", field_description)  # Remove self-closing HTML
         embed.description = f"**{field_title}**"
-        if len(embed.description) + len(field_description) > self.descriptionMaxSize:
-            embed.description += "\nSee linked page for details."
+        if len(embed.description) + len(field_description) > 650:
+            embed.description += f"{field_description[:650]}...\nClick the button below to view the whole content."
         else:
             embed.description += field_description
-        await ctx.send(embed=embed)
+
+        view = discord.ui.View(timeout=None).add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="View Page", url=embed.url))
+        await ctx.send(embed=embed, view=view)
 
     async def read_guide(self, ctx, arg, embed):
         page = None
@@ -100,11 +100,13 @@ class FAQ(commands.Cog):
         field_description = re.sub("<.*?>(.*?)</.*?>", "\\1", field_description)  # Remove other HTML
         field_description = re.sub("<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr).*?>", "[\\1]", field_description)  # Remove self-closing HTML
         embed.description = f"**{field_title}**"
-        if len(embed.description) + len(field_description) > self.descriptionMaxSize:
-            embed.description += "\nSee linked page for details."
+        if len(embed.description) + len(field_description) > 650:
+            embed.description += f"{field_description[:650]}...\nClick the button below to view the whole content."
         else:
             embed.description += field_description
-        await ctx.send(embed=embed)
+
+        view = discord.ui.View(timeout=None).add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="View Page", url=embed.url))
+        await ctx.send(embed=embed, view=view)
 
     def read_glossary(self, file, iter):
         line = file[iter]
