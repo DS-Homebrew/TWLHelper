@@ -19,11 +19,7 @@
     },
 
     "THREAD": {
-        "TWLUPDATES": null,
-        "NDSBUPDATES": null,
-        "WEBUPDATES": null,
-        "DXUPDATES": null,
-        "MISCUPDATES": null
+        "DXUPDATES": null
     },
 
     "GSPREADKEY": null
