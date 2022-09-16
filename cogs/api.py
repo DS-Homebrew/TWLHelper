@@ -7,9 +7,10 @@
 import functools
 import json
 from datetime import datetime
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
 from urllib import parse
 
+import aiohttp
 import discord
 from discord.ext import commands, tasks
 from pytz import timezone
@@ -17,6 +18,9 @@ from rapidfuzz import process
 from re import findall
 
 from utils import ViewPages, web_name
+
+if TYPE_CHECKING:
+    from twlhelper import TWLHelper
 
 
 class UDBMenu(ViewPages):
@@ -65,9 +69,10 @@ class GbatekMenu(ViewPages):
 class API(commands.Cog):
     """Commands that access any API of sorts"""
 
-    def __init__(self, bot):
+    def __init__(self, bot: TWLHelper):
         self.bot = bot
         self.loop.start()
+        self.loop.add_exception_type(aiohttp.ContentTypeError)
 
     def cog_unload(self):
         self.loop.cancel()
@@ -80,9 +85,9 @@ class API(commands.Cog):
     @tasks.loop(hours=1)
     async def loop(self):
         await self.bot.wait_until_ready()
+        await self.update_netinfo()
         if self.bot.settings['GSPREADKEY']:
             await self.asyncDumpWorksheet()
-        await self.update_netinfo()
 
     # nds-bootstrap Compatibility list searching
     def dumpWorksheet(self):
@@ -455,5 +460,5 @@ class API(commands.Cog):
         await menu.start()
 
 
-async def setup(bot):
+async def setup(bot: TWLHelper):
     await bot.add_cog(API(bot))
