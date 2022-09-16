@@ -3,6 +3,7 @@
 #
 # SPDX-License-Identifier: ISC
 #
+from __future__ import annotations
 
 import functools
 import json
