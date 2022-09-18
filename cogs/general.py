@@ -387,7 +387,7 @@ your device will refuse to write to it.
         embed = discord.Embed(title="How to launch TWiLight Menu++ automatically with Unlaunch")
         embed.description = cleandoc("""
                                     In Unlaunch, select Options, then set `TWiLight Menu++` (`boot.nds`) as `No Button`.
-                                    If you do not know how to open Unlaunch, **turn off your DSi completely off**, \
+                                    If you do not know how to open Unlaunch, **turn your DSi completely off**, \
 **hold** `A` and `B` together and press power **while** holding said buttons.\n
                                     If done correctly, your DSi should automatically boot into TWiLight Menu++.
                                     """)
