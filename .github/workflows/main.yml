@@ -34,10 +34,10 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            ./reboot.sh
+            ./twlhelper-reboot.sh
             exit
           host: ${{ secrets.SSH_HOST }}
-          user: twlhelper
+          user: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
       - name: Send webhook on failure
         if: ${{ failure() }}
