@@ -38,6 +38,7 @@ class NoIntro(commands.Cog):
         Usage:
             .nicompare <gamecode> <sha1hash>
         """
+        sha1list = []
         for child in self.niroot:
             # skip the database header
             if child.tag == "header":
@@ -45,11 +46,14 @@ class NoIntro(commands.Cog):
             if "serial" not in child[1].attrib:
                 continue
             if child[1].attrib["serial"] == gamecode.upper():
-                if child[1].attrib['sha1'] == sha1hash:
-                    return await ctx.send("This ROM is valid.")
-                else:
-                    return await ctx.send("This ROM is invalid. This may mean that you may have trimmed this ROM, the ROM is corrupt, or it is a ROM hack.")
-        await ctx.send("ROM not found. Is the game code correct?")
+                if "sha1" in child[1].attrib:
+                    sha1list.append(child[1].attrib["sha1"])
+        if not sha1list:
+            return await ctx.send("ROM not found. Is the game code correct?")
+        if sha1hash in sha1list:
+            return await ctx.send("This ROM is valid.")
+        else:
+            return await ctx.send("This ROM is invalid. This may mean that you may have trimmed this ROM, the ROM is corrupt, or it is a ROM hack.")
 
 
 async def setup(bot):
