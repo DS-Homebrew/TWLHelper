@@ -20,8 +20,14 @@ class NoIntro(commands.Cog):
 
     def __init__(self, bot):
         self.bot: TWLHelper = bot
-        self.nitree = ET.parse('no-intro.dat')
-        self.niroot = self.nitree.getroot()
+        if self.bot.settings["NOINTRO"] is not None:
+            self.nitree = ET.parse('no-intro.dat')
+            self.niroot = self.nitree.getroot()
+
+    async def cog_check(self, ctx):
+        if self.bot.settings["NOINTRO"] is None:
+            raise commands.CheckFailure()
+        return True
 
     @commands.command()
     async def nicompare(self, ctx, gamecode: str, sha1hash: str):

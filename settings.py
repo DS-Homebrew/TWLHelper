@@ -19,6 +19,7 @@ def loadSettings() -> Dict[str, Any]:
     ret['PREFIX'] = [x for x in settings['DEFAULT']['PREFIX']]
     ret['STATUS'] = settings['DEFAULT']['STATUS']
     ret['GSPREADKEY'] = settings.get('GSPREADKEY')
+    ret['NOINTRO'] = settings.get('NOINTRO')
 
     # server specifics
     ret['GUILD'] = settings.get('GUILD')
