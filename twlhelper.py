@@ -71,7 +71,7 @@ class TWLHelper(commands.Bot):
             await self.load_extension("jishaku")
             log.info("Loaded cog jishaku")
         except Exception as e:
-            log.exception(f"Failed to load cog {jishaku}\n{type(e).__name__}", exc_info=e)
+            log.exception(f"Failed to load cog jishaku\n{type(e).__name__}", exc_info=e)
 
     async def close(self):
         await self.session.close()
