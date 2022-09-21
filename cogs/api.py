@@ -162,7 +162,7 @@ class API(commands.Cog):
             return await ctx.send(embed=embed)
 
         tid = len(title) == 4
-        if tid and title[0] in ['H', 'Z', 'K']:
+        if tid and title[0].upper() in ['H', 'Z', 'K']:
             return await ctx.send("DSiWare compatibility is not supported. Please try another game, or visit the list directly.")
         with open("nbcompat.json", "r") as compatfile:
             compatlist = json.load(compatfile)
