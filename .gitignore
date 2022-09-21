@@ -1,6 +1,5 @@
 *.json
 *.xml
-*.dat
 ._*
 .DS_Store
 __pycache__
