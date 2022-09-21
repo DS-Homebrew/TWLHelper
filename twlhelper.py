@@ -66,7 +66,7 @@ class TWLHelper(commands.Bot):
                     await self.load_extension(cog)
                     log.info(f"Loaded cog cogs.{filename[:-3]}")
             except Exception as e:
-                log.exception(f"Failed to load cog {cog}\n{type(e).__name__}: {e}")
+                log.exception(f"Failed to load cog {cog}\n{type(e).__name__}", exc_info=e)
         try:
             await self.load_extension("jishaku")
             log.info("Loaded cog jishaku")
