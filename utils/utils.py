@@ -24,7 +24,6 @@ import discord
 from discord.ext import commands
 
 __all__ = ("create_error_embed",
-           "is_staff",
            "check_arg",
            "web_name",
            "build_wiki_embed")
@@ -50,12 +49,6 @@ def create_error_embed(exc: Any, *, ctx: Optional[commands.Context] = None, inte
 
     embed.add_field(name="Exception Type", value=exc.__class__.__name__)
     return embed
-
-
-def is_staff():
-    def predicate(ctx):
-        return any((role.id in ctx.bot.settings['staff_roles'] or role.name in ctx.bot.settings['staff_roles']) for role in ctx.message.author.roles) if not ctx.author == ctx.guild.owner else True
-    return commands.check(predicate)
 
 
 def check_arg(argument: str, arg) -> bool:
