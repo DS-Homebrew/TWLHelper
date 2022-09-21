@@ -23,5 +23,5 @@
     },
 
     "GSPREADKEY": null,
-    "NOINTRO": null
+    "NOINTRO": "no-intro.dat"
 }

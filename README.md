@@ -38,6 +38,10 @@ Each function and related commands will be disabled until the instructions are f
 - The GitHub cog pushes GitHub webhook updates into specific threads in the server.
     - In `settings.json`, set `GITHUBUPDATES` to the channel where the main GitHub webhook is set.
     - In `settings.json`, under `THREAD`, set values accordingly.
+- The NoIntro cog has commands related to searching the No-Intro database.
+    - For now, only Nintendo DS games are supported.
+    - In `settings.json`, set `NOINTRO` to the relative path of the database file.
+        - This is by default set to the pre-provided `no-intro.dat` file.
 
 ## License
 ```
@@ -65,3 +69,5 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 - [YourKalamity](https://github.com/YourKalamity): `convert.py` code used with permission
 - [LightSage's UDB-API](https://github.com/LightSage/UDB-API): fuzzy searching
     - Licensed under Apache 2.0. See source, or see http://www.apache.org/licenses/LICENSE-2.0.
+- No-Intro: Nintendo DS database
+    - All values were set to default when generating from the website.
