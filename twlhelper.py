@@ -54,6 +54,8 @@ class TWLHelper(commands.Bot):
         )
         if settings['GSPREADKEY'] is not None:
             self.gspread = gspread.service_account(filename=settings['GSPREADKEY'])
+        else:
+            log.warning("gspread key not found, disabling it")
 
     async def load_cogs(self):
         cog = ""
@@ -64,13 +66,12 @@ class TWLHelper(commands.Bot):
                     await self.load_extension(cog)
                     log.info(f"Loaded cog cogs.{filename[:-3]}")
             except Exception as e:
-                log.info(f"Failed to load cog {cog}\n{type(e).__name__}: {e}")
+                log.exception(f"Failed to load cog {cog}\n{type(e).__name__}: {e}")
         try:
-            cog = "jishaku"
             await self.load_extension("jishaku")
             log.info("Loaded cog jishaku")
         except Exception as e:
-            log.exception(f"Failed to load cog {cog}\n{type(e).__name__}", exc_info=e)
+            log.exception(f"Failed to load cog {jishaku}\n{type(e).__name__}", exc_info=e)
 
     async def close(self):
         await self.session.close()
@@ -83,10 +84,11 @@ class TWLHelper(commands.Bot):
                 member = g.get_member(user.id)
                 if member and any(role.id in self.settings['staff_roles'] for role in member.roles):
                     return True
+        log.info("Guild staff roles not set, bot owner set to default")
         return await super().is_owner(user)
 
     async def on_ready(self):
-        print("TWLHelper ready.")
+        log.info("TWLHelper ready.")
 
     async def on_command_error(self, ctx: commands.Context, exc: commands.CommandInvokeError):
         author = ctx.author
