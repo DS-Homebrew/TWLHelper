@@ -22,13 +22,13 @@ if TYPE_CHECKING:
 class NoIntroMenu(ViewPages):
     async def format_page(self, entry: Any):
         embed = discord.Embed()
-        embed.title = f"{entry['name']} ({entry['serial']})"
-        embed.add_field(name="Status", value=f"{entry['status'] if 'status' in entry else 'unverified'}", inline=False)
-        embed.add_field(name="CRC32", value=f"{entry['crc']}", inline=False)
-        embed.add_field(name="MD5", value=f"{entry['md5']}", inline=False)
-        embed.add_field(name="SHA1", value=f"{entry['sha1']}", inline=False)
-        if "sha256" in entry:
-            embed.add_field(name="SHA256", value=f"{entry['sha256']}", inline=False)
+        embed.title = f"{entry.attrib['name']} ({entry[1].attrib['serial']})"
+        embed.add_field(name="Status", value=f"{entry[1].attrib['status'] if 'status' in entry[1].attrib else 'unverified'}", inline=False)
+        embed.add_field(name="CRC32", value=f"{entry[1].attrib['crc']}", inline=False)
+        embed.add_field(name="MD5", value=f"{entry[1].attrib['md5']}", inline=False)
+        embed.add_field(name="SHA1", value=f"{entry[1].attrib['sha1']}", inline=False)
+        if "sha256" in entry[1].attrib:
+            embed.add_field(name="SHA256", value=f"{entry[1].attrib['sha256']}", inline=False)
         return embed
 
 
@@ -76,7 +76,7 @@ class NoIntro(commands.Cog):
         for child in self.niroot:
             if child.tag == "header":
                 continue
-            if child[1].attrib["name"] == name:
+            if child.attrib["name"] == name:
                 return child
         return None
 
@@ -88,20 +88,20 @@ class NoIntro(commands.Cog):
             if "serial" not in child[1].attrib:
                 continue
             if child[1].attrib["serial"] == arg.upper():
-                gamelist.append(child[1].attrib)
+                gamelist.append(child)
         return gamelist
 
     # This function is based on UDB-API, licensed Apache-2.0.
     # https://github.com/LightSage/UDB-API
     def search_name(self, arg):
         matchlist = []
-        game_names = [child[1].attrib["name"] for child in self.niroot if "name" in child[1].attrib]
+        game_names = [child.attrib["name"] for child in self.niroot if "name" in child.attrib]
         results = process.extract(arg, [g.lower() for g in game_names], processor=lambda a: a.lower())
         for _, score, idx in results:
             if score < 70:
                 continue
             game = self.getGameValues(game_names[idx])
-            matchlist.append(game[1].attrib)
+            matchlist.append(game)
         return matchlist
 
     @commands.command(usage="[title id|game name]")
