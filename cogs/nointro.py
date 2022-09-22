@@ -11,7 +11,7 @@ from typing import Any, Optional, TYPE_CHECKING
 
 import discord
 from discord.ext import commands
-from rapidfuzz import process
+from rapidfuzz import process, distance
 
 from utils import ViewPages
 
@@ -96,10 +96,8 @@ class NoIntro(commands.Cog):
     def search_name(self, arg):
         matchlist = []
         game_names = [child.attrib["name"] for child in self.niroot if "name" in child.attrib]
-        results = process.extract(arg, [g.lower() for g in game_names], processor=lambda a: a.lower())
+        results = process.extract(arg, [g.lower() for g in game_names], scorer=distance.Jaro.similarity, processor=lambda a: a.lower())
         for _, score, idx in results:
-            if score < 70:
-                continue
             game = self.getGameValues(game_names[idx])
             matchlist.append(game)
         return matchlist
