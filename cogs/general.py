@@ -399,6 +399,7 @@ your device will refuse to write to it.
         embed = discord.Embed(title="7-Zip")
         embed.url = "https://www.7-zip.org/"
         embed.description = "7-Zip is the recommended program for Windows users to use to extract .7z files, such as the one TWiLight Menu++ comes in.\nMost people should download the '64-bit x64' version."
+        await ctx.send(embed=embed)
 
 
 async def setup(bot):
