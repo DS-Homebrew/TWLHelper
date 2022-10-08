@@ -182,14 +182,6 @@ class Wiki(commands.Cog):
         embed.description = "How to create RAM Disks for using older homebrew with nds-bootstrap"
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["icons", "banner", "banners", "customicon", "customicons", "custombanner", "custombanners"])
-    async def icon(self, ctx):
-        """Links to the custom icons and banners page"""
-        embed = self.embed("How to Get custom Icons and Banners")
-        embed.url += "twilightmenu/how-to-get-custom-icons.html"
-        embed.description = "How to get custom icons and banners for TWiLight Menu++"
-        await ctx.send(embed=embed)
-
     @commands.command(aliases=["dlp", "downloadplay"])
     async def pictochat(self, ctx):
         """Links to the page for getting PictoChat and DS Download Play on the DS Classic Menu"""
