@@ -3,6 +3,7 @@ name: 'Push to main'
 on:
   push:
     branches: main
+  workflow_dispatch:
 
 jobs:
   build:
