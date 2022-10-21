@@ -482,9 +482,9 @@ class Convert(commands.Cog):
         else:
             await self.download_media_error(ctx, fileName)
 
-    @commands.command()
+    @commands.command(aliases=['border'])
     @software_exists(['grit'])
-    async def border(self, ctx, filelink=None):
+    async def gbaborder(self, ctx, filelink=None):
         """
         Converts an attacked, or linked, image file to GBARunner2 border format
         Returns the guide on how convert manually if no arguments are provided
