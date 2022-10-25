@@ -474,7 +474,7 @@ class API(commands.Cog):
         }
         if device.lower() not in devices:
             return await ctx.send("This device is not supported.")
-        async with self.bot.session.get(f"https://mkey.api.hansol.ca/{devices[device.lower()]}/{month}/{day}/{inquiry}") as r:
+        async with self.bot.session.get(f"https://mkey.api.hansol.ca/{devices[device.lower()]}/{inquiry}/{month}/{day}") as r:
             if r.status == 200:
                 ret = await r.json()
                 return await ctx.send(f'Your key is {ret["key"]}.')
