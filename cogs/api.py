@@ -469,7 +469,8 @@ class API(commands.Cog):
         devices = {
             "3ds": "CTR",
             "dsi": "TWL",
-            "wii": "RVL"
+            "wii": "RVL",
+            "wiiu": "WUP"
         }
         if device.lower() not in devices:
             return await ctx.send("This device is not supported.")
