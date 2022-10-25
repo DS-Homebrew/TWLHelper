@@ -460,6 +460,26 @@ class API(commands.Cog):
         menu = GbatekMenu(links, ctx)
         await menu.start()
 
+    @commands.command()
+    async def mkey(self, ctx, device: str, month: int, day: int, inquiry: str):
+        """
+        Generate an mkey for given device.
+        Usage: `generatemkey <3ds|dsi|wii> <month> <day> <inquiry (no space)>`
+        """
+        devices = {
+            "3ds": "CTR",
+            "dsi": "TWL",
+            "wii": "RVL"
+        }
+        if device.lower() not in devices:
+            return await ctx.send("This device is not supported.")
+        async with self.bot.session.get(f"https://mkey.api.hansol.ca/{devices[device.lower()]}/{month}/{day}/{inquiry}") as r:
+            if r.status == 200:
+                ret = await r.json()
+                return await ctx.send(f'Your key is {ret["key"]}.')
+            else:
+                return await ctx.send(f"API returned error {r.status}. Please try again later.")
+
 
 async def setup(bot: TWLHelper):
     await bot.add_cog(API(bot))
