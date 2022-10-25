@@ -460,8 +460,8 @@ class API(commands.Cog):
         menu = GbatekMenu(links, ctx)
         await menu.start()
 
-    @commands.command()
-    async def mkey(self, ctx, device: str, month: int, day: int, inquiry: str):
+    @commands.command(aliases=['mkey'])
+    async def generatemkey(self, ctx, device: str, month: int, day: int, inquiry: str):
         """
         Generate an mkey for given device.
         Usage: `generatemkey <3ds|dsi|wii> <month> <day> <inquiry (no space)>`
