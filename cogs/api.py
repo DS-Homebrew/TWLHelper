@@ -461,25 +461,33 @@ class API(commands.Cog):
         await menu.start()
 
     @commands.command(aliases=['mkey'])
-    async def generatemkey(self, ctx, device: str, month: int, day: int, inquiry: str):
+    async def generatemkey(self, ctx, device: str, month: int, day: int, inquiry: str, deviceid: Optional[str] = None):
         """
         Generate an mkey for given device.
-        Usage: `generatemkey <3ds|dsi|wii> <month> <day> <inquiry (no space)>`
+        Usage: `mkey <3ds|dsi|wii|wiiu|switch> <month> <day> <inquiry (no space)> <deviceid (switch 8.0+ only)>`
         """
         devices = {
             "3ds": "CTR",
             "dsi": "TWL",
             "wii": "RVL",
-            "wiiu": "WUP"
+            "wiiu": "WUP",
+            "ns": "HAC",
+            "nx": "HAC",
+            "switch": "HAC"
         }
+        if deviceid:
+            await ctx.message.delete()
         if device.lower() not in devices:
-            return await ctx.send("This device is not supported.")
-        async with self.bot.session.get(f"https://mkey.eiphax.tech/{devices[device.lower()]}/{inquiry}/{month}/{day}") as r:
+            return await ctx.send(f'{ctx.author.mention} This device is not supported. Valid options are: {", ".join(i for i in devices)}')
+        apicall = f"https://mkey.eiphax.tech/{devices[device.lower()]}/{inquiry}/{month}/{day}"
+        if deviceid:
+            apicall += f"?aux={deviceid}"
+        async with self.bot.session.get(apicall) as r:
             if r.status == 200:
                 ret = await r.json()
-                return await ctx.send(f'Your key is {ret["key"]}.')
+                return await ctx.send(f'{ctx.author.mention} Your key is {ret["key"]}.')
             else:
-                return await ctx.send(f"API returned error {r.status}. Please try again later.")
+                return await ctx.send(f'{ctx.author.mention} API returned error {r.status}. Please check your values and try again.')
 
 
 async def setup(bot: TWLHelper):
