@@ -204,6 +204,17 @@ class General(commands.Cog):
         embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, tap the center icon\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=["dsimenulaunch"])
+    async def homemenulaunch(self, ctx):
+        """How to launch the DSi Menu / 3DS HOME Menu from TWiLight Menu++"""
+        embed = discord.Embed(title="How to launch the DSi Menu / 3DS HOME Menu from TWiLight Menu++")
+        embed.description = "To launch the DSi Menu / 3DS HOME Menu via TWiLight Menu++, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
+        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher theme", value=cleandoc("""Press the SELECT button\n- If you are met with a list of options, select **DSi Menu** / **3DS HOME Menu**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below"""), inline=False)
+        embed.add_field(name="DS Classic Menu", value=cleandoc("""Press X"""), inline=False)
+        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the HOME icon at the top-right corner of the touchscreen"""), inline=False)
+        embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, press B\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
+        await ctx.send(embed=embed)
+
     @commands.command(aliases=["sd-card-setup", "sdformat"])
     async def formatsd(self, ctx):
         """Displays an embed with a link that tells you how to properly format your SD card"""
