@@ -479,10 +479,10 @@ class API(commands.Cog):
             await ctx.message.delete()
         if device.lower() not in devices:
             return await ctx.send(f'{ctx.author.mention} This device is not supported. Valid options are: {", ".join(i for i in devices)}')
-        apicall = f"https://mkey.eiphax.tech/?platform={devices[device.lower()]}&inquiry={inquiry}&month={month}&day={day}"
+        apicall = f"https://mkey.eiphax.tech/api?platform={devices[device.lower()]}&inquiry={inquiry}&month={month}&day={day}"
         if deviceid:
             apicall += f"&aux={deviceid}"
-        async with self.bot.session.get(apicall, headers={"Content-Type": "application/json"}) as r:
+        async with self.bot.session.get(apicall) as r:
             if r.status == 200:
                 ret = await r.json()
                 return await ctx.send(f'{ctx.author.mention} Your key is {ret["key"]}.')
