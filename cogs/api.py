@@ -80,8 +80,7 @@ class NetInfoManager(discord.ui.View):
         return True
 
     async def on_timeout(self) -> None:
-        self.clear_items()
-        await self.ctx.message.edit(view=self)
+        await self.ctx.message.edit(view=None)
 
     @discord.ui.button(label="Refresh", emoji="\N{CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS}",
                        style=discord.ButtonStyle.blurple)
