@@ -67,28 +67,63 @@ class GbatekMenu(ViewPages):
         return embed
 
 
+class NetInfoManager(discord.ui.View):
+    def __init__(self, ctx: commands.Context, *, timeout: Optional[float] = 180):
+        super().__init__(timeout=timeout)
+        self.ctx = ctx
+        self.cog: API = ctx.cog  # type: ignore
+
+    async def interaction_check(self, interaction: discord.Interaction, /) -> bool:
+        if interaction.user.id != self.ctx.author.id:
+            await interaction.response.send_message("This view is not for you!", ephemeral=True)
+            return False
+        return True
+
+    @discord.ui.button(label="Refresh", emoji="\N{CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS}")
+    async def refresh_button(self, itx: discord.Interaction, button: discord.ui.Button):
+        try:
+            await self.cog.update_netinfo()
+        except Exception as e:
+            await itx.response.send_message(f"An exception occurred refreshing netinfo:\n{e}", ephemeral=True)
+
+        await itx.edit_original_response(embed=self.cog.netinfo_embed)
+        await itx.response.send_message("Refreshed netinfo!", ephemeral=True)
+
+
+def gspreadkey_exists():
+    def predicate(ctx):
+        return ctx.bot.settings['GSPREADKEY'] is not None
+    return commands.check(predicate)
+
+
 class API(commands.Cog):
     """Commands that access any API of sorts"""
 
     def __init__(self, bot: TWLHelper):
         self.bot = bot
-        self.loop.start()
-        self.loop.add_exception_type(aiohttp.ContentTypeError)
+        if bot.settings['GSPREADKEY']:
+            self.loop.start()
+
+        # Netinfo
+        self.netinfo_task.add_exception_type(aiohttp.ContentTypeError)
+        self.netinfo_task.start()
 
     def cog_unload(self):
+        self.netinfo_task.stop()
         self.loop.cancel()
 
-    def gspreadkey_exists():
-        def predicate(ctx):
-            return ctx.bot.settings['GSPREADKEY'] is not None
-        return commands.check(predicate)
+    @tasks.loop(minutes=20)
+    async def netinfo_task(self) -> None:
+        await self.update_netinfo()
+
+    @netinfo_task.before_loop
+    async def before_netinfo_task(self):
+        await self.bot.wait_until_ready()
 
     @tasks.loop(hours=1)
     async def loop(self):
         await self.bot.wait_until_ready()
-        await self.update_netinfo()
-        if self.bot.settings['GSPREADKEY']:
-            await self.asyncDumpWorksheet()
+        await self.asyncDumpWorksheet()
 
     # nds-bootstrap Compatibility list searching
     def dumpWorksheet(self):
@@ -232,12 +267,18 @@ class API(commands.Cog):
                     embed.add_field(name=entry_name, value=entry_desc, inline=False)
         if len(embed.fields) == 0:
             embed.description = "No ongoing or upcoming maintenances."
+
         self.netinfo_embed = embed
 
     @commands.command()
     async def netinfo(self, ctx):
         """Shows the Nintendo Network status information"""
-        await ctx.send(embed=self.netinfo_embed)
+        if await self.bot.is_owner(ctx.author):
+            view = NetInfoManager(ctx)
+        else:
+            view = None
+
+        await ctx.send(embed=self.netinfo_embed, view=view)
 
     async def request(self, url: str):
         async with self.bot.session.get(url) as r:
