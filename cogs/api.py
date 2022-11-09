@@ -79,6 +79,10 @@ class NetInfoManager(discord.ui.View):
             return False
         return True
 
+    async def on_timeout(self) -> None:
+        self.clear_items()
+        await self.ctx.message.edit(view=self)
+
     @discord.ui.button(label="Refresh", emoji="\N{CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS}",
                        style=discord.ButtonStyle.blurple)
     async def refresh_button(self, itx: discord.Interaction, button: discord.ui.Button):
@@ -268,7 +272,7 @@ class API(commands.Cog):
                         entry_name += ", " + ', '.join(entry["services"])
                     embed.add_field(name=entry_name, value=entry_desc, inline=False)
         if len(embed.fields) == 0:
-            embed.description = "No ongoing or upcoming maintenances."
+            embed.description = "No ongoing or upcoming maintenance."
 
         self.netinfo_embed = embed
 
