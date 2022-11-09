@@ -224,20 +224,21 @@ class API(commands.Cog):
         return timezone('US/Pacific').localize(datetime.strptime(' '.join(timestr.split()), '%A, %B %d, %Y %I :%M %p')).astimezone(timezone('UTC'))
 
     async def update_netinfo(self):
-        async with self.bot.session.get('https://www.nintendo.co.jp/netinfo/en_US/status.json?callback=getJSON', timeout=45) as r:
-            if r.status == 200:
-                # Nintendo likes to fuck up the json content type sometimes.
-                j = await r.json(content_type=None)
-            else:
-                self.netinfo_embed.description = "Failure when checking the Network Maintenance Information page."
-                return
-
         now = datetime.now(timezone('US/Pacific'))
 
         embed = discord.Embed(title="Network Maintenance Information / Online Status",
                               url="https://www.nintendo.co.jp/netinfo/en_US/index.html",
                               timestamp=now)
-        embed.set_footer(text="This information was last updated:")
+        embed.set_footer(text="This information was last fetched at")
+
+        async with self.bot.session.get('https://www.nintendo.co.jp/netinfo/en_US/status.json?callback=getJSON', timeout=45) as r:
+            if r.status == 200:
+                # Nintendo likes to fuck up the json content type sometimes.
+                j = await r.json(content_type=None)
+            else:
+                embed.description = "Failure when checking the Network Maintenance Information page."
+                self.netinfo_embed = embed
+                return
 
         for status_type in ("operational_statuses", "temporary_maintenances"):
             descriptor = "Maintenance" if status_type == "temporary_maintenances" else "Status"
