@@ -217,7 +217,7 @@ class API(commands.Cog):
                 if "begin" in entry:
                     begin = self.netinfo_parse_time(entry["begin"])
                     entry_desc += f"\nBegins: {discord.utils.format_dt(begin, style='F')}"
-                if "end" in entry:
+                if "end" in entry and entry["end"] is not None:
                     end = self.netinfo_parse_time(entry["end"])
                     entry_desc += f"\nEnds: {discord.utils.format_dt(end, style='F')}"
 
