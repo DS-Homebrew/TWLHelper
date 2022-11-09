@@ -29,7 +29,7 @@ class EmbedHelp(commands.MinimalHelpCommand):
         destination = self.get_destination()
         for page in self.paginator.pages:
             embed = discord.Embed(description=page)
-            embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/TWLHelper/main/assets/TWLHelper.png")
             await destination.send(embed=embed)
 
 
