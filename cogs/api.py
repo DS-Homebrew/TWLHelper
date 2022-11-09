@@ -79,15 +79,16 @@ class NetInfoManager(discord.ui.View):
             return False
         return True
 
-    @discord.ui.button(label="Refresh", emoji="\N{CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS}")
+    @discord.ui.button(label="Refresh", emoji="\N{CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS}",
+                       style=discord.ButtonStyle.blurple)
     async def refresh_button(self, itx: discord.Interaction, button: discord.ui.Button):
         try:
             await self.cog.update_netinfo()
         except Exception as e:
             await itx.response.send_message(f"An exception occurred refreshing netinfo:\n{e}", ephemeral=True)
 
-        await itx.edit_original_response(embed=self.cog.netinfo_embed)
         await itx.response.send_message("Refreshed netinfo!", ephemeral=True)
+        await self.ctx.message.edit(embed=self.cog.netinfo_embed)
 
 
 def gspreadkey_exists():
