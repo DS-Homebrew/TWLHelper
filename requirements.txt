@@ -1,6 +1,6 @@
 discord.py~=2.1.0
 feedparser~=6.0.10
-gspread~=5.7.1
+gspread~=5.7.2
 jishaku~=2.5.1
 markdownify~=0.11.6
 psutil~=5.9.4
