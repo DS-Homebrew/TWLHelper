@@ -311,7 +311,7 @@ class API(commands.Cog):
             url = f"https://udb-api.lightsage.dev/search/{parse.quote(application)}"
         try:
             resp = await self.request(url)
-        except CommandError as e:
+        except commands.CommandError as e:
             return await ctx.send(str(e))
         source = resp['results'] if type(resp) == dict else resp
         if not source:
@@ -373,7 +373,7 @@ class API(commands.Cog):
             url = f"https://twlmenu-extras.api.hansol.ca/search/{store_name}/{parse.quote(argument)}"
         try:
             resp = await self.request(url)
-        except CommandError as e:
+        except commands.CommandError as e:
             return await ctx.send(str(e))
         source = resp['results'] if type(resp) == dict else resp
         if not source:
