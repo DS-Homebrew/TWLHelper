@@ -309,7 +309,10 @@ class API(commands.Cog):
             url = "https://udb-api.lightsage.dev/random"
         else:
             url = f"https://udb-api.lightsage.dev/search/{parse.quote(application)}"
-        resp = await self.request(url)
+        try:
+            resp = await self.request(url)
+        except CommandError as e:
+            return await ctx.send(str(e))
         source = resp['results'] if type(resp) == dict else resp
         if not source:
             return await ctx.send("App not found. Please try again.")
@@ -368,7 +371,10 @@ class API(commands.Cog):
             url = f"https://twlmenu-extras.api.hansol.ca/random/{store_name}"
         else:
             url = f"https://twlmenu-extras.api.hansol.ca/search/{store_name}/{parse.quote(argument)}"
-        resp = await self.request(url)
+        try:
+            resp = await self.request(url)
+        except CommandError as e:
+            return await ctx.send(str(e))
         source = resp['results'] if type(resp) == dict else resp
         if not source:
             return await ctx.send("Skin not found. Please try again.")
