@@ -368,9 +368,9 @@ class API(commands.Cog):
         store_name = parse.quote(ctx.command.extras['store'])
 
         if argument.strip() == "-r":
-            url = f"https://twlmenu-extras.api.hansol.ca/random/{store_name}"
+            url = f"https://twlmenu-extras.hansol.ca/random/{store_name}"
         else:
-            url = f"https://twlmenu-extras.api.hansol.ca/search/{store_name}/{parse.quote(argument)}"
+            url = f"https://twlmenu-extras.hansol.ca/search/{store_name}/{parse.quote(argument)}"
         try:
             resp = await self.request(url)
         except commands.CommandError as e:
