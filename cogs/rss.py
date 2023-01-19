@@ -4,9 +4,10 @@
 # SPDX-License-Identifier: ISC
 #
 
-import os
 import datetime
 import functools
+import logging
+import os
 from hashlib import sha256
 from inspect import cleandoc
 from time import mktime
@@ -15,6 +16,9 @@ import discord
 import feedparser
 from discord.ext import tasks, commands
 from markdownify import markdownify
+
+
+log = logging.getLogger("bot")
 
 
 class RSS(commands.Cog):
@@ -49,14 +53,19 @@ class RSS(commands.Cog):
 
     async def getFeed(self, url: str, xml: str):
         async with self.bot.session.get(url) as resp:
-            raw_bytes = await resp.read()
+            raw_bytes = resp.read() if resp.status == 200 else None
+        if not raw_bytes:
+            log.info(f"{url} returned {resp.status}, skipping")
+            return None
         if not os.path.isfile(xml):
+            log.info(f"{url} polled for first time, will not send to channel")
             with open(xml, 'wb') as new:
                 new.write(raw_bytes)
-                return 1
+                return None
         with open(xml, 'rb') as f:
             if self.digest_check(raw_bytes, f.read()):
-                return 2
+                log.info(f"{url} has no new content, skipping")
+                return None
         with open(xml, 'r', encoding='utf-8') as f:
             feed = await self.asyncParseFeed(raw_bytes, f.read())
         with open(xml, 'wb') as f:
@@ -65,7 +74,7 @@ class RSS(commands.Cog):
 
     async def ninupdates(self):
         ninupdates = await self.getFeed('https://yls8.mtheall.com/ninupdates/feed.php', 'ninupdates.xml')
-        if isinstance(ninupdates, int):
+        if not ninupdates:
             return
 
         consoles = [
@@ -101,7 +110,7 @@ class RSS(commands.Cog):
 
     async def subreddit(self):
         ndsbrew = await self.getFeed('https://www.reddit.com/r/ndsbrew/.rss', 'ndsbrew.xml')
-        if isinstance(ndsbrew, int):
+        if not ndsbrew:
             return
 
         new_posts = []
