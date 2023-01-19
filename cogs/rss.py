@@ -53,7 +53,7 @@ class RSS(commands.Cog):
 
     async def getFeed(self, url: str, xml: str):
         async with self.bot.session.get(url) as resp:
-            raw_bytes = resp.read() if resp.status == 200 else None
+            raw_bytes = await resp.read() if resp.status == 200 else None
         if not raw_bytes:
             log.info(f"{url} returned {resp.status}, skipping")
             return None
