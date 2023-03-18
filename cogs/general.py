@@ -412,6 +412,16 @@ your device will refuse to write to it.
         embed.description = "7-Zip is the recommended program for Windows users to use to extract .7z files, such as the one TWiLight Menu++ comes in.\nMost people should download the '64-bit x64' version."
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def ysmenu(self, ctx):
+        """Links to RetroGameFan's YSMenu download page"""
+        embed = discord.Embed(title="RetroGameFan's YSMenu")
+        embed.url = "https://gbatemp.net/download/35737/"
+        embed.description = "Kernel for the DSTT family of flash cartridges"
+        embed.set_author(name="Yasu Software & RetroGameFan")
+        embed.set_thumbnail(url="https://gbatemp.net/data/avatars/l/221/221134.jpg?1570890734")
+        await ctx.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(General(bot))
