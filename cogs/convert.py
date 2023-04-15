@@ -228,7 +228,7 @@ class Convert(commands.Cog):
                 newFileName = f"downloads/senpai_converted_{time()}.gif"
                 outputtext = await ctx.send("`Converting to GIF...`")
                 try:
-                    maxcolors = 31 if any(dither in args for dither in ["-dither", "--dither", "-d"]) else 256
+                    maxcolors = 256 if any(dither in args for dither in ["-nodither", "--nodither", "-n"]) else 31
                     proc = await create_subprocess_exec("ffmpeg", "-y", "-i", fileName, "-filter_complex", f"color=black,format=rgb24[c];[c][0]scale2ref[c][i];[c][i]overlay=format=auto:shortest=1,setsar=1[o];[o]crop='if(gte(ih,iw*3/4),iw,if(gte(iw,ih*4/3),ih*4/3,ih))':'if(gte(ih,iw*3/4),iw*3/4,if(gte(iw,ih*4/3),ih,ih*3/4))',scale=256:192:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors={maxcolors}:reserve_transparent=0[p];[s1][p]paletteuse", "-frames", "1", newFileName)
                     await proc.wait()
                 except Exception:
@@ -292,7 +292,7 @@ class Convert(commands.Cog):
         elif fileName == 1:
             embed = self.embed("Custom Unlaunch Backgrounds")
             embed.url += "twilightmenu/custom-unlaunch-backgrounds.html"
-            embed.description = "How to make custom Unlaunch backgrounds and install them using TWiLight Menu++"
+            embed.description = "Run this command with an image attached or linked to convert it for use with Unlaunch. Use with `-nodither` to disable dithering.\n\nSee the above link for how to manually convert images in higher quality."
             return await ctx.send(embed=embed)
         else:
             await self.download_media_error(ctx, fileName)
