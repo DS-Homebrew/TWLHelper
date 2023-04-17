@@ -5,5 +5,5 @@ jishaku~=2.5.1
 markdownify~=0.11.6
 psutil~=5.9.4
 pytz~=2023.3
-rapidfuzz>=2.0.0,<3.0.0
+rapidfuzz>=2.0.0,<4.0.0
 yarl~=1.8.2
