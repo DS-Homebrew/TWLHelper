@@ -137,13 +137,13 @@ class API(commands.Cog):
         spreadsheet = retailds.get_all_values()
         if spreadsheet is None:
             return
-        f = open("nbcompat.json", "w")
+        f = open("data/nbcompat.json", "w")
         json.dump(spreadsheet, f)
         f.close()
         spreadsheet = testingqueue.get_all_values()
         if spreadsheet is None:
             return
-        f = open("nbcompat-fallback.json", "w")
+        f = open("data/nbcompat-fallback.json", "w")
         json.dump(spreadsheet, f)
         f.close()
 
@@ -203,14 +203,14 @@ class API(commands.Cog):
         tid = len(title) == 4
         if tid and title[0].upper() in ['H', 'Z', 'K']:
             return await ctx.send("DSiWare compatibility is not supported. Please try another game, or visit the list directly.")
-        with open("nbcompat.json", "r") as compatfile:
+        with open("data/nbcompat.json", "r") as compatfile:
             compatlist = json.load(compatfile)
         source = self.search_tid(title, compatlist, getlink=False) if tid else self.search_name(title, compatlist)
         if source:
             menu = NBCompatMenu(source, ctx)
             return await menu.start()
         else:
-            with open("nbcompat-fallback.json") as compatfile:
+            with open("data/nbcompat-fallback.json") as compatfile:
                 compatlist = json.load(compatfile)
             source = self.search_tid(title, compatlist, getlink=False) if tid else self.search_name(title, compatlist)
             if source:

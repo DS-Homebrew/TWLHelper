@@ -137,7 +137,7 @@ class TWLHelper(commands.Bot):
 
 async def main():
     # bot.log
-    discord.utils.setup_logging(handler=logging.FileHandler('bot.log', encoding='utf-8', mode='w'))
+    discord.utils.setup_logging(handler=logging.FileHandler('data/bot.log', encoding='utf-8', mode='w'))
     # Stream Handler
     discord.utils.setup_logging()
 

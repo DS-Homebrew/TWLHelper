@@ -73,7 +73,7 @@ class RSS(commands.Cog):
         return feed
 
     async def ninupdates(self):
-        ninupdates = await self.getFeed('https://yls8.mtheall.com/ninupdates/feed.php', 'ninupdates.xml')
+        ninupdates = await self.getFeed('https://yls8.mtheall.com/ninupdates/feed.php', 'data/ninupdates.xml')
         if not ninupdates:
             return
 
@@ -109,7 +109,7 @@ class RSS(commands.Cog):
         return await channel.send(embed=embed)
 
     async def subreddit(self):
-        ndsbrew = await self.getFeed('https://www.reddit.com/r/ndsbrew/.rss', 'ndsbrew.xml')
+        ndsbrew = await self.getFeed('https://www.reddit.com/r/ndsbrew/.rss', 'data/ndsbrew.xml')
         if not ndsbrew:
             return
 

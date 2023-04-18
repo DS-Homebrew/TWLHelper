@@ -38,7 +38,7 @@ class NoIntro(commands.Cog):
     def __init__(self, bot):
         self.bot: TWLHelper = bot
         if self.bot.settings["NOINTRO"] is not None:
-            self.nitree = ET.parse('no-intro.dat')
+            self.nitree = ET.parse('data/no-intro.dat')
             self.niroot = self.nitree.getroot()
 
     async def cog_check(self, ctx):

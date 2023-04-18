@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  twlhelper:
+    build: .
+    volumes:
+      - ./data:/home/twlhelper/data
+    secrets:
+      - twlhelper-settings
+
+secrets:
+  twlhelper-settings:
+    file: ./settings.json
