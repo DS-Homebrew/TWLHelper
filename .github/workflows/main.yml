@@ -36,3 +36,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ghcr.io/ds-homebrew/twlhelper:latest
+      - name: Reboot TWLHelper
+        run: |
+          curl -X POST ${{ secrets.JENKINS_BUILD }}
