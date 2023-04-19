@@ -422,6 +422,13 @@ your device will refuse to write to it.
         embed.set_thumbnail(url="https://gbatemp.net/data/avatars/l/221/221134.jpg?1570890734")
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def lazydsi(self, ctx):
+        """Tells you to stop trying to use it (and/or the vguide)"""
+        embed = discord.Embed(title="Lazy DSi Downloader is deprecated")
+        embed.description = "This application is deprecated. Please read the [guide](https://dsi.cfw.guide)."
+        await ctx.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(General(bot))
