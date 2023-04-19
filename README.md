@@ -43,6 +43,16 @@ Each function and related commands will be disabled until the instructions are f
     - In `settings.json`, set `NOINTRO` to the relative path of the database file.
         - This is by default set to the pre-provided `no-intro.dat` file.
 
+### Docker
+
+TWLHelper is also provided as a Docker container.
+
+How to use:
+1. Download `docker-compose-prod.yml` to a self-contained folder of your choice, rename it to `docker-compose.yml`
+1. Create a `data` folder (it should already exist if you previously cloned the repository)
+1. If you use the nds-bootstrap compatibility list feature, copy the `GSPREADKEY` file to the `data` folder, then set your `settings.json` accordingly
+1. Run `docker compose up -d`
+
 ## License
 ```
 ISC License
