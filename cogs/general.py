@@ -201,17 +201,6 @@ class General(commands.Cog):
                                 """, title="Fix broken TWL")
 
     @commands.command()
-    async def twlsettings(self, ctx):
-        """How to access TWiLight Menu++ Settings"""
-        embed = discord.Embed(title="How to access TWiLight Menu++ Settings")
-        embed.description = "To access TWiLight Menu++ settings, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
-        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher theme", value=cleandoc("""Press the SELECT button\n- If you are met with a list of options, select **TWLMenu++ Settings**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below"""), inline=False)
-        embed.add_field(name="DS Classic Menu", value=cleandoc("""Tap the small icon in the bottom center of the touchscreen"""), inline=False)
-        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the icon in the top left corner of the touchscreen"""), inline=False)
-        embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, press the SELECT button\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
-        await ctx.send(embed=embed)
-
-    @commands.command()
     async def twlmanual(self, ctx):
         """How to access TWiLight Menu++ Instruction Manual"""
         embed = discord.Embed(title="How to access TWiLight Menu++ Instruction Manual")
@@ -222,6 +211,20 @@ class General(commands.Cog):
         embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, tap the green book icon\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
         embed.add_field(name="Online", value=cleandoc("""The TWiLight Menu++ manual is also available online at https://manual.ds-homebrew.com."""), inline=False)
         await ctx.send(embed=embed)
+
+    @commands.command()
+    async def twlsettings(self, ctx):
+        """How to access TWiLight Menu++ Settings"""
+        title = "How to access TWiLight Menu++ Settings"
+        initDescription = "To access TWiLight Menu++ settings, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
+        themeSteps = {
+            "dsi": """Press the SELECT button\n- If you are met with a list of options, select **TWLMenu++ Settings**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below""",
+            "ds": """Tap the small icon in the bottom center of the touchscreen""",
+            "3ds": """Tap the icon in the top left corner of the touchscreen""",
+            "r4": """In the main menu, press the SELECT button\n- If you are in the file explorer, press the START button to return to the main menu"""
+        }
+        view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
+        await view.start()
 
     @commands.command()
     async def slot1launch(self, ctx):
@@ -240,13 +243,16 @@ class General(commands.Cog):
     @commands.command(aliases=["dsimenulaunch"])
     async def homemenulaunch(self, ctx):
         """How to launch the DSi Menu / 3DS HOME Menu from TWiLight Menu++"""
-        embed = discord.Embed(title="How to launch the DSi Menu / 3DS HOME Menu from TWiLight Menu++")
-        embed.description = "To launch the DSi Menu / 3DS HOME Menu via TWiLight Menu++, follow the instructions relative to the way TWiLight Menu++ is setup on your device.\n- If you are using a 3DS, you may also use the HOME Menu button directly below the touchscreen"
-        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher theme", value="Press the SELECT button\n- If you are met with a list of options, select **DSi Menu** / **3DS HOME Menu**\n- If the screen turns white and then you are met with a different menu, follow the instructions for \"**DS Classic Menu**\" below", inline=False)
-        embed.add_field(name="DS Classic Menu", value="Press X", inline=False)
-        embed.add_field(name="Nintendo 3DS theme", value="Tap the HOME icon at the top-right corner of the touchscreen", inline=False)
-        embed.add_field(name="R4 Original theme", value="In the main menu, press B\n- If you are in the file explorer, press the START button to return to the main menu", inline=False)
-        await ctx.send(embed=embed)
+        title = "How to launch the DSi Menu / 3DS HOME Menu from TWiLight Menu++"
+        initDescription = "To launch the DSi Menu / 3DS HOME Menu via TWiLight Menu++, follow the instructions relative to the way TWiLight Menu++ is setup on your device.\n- If you are using a 3DS, you may also use the HOME Menu button directly below the touchscreen"
+        themeSteps = {
+            "dsi": """Press the SELECT button\n- If you are met with a list of options, select **DSi Menu** / **3DS HOME Menu**\n- If the screen turns white and then you are met with a different menu, follow the instructions for \"**DS Classic Menu**\" below""",
+            "ds": """Press X""",
+            "3ds": """Tap the HOME icon at the top-right corner of the touchscreen""",
+            "r4": """In the main menu, press B\n- If you are in the file explorer, press the START button to return to the main menu"""
+        }
+        view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
+        await view.start()
 
     @commands.command(aliases=["sd-card-setup", "sdformat"])
     async def formatsd(self, ctx):
