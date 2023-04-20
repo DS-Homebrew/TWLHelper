@@ -39,6 +39,8 @@ class TWLMThemeMenu(CustomView):
             self.embed.add_field(name=title, value=cleandoc(text))
         else:
             self.embed.set_field_at(index=0, name=title, value=cleandoc(text))
+        if self.embed.description:
+            self.embed.description = None
         return
 
     @discord.ui.button(label="DSi/Saturn/HBL Theme")
