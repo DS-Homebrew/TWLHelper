@@ -25,6 +25,46 @@ class TWLMNightlyView(CustomView):
         await itx.response.send_message(cleandoc(message), ephemeral=True)
 
 
+class TWLMThemeMenu(CustomView):
+    def __init__(self, ctx, title, initDescription, themeSteps):
+        self.message: discord.Message = None
+        self.ctx = ctx
+        self.themeSteps = themeSteps
+        self.embed = discord.Embed(title=title)
+        self.embed.description = initDescription
+        super().__init__()
+
+    def edit_embed(self, title, text):
+        if not self.embed.fields:
+            self.embed.add_field(name=title, value=cleandoc(text))
+        else:
+            self.embed.set_field_at(index=0, name=title, value=cleandoc(text))
+        return
+
+    @discord.ui.button(label="DSi/Saturn/HBL Theme")
+    async def dsi_button(self, itx, button):
+        self.edit_embed("DSi/Saturn/HBL Theme", self.themeSteps["dsi"])
+        await itx.response.edit_message(embed=self.embed)
+
+    @discord.ui.button(label="DS Classic Menu")
+    async def ds_classic_button(self, itx, button):
+        self.edit_embed("DS Classic Menu", self.themeSteps["ds"])
+        await itx.response.edit_message(embed=self.embed)
+
+    @discord.ui.button(label="3DS Theme")
+    async def _3ds_button_text(self, itx, button):
+        self.edit_embed("3DS Theme", self.themeSteps["3ds"])
+        await itx.response.edit_message(embed=self.embed)
+
+    @discord.ui.button(label="R4 Theme")
+    async def r4_button_text(self, itx, button):
+        self.edit_embed("R4 Theme", self.themeSteps["r4"])
+        await itx.response.edit_message(embed=self.embed)
+
+    async def start(self):
+        self.message = await self.ctx.send(embed=self.embed, view=self)
+
+
 class General(commands.Cog):
     """
     General commands
@@ -186,13 +226,16 @@ class General(commands.Cog):
     @commands.command()
     async def slot1launch(self, ctx):
         """How to launch the Slot-1 Game Card from TWiLight Menu++"""
-        embed = discord.Embed(title="How to launch the Slot-1 Game Card from TWiLight Menu++")
-        embed.description = "To launch the Slot-1 cartridge via TWiLight Menu++, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
-        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher theme", value=cleandoc("""Press the SELECT button\n- If you are met with a list of options, select **Launch Slot-1 card**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below"""), inline=False)
-        embed.add_field(name="DS Classic Menu", value=cleandoc("""Tap the Slot-1 card on the center of the touchscreen"""), inline=False)
-        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the Game Card icon at the top of the touchscreen"""), inline=False)
-        embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, tap the center icon\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
-        await ctx.send(embed=embed)
+        title = "How to launch the Slot-1 Game Card from TWiLight Menu++"
+        initDescription = "To launch the Slot-1 cartridge via TWiLight Menu++, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
+        themeSteps = {
+            "dsi": """Press the SELECT button\n- If you are met with a list of options, select **Launch Slot-1 card**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below""",
+            "ds": """Tap the Slot-1 card on the center of the touchscreen""",
+            "3ds": """Tap the Game Card icon at the top of the touchscreen""",
+            "r4": """In the main menu, tap the center icon\n- If you are in the file explorer, press the START button to return to the main menu"""
+        }
+        view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
+        await view.start()
 
     @commands.command(aliases=["dsimenulaunch"])
     async def homemenulaunch(self, ctx):
