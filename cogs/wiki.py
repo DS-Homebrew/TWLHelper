@@ -36,7 +36,7 @@ class Wiki(commands.Cog):
     async def twilight_update(self, ctx):
         """TWiLight Menu update guide."""
         embed = self.embed("TWiLight Menu++ Update Guide")
-        embed.url = None  # lol
+        embed.url += "twilightmenu/updating.html"
         embed.description = "How to update TWiLight Menu++"
         view = CustomView()
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/updating-3ds.html"))
