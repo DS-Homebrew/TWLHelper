@@ -220,13 +220,19 @@ class Wiki(commands.Cog):
         await ctx.send(embed=embed)
 
     @bios.command(aliases=["ds", "dsi"])
-    async def nds(self, ctx):
-        """NDS BIOS Dumping"""
-        embed = discord.Embed(title="Dumping NDS BIOS")
-        embed.set_author(name="Arisotura")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/1311867?v=4")
-        embed.url = "http://melonds.kuribo64.net/faq.php"
-        embed.description = "How to dump the NDS BIOS from a DS, DSi or 3DS"
+    async def nds(self, ctx, arg=""):
+        """NDS BIOS Dumping
+        Usage: bios nds [nds, dsi, 3ds]"""
+        embed = self.embed("Dumping NDS BIOS")
+        embed.url += "ds-index/ds-bios-firmware-dump.html"
+        if check_arg(arg, ("nds", "3ds", "flashcard", "flashcart")):
+            embed.url += "?tab=flashcard"
+            embed.description = "How to dump the NDS BIOS and firmware from a DS, DSi or 3DS using a flashcard"
+        elif check_arg(arg, ("dsi",)):
+            embed.url += "?tab=dsi-sd-card"
+            embed.description = "How to dump the NDS and DSi BIOS and firmware from a DSi"
+        else:
+            embed.description = "How to dump the NDS and/or DSi BIOS and firmware"
         await ctx.send(embed=embed)
 
     @commands.command(aliases=['vp'])
