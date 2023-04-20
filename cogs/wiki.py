@@ -200,20 +200,17 @@ class Wiki(commands.Cog):
         """GBA BIOS Info/dump page.
         Usage: bios gba [nds, gba, 3ds, wii]"""
         embed = self.embed("GBA BIOS Info")
-        embed.url += "gbarunner2/bios.html"
-        embed.description = "Information on the GBA BIOS and how to dump it"
-        if check_arg(arg, ("nds", "gba", "flashcard", "flashcart")):
-            embed.title = "Dumping GBA BIOS from a DS"
-            embed.description = "Also dump from a GBA"
-            embed.url = "https://glazedbelmont.github.io/gbabiosdump/#gameboy-advance-sp-micro-ds-ds-lite.html"
-            embed.set_author(name="GlaZed Belmont")
-            embed.set_thumbnail(url="https://raw.githubusercontent.com/GlaZedBelmont/GlaZedBelmont.github.io/master/img/glazed.png")
+        if not arg:
+            embed.url += "gbarunner2/bios.html"
+            embed.description = "Information on the GBA BIOS and how to dump it"
+        elif check_arg(arg, ("nds", "gba", "flashcard", "flashcart")):
+            embed.title = "Dumping GBA BIOS from a DS or GBA"
+            embed.description = "Tutorial to dump a GBA BIOS using a GBA flashcart"
+            embed.url += "gbarunner2/bios-dump.html?tab=gba-flashcart"
         elif check_arg(arg, ("3ds",)):
             embed.title = "Dumping GBA BIOS from a 3DS"
             embed.description = "Tutorial to dump a GBA BIOS using open_agb_firm"
-            embed.url = "https://glazedbelmont.github.io/gbabiosdump/#virtual-console-title-from-a-3ds.html"
-            embed.set_author(name="GlaZed Belmont")
-            embed.set_thumbnail(url="https://raw.githubusercontent.com/GlaZedBelmont/GlaZedBelmont.github.io/master/img/glazed.png")
+            embed.url += "gbarunner2/bios-dump.html?tab=gba-flashcart"
         elif check_arg(arg, ("wii", "linkcable")):
             embed.title = "Dumping GBA BIOS from a Wii"
             embed.description = "How to dump a GBA BIOS from a Wii or GameCube"
