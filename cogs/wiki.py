@@ -9,7 +9,7 @@ import re
 
 from discord.ext import commands
 from typing import Optional
-from utils import check_arg, twilightmenu_alias
+from utils import CustomView, check_arg, twilightmenu_alias
 
 
 class Wiki(commands.Cog):
@@ -38,11 +38,11 @@ class Wiki(commands.Cog):
         embed = self.embed("TWiLight Menu++ Update Guide")
         embed.url = None  # lol
         embed.description = "How to update TWiLight Menu++"
-        view = discord.ui.View()
+        view = CustomView()
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/updating-3ds.html"))
         view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/updating-dsi.html"))
         view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/updating-flashcard.html"))
-        await ctx.send(embed=embed, view=view)
+        view.message = await ctx.send(embed=embed, view=view)
 
     @commands.command(aliases=["ds-index"])
     async def dsindex(self, ctx):

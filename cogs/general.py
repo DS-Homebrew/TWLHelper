@@ -9,16 +9,20 @@ from inspect import cleandoc
 import discord
 from discord.ext import commands
 
-from utils import (Literal, check_arg, ndsbootstrap_alias,
+from utils import (Literal, check_arg, CustomView, ndsbootstrap_alias,
                    twilightmenu_alias)
 
 
-class TWLMNightlyView(discord.ui.View):
+class TWLMNightlyView(CustomView):
+    def __init__(self, ctx):
+        self.ctx = ctx
+        super().__init__()
+
     @discord.ui.button(label="3DS")
     async def bcallback(self, itx, button):
-        message = "The latest nightly version of TWiLight Menu++ for 3DS can be downloaded from Universal Updater. \
-                   Select TWiLight Menu++, then install the [nightly] build."
-        await itx.response.send_message(message, ephemeral=True)
+        message = """The latest nightly version of TWiLight Menu++ for 3DS can be downloaded from Universal Updater.
+                     Select TWiLight Menu++, then install the [nightly] build."""
+        await itx.response.send_message(cleandoc(message), ephemeral=True)
 
 
 class General(commands.Cog):
@@ -86,11 +90,11 @@ class General(commands.Cog):
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.description = "How to install TWiLight Menu++"
-        view = discord.ui.View()
+        view = CustomView()
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html"))
         view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/installing-dsi.html"))
         view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"))
-        await ctx.send(embed=embed, view=view)
+        view.message = await ctx.send(embed=embed, view=view)
 
     @install.command(name="hiyacfw", aliases=["hiya"])
     async def hiyacfw_install(self, ctx):
@@ -123,10 +127,10 @@ class General(commands.Cog):
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.description = "How to uninstall TWiLight Menu++"
-        view = discord.ui.View()
+        view = CustomView()
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/uninstalling-3ds.html"))
         view.add_item(discord.ui.Button(label="DS & DSi", url="http://wiki.ds-homebrew.com/twilightmenu/uninstalling-ds.html"))
-        await ctx.send(embed=embed, view=view)
+        view.message = await ctx.send(embed=embed, view=view)
 
     @uninstall.command(name="unlaunch")
     async def unlaunch_uninstall(self, ctx):
@@ -247,10 +251,10 @@ class General(commands.Cog):
 
     @nightly.command(name="twilight", aliases=twilightmenu_alias)
     async def twilight_nightly(self, ctx, *, arg=""):
-        view = TWLMNightlyView()
+        view = TWLMNightlyView(ctx)
         view.add_item(discord.ui.Button(label="DSi", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-DSi.7z"))
         view.add_item(discord.ui.Button(label="Flashcard", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-Flashard.7z"))
-        await ctx.send(content="**TWiLight Menu++ nightly**\n\nPlease select your platform below.", view=view)
+        view.message = await ctx.send(content="**TWiLight Menu++ nightly**\n\nPlease select your platform below.", view=view)
 
     @nightly.command(name="ndsbootstrap", aliases=ndsbootstrap_alias)
     async def ndsbootstrap_nightly(self, ctx):
