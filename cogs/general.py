@@ -72,32 +72,17 @@ class General(commands.Cog):
         """Links and/or information on installing apps"""
         await ctx.send_help(ctx.command)
 
-    @install.command(name="twilight", aliases=twilightmenu_alias, usage="[3ds|ds|dsi|flashcard|flashcart]")
-    async def twilight_install(self, ctx, system: Literal("3ds", "dsi", "flashcard", "flashcart", "ds") = None):  # noqa
-        if not system:
-            embed = build_wiki_embed(title="TWiLight Menu++ Installation Guide")
-            embed.description = "**3DS**: https://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html\n"\
-                                "**DSi**: https://wiki.ds-homebrew.com/twilightmenu/installing-dsi.html\n"\
-                                "**Flashcards**: https://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"
-            await ctx.send(embed=embed)
-            return
-
+    @install.command(name="twilight", aliases=twilightmenu_alias)
+    async def twilight_install(self, ctx):
         embed = discord.Embed(title="TWiLight Menu++ Installation Guide")
         embed.set_author(name="DS-Homebrew Wiki")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/installing"
         embed.description = "How to install TWiLight Menu++"
-        if system == "3ds":
-            embed.url += "-3ds"
-            embed.description += " on the 3DS"
-        elif system == "dsi":
-            embed.url += "-dsi"
-            embed.description += " on the DSi"
-        elif system in ("flashcard", "flashcart", "ds"):
-            embed.url += "-flashcard"
-            embed.description += " on flashcards"
-        embed.url += ".html"
-        await ctx.send(embed=embed)
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html"))
+        view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/installing-dsi.html"))
+        view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"))
+        await ctx.send(embed=embed, view=view)
 
     @install.command(name="hiyacfw", aliases=["hiya"])
     async def hiyacfw_install(self, ctx):
