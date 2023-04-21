@@ -38,7 +38,7 @@ class Wiki(commands.Cog):
         embed = self.embed("TWiLight Menu++ Update Guide")
         embed.url += "twilightmenu/updating.html"
         embed.description = "How to update TWiLight Menu++"
-        view = CustomView()
+        view = discord.ui.View()
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/updating-3ds.html"))
         view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/updating-dsi.html"))
         view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/updating-flashcard.html"))

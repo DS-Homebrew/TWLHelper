@@ -9,7 +9,7 @@ from inspect import cleandoc
 import discord
 from discord.ext import commands
 
-from utils import (Literal, check_arg, CustomView, ndsbootstrap_alias,
+from utils import (Literal, build_wiki_embed, check_arg, CustomView, ndsbootstrap_alias,
                    twilightmenu_alias)
 
 
@@ -128,11 +128,9 @@ class General(commands.Cog):
 
     @install.command(name="twilight", aliases=twilightmenu_alias)
     async def twilight_install(self, ctx):
-        embed = discord.Embed(title="TWiLight Menu++ Installation Guide")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed = build_wiki_embed(title="TWiLight Menu++ Installation Guide", url="twilightmenu/installing.html")
         embed.description = "How to install TWiLight Menu++"
-        view = CustomView()
+        view = discord.ui.View()
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html"))
         view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/installing-dsi.html"))
         view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"))
@@ -165,11 +163,9 @@ class General(commands.Cog):
     @uninstall.command(name="twilight", aliases=twilightmenu_alias)
     async def twilight_uninstall(self, ctx):
         """Displays an embed with a link that tells you how to uninstall TWiLight Menu++ for a certain system."""
-        embed = discord.Embed(title="TWiLight Menu++ Uninstall Guide")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed = build_wiki_embed(title="TWiLight Menu++ Uninstall Guide", url="twlightmenu/uninstalling.html")
         embed.description = "How to uninstall TWiLight Menu++"
-        view = CustomView()
+        view = discord.ui.View()
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/uninstalling-3ds.html"))
         view.add_item(discord.ui.Button(label="DS & DSi", url="http://wiki.ds-homebrew.com/twilightmenu/uninstalling-ds.html"))
         view.message = await ctx.send(embed=embed, view=view)
