@@ -18,6 +18,8 @@ class Convert(commands.Cog):
     async def cog_check(self, ctx):
         if ctx.guild is None:
             raise commands.NoPrivateMessage()
+        if not self.bot.settings["GUILD"] or ctx.guild.id != self.bot.settings["GUILD"]:
+            raise commands.CheckFailure()
         return True
 
     def software_exists(apps: list):
