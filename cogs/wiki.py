@@ -20,21 +20,6 @@ class Wiki(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def read_rule(self, ctx, file, iter):
-        line = file[iter]
-        out = ""
-        iter += 1
-        while ("### " not in line and "## " not in line) or "####" in line:
-            out += '\n' + file[iter]
-            iter += 1
-            if iter < len(file):
-                line = file[iter]
-            else:
-                break
-        out = re.sub("#### (.*)", "**\\1**", out)
-        out = re.sub(r"\[#.+?\]\(.+?\\/(\d+)\)", "<#\\1>", out)
-        return out
-
     def embed(self, title):
         embed = discord.Embed(title=title)
         embed.set_author(name="DS-Homebrew Wiki")
@@ -107,24 +92,15 @@ class Wiki(commands.Cog):
         if not num:
             await ctx.send(embed=embed)
         else:
-            if num < 0 or num > 12:
-                return await ctx.send("Invalid rule number. Please try again.")
             page = None
-            r = await self.bot.session.get("https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/community/discord-rules.md")
-            if r.status == 200:
+            async with self.bot.session.get(f"https://raw.githubusercontent.com/DS-Homebrew/wiki/main/pages/_en-US/community/rules/{num}.md") as r:
+                if r.status == 404:
+                    return await ctx.send("Invalid rule number. Please try again.")
+                elif r.status != 200:
+                    return await ctx.send("Unable to fetch rules. Pleas try again later.")
                 page = await r.text()
-            numstr = str(num)
-            rulepage = page.splitlines()
-            message = ""
-            iter = 0
-            rulenum = "### " + numstr
-            for rule in rulepage:
-                iter += 1
-                if rulenum in rule.lower():
-                    message = "**Rule " + rule[4:] + "**\n"
-                    message += self.read_rule(ctx, rulepage, iter)
-                    break
-            await ctx.send(message, suppress_embeds=True)
+            page = re.sub("### (.*)", "**Rule \\1**", page)
+            await ctx.send(page, suppress_embeds=True)
 
     @commands.command(aliases=["discordinfo"])
     async def serverinfo(self, ctx):
