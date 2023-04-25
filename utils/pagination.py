@@ -15,20 +15,25 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
+from __future__ import annotations
 
-from typing import Any, Optional, Sequence
+from typing import TYPE_CHECKING, Any, Optional, Sequence
 
 import discord
 from discord.ext import commands
 
 from utils.utils import create_error_embed
 
+if TYPE_CHECKING:
+    from ..twlhelper import TWLHelper
+
 __all__ = ("CustomView", "ViewPages")
 
 
 class CustomView(discord.ui.View):
-    def __init__(self):
-        self.message: discord.Message = None
+    def __init__(self, ctx: commands.Context):
+        self.ctx: commands.Context[TWLHelper] = ctx
+        self.message: Optional[discord.Message] = None
         super().__init__(timeout=60)
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
@@ -51,10 +56,9 @@ class CustomView(discord.ui.View):
 # I would support other stuff than just embeds but this fine for now...
 class ViewPages(CustomView):
     def __init__(self, source: Sequence[Any], ctx: commands.Context):
-        self.ctx = ctx
         self.current_page = 0
         self._source = source
-        super().__init__()
+        super().__init__(ctx)
 
     async def format_page(self, entry: Any) -> discord.Embed:
         """A coroutine that allows you to format an entry.

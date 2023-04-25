@@ -3,14 +3,65 @@
 #
 # SPDX-License-Identifier: ISC
 #
+from __future__ import annotations
 
 from inspect import cleandoc
+from typing import Optional
 
 import discord
 from discord.ext import commands
 
-from utils import (Literal, build_wiki_embed, check_arg, ndsbootstrap_alias,
-                   twilightmenu_alias)
+from utils import (CustomView, Literal, build_wiki_embed, check_arg,
+                   ndsbootstrap_alias, twilightmenu_alias)
+
+
+class TWLMNightlyView(CustomView):
+    @discord.ui.button(label="3DS")
+    async def bcallback(self, itx, button):
+        message = """The latest nightly version of TWiLight Menu++ for 3DS can be downloaded from Universal Updater.
+                     Select TWiLight Menu++, then install the [nightly] build."""
+        await itx.response.send_message(cleandoc(message), ephemeral=True)
+
+
+class TWLMThemeMenu(CustomView):
+    def __init__(self, ctx, title, initDescription, themeSteps):
+        self.message: Optional[discord.Message] = None
+        self.themeSteps = themeSteps
+        self.embed = discord.Embed(title=title)
+        self.embed.description = initDescription
+        super().__init__(ctx)
+
+    def edit_embed(self, title, text):
+        if not self.embed.fields:
+            self.embed.add_field(name=title, value=cleandoc(text))
+        else:
+            self.embed.set_field_at(index=0, name=title, value=cleandoc(text))
+        if self.embed.description:
+            self.embed.description = None
+        return
+
+    @discord.ui.button(label="DSi/Saturn/HBL Theme")
+    async def dsi_button(self, itx, button):
+        self.edit_embed("DSi/Saturn/HBL Theme", self.themeSteps["dsi"])
+        await itx.response.edit_message(embed=self.embed)
+
+    @discord.ui.button(label="DS Classic Menu")
+    async def ds_classic_button(self, itx, button):
+        self.edit_embed("DS Classic Menu", self.themeSteps["ds"])
+        await itx.response.edit_message(embed=self.embed)
+
+    @discord.ui.button(label="3DS Theme")
+    async def _3ds_button_text(self, itx, button):
+        self.edit_embed("3DS Theme", self.themeSteps["3ds"])
+        await itx.response.edit_message(embed=self.embed)
+
+    @discord.ui.button(label="R4 Theme")
+    async def r4_button_text(self, itx, button):
+        self.edit_embed("R4 Theme", self.themeSteps["r4"])
+        await itx.response.edit_message(embed=self.embed)
+
+    async def start(self):
+        self.message = await self.ctx.send(embed=self.embed, view=self)
 
 
 class General(commands.Cog):
@@ -72,32 +123,15 @@ class General(commands.Cog):
         """Links and/or information on installing apps"""
         await ctx.send_help(ctx.command)
 
-    @install.command(name="twilight", aliases=twilightmenu_alias, usage="[3ds|ds|dsi|flashcard|flashcart]")
-    async def twilight_install(self, ctx, system: Literal("3ds", "dsi", "flashcard", "flashcart", "ds") = None):  # noqa
-        if not system:
-            embed = build_wiki_embed(title="TWiLight Menu++ Installation Guide")
-            embed.description = "**3DS**: https://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html\n"\
-                                "**DSi**: https://wiki.ds-homebrew.com/twilightmenu/installing-dsi.html\n"\
-                                "**Flashcards**: https://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"
-            await ctx.send(embed=embed)
-            return
-
-        embed = discord.Embed(title="TWiLight Menu++ Installation Guide")
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/installing"
+    @install.command(name="twilight", aliases=twilightmenu_alias)
+    async def twilight_install(self, ctx):
+        embed = build_wiki_embed(title="TWiLight Menu++ Installation Guide", url="twilightmenu/installing.html")
         embed.description = "How to install TWiLight Menu++"
-        if system == "3ds":
-            embed.url += "-3ds"
-            embed.description += " on the 3DS"
-        elif system == "dsi":
-            embed.url += "-dsi"
-            embed.description += " on the DSi"
-        elif system in ("flashcard", "flashcart", "ds"):
-            embed.url += "-flashcard"
-            embed.description += " on flashcards"
-        embed.url += ".html"
-        await ctx.send(embed=embed)
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html"))
+        view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/installing-dsi.html"))
+        view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"))
+        await ctx.send(embed=embed, view=view)
 
     @install.command(name="hiyacfw", aliases=["hiya"])
     async def hiyacfw_install(self, ctx):
@@ -123,24 +157,15 @@ class General(commands.Cog):
         """Links and/or information on uninstalling apps"""
         await ctx.send_help(ctx.command)
 
-    @uninstall.command(name="twilight", aliases=twilightmenu_alias, require_var_positional=True, usage="[3ds|dsi|ds]")
-    async def twilight_uninstall(self, ctx, system: Literal("3ds", "dsi", "ds", "flashcard", "flashcart")):  # noqa
+    @uninstall.command(name="twilight", aliases=twilightmenu_alias)
+    async def twilight_uninstall(self, ctx):
         """Displays an embed with a link that tells you how to uninstall TWiLight Menu++ for a certain system."""
-        embed = discord.Embed(title="TWiLight Menu++ Uninstall Guide")
-        embed.url = "https://wiki.ds-homebrew.com/twilightmenu/uninstalling"
-        embed.set_author(name="DS-Homebrew Wiki")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
+        embed = build_wiki_embed(title="TWiLight Menu++ Uninstall Guide", url="twlightmenu/uninstalling.html")
         embed.description = "How to uninstall TWiLight Menu++"
-
-        if check_arg(system, ("3ds",)):
-            embed.url += "-3ds"
-            embed.description += " on the 3DS"
-        elif check_arg(system, ("dsi", "flashcard", "flashcart", "ds")):
-            embed.url += "-ds"
-            embed.description += " on the DSi and/or flashcards"
-
-        embed.url += ".html"
-        await ctx.send(embed=embed)
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/uninstalling-3ds.html"))
+        view.add_item(discord.ui.Button(label="DS & DSi", url="http://wiki.ds-homebrew.com/twilightmenu/uninstalling-ds.html"))
+        await ctx.send(embed=embed, view=view)
 
     @uninstall.command(name="unlaunch")
     async def unlaunch_uninstall(self, ctx):
@@ -171,17 +196,6 @@ class General(commands.Cog):
                                 """, title="Fix broken TWL")
 
     @commands.command()
-    async def twlsettings(self, ctx):
-        """How to access TWiLight Menu++ Settings"""
-        embed = discord.Embed(title="How to access TWiLight Menu++ Settings")
-        embed.description = "To access TWiLight Menu++ settings, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
-        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher theme", value=cleandoc("""Press the SELECT button\n- If you are met with a list of options, select **TWLMenu++ Settings**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below"""), inline=False)
-        embed.add_field(name="DS Classic Menu", value=cleandoc("""Tap the small icon in the bottom center of the touchscreen"""), inline=False)
-        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the icon in the top left corner of the touchscreen"""), inline=False)
-        embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, press the SELECT button\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
-        await ctx.send(embed=embed)
-
-    @commands.command()
     async def twlmanual(self, ctx):
         """How to access TWiLight Menu++ Instruction Manual"""
         embed = discord.Embed(title="How to access TWiLight Menu++ Instruction Manual")
@@ -194,26 +208,46 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
+    async def twlsettings(self, ctx):
+        """How to access TWiLight Menu++ Settings"""
+        title = "How to access TWiLight Menu++ Settings"
+        initDescription = "To access TWiLight Menu++ settings, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
+        themeSteps = {
+            "dsi": """Press the SELECT button\n- If you are met with a list of options, select **TWLMenu++ Settings**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below""",
+            "ds": """Tap the small icon in the bottom center of the touchscreen""",
+            "3ds": """Tap the icon in the top left corner of the touchscreen""",
+            "r4": """In the main menu, press the SELECT button\n- If you are in the file explorer, press the START button to return to the main menu"""
+        }
+        view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
+        await view.start()
+
+    @commands.command()
     async def slot1launch(self, ctx):
         """How to launch the Slot-1 Game Card from TWiLight Menu++"""
-        embed = discord.Embed(title="How to launch the Slot-1 Game Card from TWiLight Menu++")
-        embed.description = "To launch the Slot-1 cartridge via TWiLight Menu++, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
-        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher theme", value=cleandoc("""Press the SELECT button\n- If you are met with a list of options, select **Launch Slot-1 card**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below"""), inline=False)
-        embed.add_field(name="DS Classic Menu", value=cleandoc("""Tap the Slot-1 card on the center of the touchscreen"""), inline=False)
-        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the Game Card icon at the top of the touchscreen"""), inline=False)
-        embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, tap the center icon\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
-        await ctx.send(embed=embed)
+        title = "How to launch the Slot-1 Game Card from TWiLight Menu++"
+        initDescription = "To launch the Slot-1 cartridge via TWiLight Menu++, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
+        themeSteps = {
+            "dsi": """Press the SELECT button\n- If you are met with a list of options, select **Launch Slot-1 card**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below""",
+            "ds": """Tap the Slot-1 card on the center of the touchscreen""",
+            "3ds": """Tap the Game Card icon at the top of the touchscreen""",
+            "r4": """In the main menu, tap the center icon\n- If you are in the file explorer, press the START button to return to the main menu"""
+        }
+        view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
+        await view.start()
 
     @commands.command(aliases=["dsimenulaunch"])
     async def homemenulaunch(self, ctx):
         """How to launch the DSi Menu / 3DS HOME Menu from TWiLight Menu++"""
-        embed = discord.Embed(title="How to launch the DSi Menu / 3DS HOME Menu from TWiLight Menu++")
-        embed.description = "To launch the DSi Menu / 3DS HOME Menu via TWiLight Menu++, follow the instructions relative to the way TWiLight Menu++ is setup on your device.\n- If you are using a 3DS, you may also use the HOME Menu button directly below the touchscreen"
-        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher theme", value="Press the SELECT button\n- If you are met with a list of options, select **DSi Menu** / **3DS HOME Menu**\n- If the screen turns white and then you are met with a different menu, follow the instructions for \"**DS Classic Menu**\" below", inline=False)
-        embed.add_field(name="DS Classic Menu", value="Press X", inline=False)
-        embed.add_field(name="Nintendo 3DS theme", value="Tap the HOME icon at the top-right corner of the touchscreen", inline=False)
-        embed.add_field(name="R4 Original theme", value="In the main menu, press B\n- If you are in the file explorer, press the START button to return to the main menu", inline=False)
-        await ctx.send(embed=embed)
+        title = "How to launch the DSi Menu / 3DS HOME Menu from TWiLight Menu++"
+        initDescription = "To launch the DSi Menu / 3DS HOME Menu via TWiLight Menu++, follow the instructions relative to the way TWiLight Menu++ is setup on your device.\n- If you are using a 3DS, you may also use the HOME Menu button directly below the touchscreen"
+        themeSteps = {
+            "dsi": """Press the SELECT button\n- If you are met with a list of options, select **DSi Menu** / **3DS HOME Menu**\n- If the screen turns white and then you are met with a different menu, follow the instructions for \"**DS Classic Menu**\" below""",
+            "ds": """Press X""",
+            "3ds": """Tap the HOME icon at the top-right corner of the touchscreen""",
+            "r4": """In the main menu, press B\n- If you are in the file explorer, press the START button to return to the main menu"""
+        }
+        view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
+        await view.start()
 
     @commands.command(aliases=["sd-card-setup", "sdformat"])
     async def formatsd(self, ctx):
@@ -260,26 +294,11 @@ class General(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @nightly.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_nightly(self, ctx, *, arg=""):
-        url = "https://github.com/TWLBot/Builds/raw/master/TWiLightMenu"
-        console = ""
-        if arg != "":
-            if check_arg(arg, ("3ds",)):
-                return await self.simple_embed(ctx, """
-                                                    The latest nightly version of TWiLight Menu++ for 3DS can be downloaded from Universal Updater. \
-                                                    Select TWiLight Menu++, then install the [nightly] build.
-                                                    """, title="TWiLight Menu++ nightly for 3DS")
-            elif check_arg(arg, ("dsi",)):
-                url += "-DSi"
-                console = "for DSi"
-            elif check_arg(arg, ("flashcard", "flashcart", "ds")):
-                url += "-Flashcard"
-                console = "for flashcards"
-        url += ".7z"
-        description = f"The latest nightly version of TWiLight Menu++ {console} can be found here: {url}"
-        if arg == "":
-            description += "\n\nOn the 3DS, this can be installed from Universal Updater. Select TWiLight Menu++, then install the [nightly] build."
-        await self.simple_embed(ctx, description, title=f"TWiLight Menu++ nightly {console}")
+    async def twilight_nightly(self, ctx):
+        view = TWLMNightlyView(ctx)
+        view.add_item(discord.ui.Button(label="DSi", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-DSi.7z"))
+        view.add_item(discord.ui.Button(label="Flashcard", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-Flashard.7z"))
+        view.message = await ctx.send(content="**TWiLight Menu++ nightly**\n\nPlease select your platform below.", view=view)
 
     @nightly.command(name="ndsbootstrap", aliases=ndsbootstrap_alias)
     async def ndsbootstrap_nightly(self, ctx):
@@ -288,34 +307,20 @@ class General(commands.Cog):
                         On the 3DS, this can be installed from Universal Updater. Select nds-bootstrap, then install the [nightly] build."
         await self.simple_embed(ctx, description, title="nds-bootstrap nightly")
 
-    @commands.group(aliases=["crowdin"], invoke_without_command=True, case_insensitive=True)
+    @commands.command(aliases=["crowdin"])
     async def translate(self, ctx):
         """Links to Crowdin projects"""
-        await ctx.send_help(ctx.command)
-
-    async def tlembed(self, ctx, title, extension):
-        embed = discord.Embed(title=title + " Crowdin Project")
-        embed.set_author(name="DS-Homebrew Wiki")
+        crowdin_baseurl = "https://crowdin.com/project"
+        embed = discord.Embed(title="DS(i) Mode Hacking! Crowdin Projects")
+        embed.set_author(name="DS-Homebrew")
         embed.set_thumbnail(url="https://support.crowdin.com/assets/logos/crowdin-white-symbol.png")
-        embed.description = "Help translate " + title + " on Crowdin."
-        embed.url = "https://crowdin.com/project/" + extension
-        await ctx.send(embed=embed)
-
-    @translate.command(aliases=twilightmenu_alias)
-    async def twilight(self, ctx):
-        await self.tlembed(ctx, "TWiLight Menu++", "TwilightMenu")
-
-    @translate.command(aliases=ndsbootstrap_alias)
-    async def ndsbootstrap(self, ctx):
-        await self.tlembed(ctx, "nds-bootstrap", "nds-bootstrap")
-
-    @translate.command(aliases=["skins", "ds-homebrew.com", "website"])
-    async def wiki(self, ctx):
-        await self.tlembed(ctx, "DS-Homebrew Wiki", "ds-homebrew-wiki")
-
-    @translate.command(aliases=["dsicfwguide", "dsi.cfw.guide"])
-    async def dsiguide(self, ctx):
-        await self.tlembed(ctx, "DSi Guide", "dsi-guide")
+        embed.description = "Help translate our projects on Crowdin."
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label="TWiLight Menu++", url=f"{crowdin_baseurl}/TwilightMenu"))
+        view.add_item(discord.ui.Button(label="nds-bootstrap", url=f"{crowdin_baseurl}/nds-bootstrap"))
+        view.add_item(discord.ui.Button(label="DS-Homebrew Wiki / Skins site", url=f"{crowdin_baseurl}/ds-homebrew-wiki"))
+        view.add_item(discord.ui.Button(label="DSi Guide", url=f"{crowdin_baseurl}/dsi-guide"))
+        await ctx.send(embed=embed, view=view)
 
     @commands.command(aliases=["colour"])
     async def color(self, ctx, *, color):

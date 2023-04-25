@@ -33,23 +33,16 @@ class Wiki(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @update.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_update(self, ctx, *, arg=""):
-        """TWiLight Menu update guide.
-        Usage: update twilight [3ds, dsi, ds]"""
+    async def twilight_update(self, ctx):
+        """TWiLight Menu update guide."""
         embed = self.embed("TWiLight Menu++ Update Guide")
-        embed.url += "twilightmenu/updating"
+        embed.url += "twilightmenu/updating.html"
         embed.description = "How to update TWiLight Menu++"
-        if check_arg(arg, ("3ds",)):
-            embed.url += "-3ds"
-            embed.description += " on the 3DS"
-        elif check_arg(arg, ("dsi",)):
-            embed.url += "-dsi"
-            embed.description += " on the DSi"
-        elif check_arg(arg, ("flashcard", "flashcart", "ds")):
-            embed.url += "-flashcard"
-            embed.description += " on flashcards"
-        embed.url += ".html"
-        await ctx.send(embed=embed)
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/updating-3ds.html"))
+        view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/updating-dsi.html"))
+        view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/updating-flashcard.html"))
+        await ctx.send(embed=embed, view=view)
 
     @commands.command(aliases=["ds-index"])
     async def dsindex(self, ctx):
