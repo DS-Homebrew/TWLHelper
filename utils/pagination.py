@@ -56,10 +56,9 @@ class CustomView(discord.ui.View):
 # I would support other stuff than just embeds but this fine for now...
 class ViewPages(CustomView):
     def __init__(self, source: Sequence[Any], ctx: commands.Context):
-        self.ctx = ctx
         self.current_page = 0
         self._source = source
-        super().__init__()
+        super().__init__(ctx)
 
     async def format_page(self, entry: Any) -> discord.Embed:
         """A coroutine that allows you to format an entry.
