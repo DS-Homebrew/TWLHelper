@@ -310,34 +310,20 @@ class General(commands.Cog):
                         On the 3DS, this can be installed from Universal Updater. Select nds-bootstrap, then install the [nightly] build."
         await self.simple_embed(ctx, description, title="nds-bootstrap nightly")
 
-    @commands.group(aliases=["crowdin"], invoke_without_command=True, case_insensitive=True)
+    @commands.command(aliases=["crowdin"])
     async def translate(self, ctx):
         """Links to Crowdin projects"""
-        await ctx.send_help(ctx.command)
-
-    async def tlembed(self, ctx, title, extension):
-        embed = discord.Embed(title=title + " Crowdin Project")
-        embed.set_author(name="DS-Homebrew Wiki")
+        crowdin_baseurl = "https://crowdin.com/project"
+        embed = discord.Embed(title="DS(i) Mode Hacking! Crowdin Projects")
+        embed.set_author(name="DS-Homebrew")
         embed.set_thumbnail(url="https://support.crowdin.com/assets/logos/crowdin-white-symbol.png")
-        embed.description = "Help translate " + title + " on Crowdin."
-        embed.url = "https://crowdin.com/project/" + extension
-        await ctx.send(embed=embed)
-
-    @translate.command(aliases=twilightmenu_alias)
-    async def twilight(self, ctx):
-        await self.tlembed(ctx, "TWiLight Menu++", "TwilightMenu")
-
-    @translate.command(aliases=ndsbootstrap_alias)
-    async def ndsbootstrap(self, ctx):
-        await self.tlembed(ctx, "nds-bootstrap", "nds-bootstrap")
-
-    @translate.command(aliases=["skins", "ds-homebrew.com", "website"])
-    async def wiki(self, ctx):
-        await self.tlembed(ctx, "DS-Homebrew Wiki", "ds-homebrew-wiki")
-
-    @translate.command(aliases=["dsicfwguide", "dsi.cfw.guide"])
-    async def dsiguide(self, ctx):
-        await self.tlembed(ctx, "DSi Guide", "dsi-guide")
+        embed.description = "Help translate our projects on Crowdin."
+        view = discord.ui.View()
+        view.add_item(discord.ui.Button(label="TWiLight Menu++", url=f"{crowdin_baseurl}/TwilightMenu"))
+        view.add_item(discord.ui.Button(label="nds-bootstrap", url=f"{crowdin_baseurl}/nds-bootstrap"))
+        view.add_item(discord.ui.Button(label="DS-Homebrew Wiki / Skins site", url=f"{crowdin_baseurl}/ds-homebrew-wiki"))
+        view.add_item(discord.ui.Button(label="DSi Guide", url=f"{crowdin_baseurl}/dsi-guide"))
+        await ctx.send(embed=embed, view=view)
 
     @commands.command(aliases=["colour"])
     async def color(self, ctx, *, color):
