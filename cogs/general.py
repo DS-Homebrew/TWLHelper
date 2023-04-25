@@ -297,7 +297,7 @@ class General(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @nightly.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_nightly(self, ctx, *, arg=""):
+    async def twilight_nightly(self, ctx):
         view = TWLMNightlyView(ctx)
         view.add_item(discord.ui.Button(label="DSi", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-DSi.7z"))
         view.add_item(discord.ui.Button(label="Flashcard", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-Flashard.7z"))
