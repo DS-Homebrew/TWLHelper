@@ -9,7 +9,7 @@ import re
 
 from discord.ext import commands
 from typing import Optional
-from utils import CustomView, check_arg, twilightmenu_alias
+from utils import check_arg, twilightmenu_alias
 
 
 class Wiki(commands.Cog):
