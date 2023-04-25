@@ -3,21 +3,19 @@
 #
 # SPDX-License-Identifier: ISC
 #
+from __future__ import annotations
 
 from inspect import cleandoc
+from typing import Optional
 
 import discord
 from discord.ext import commands
 
-from utils import (Literal, build_wiki_embed, check_arg, CustomView, ndsbootstrap_alias,
-                   twilightmenu_alias)
+from utils import (CustomView, Literal, build_wiki_embed, check_arg,
+                   ndsbootstrap_alias, twilightmenu_alias)
 
 
 class TWLMNightlyView(CustomView):
-    def __init__(self, ctx):
-        self.ctx = ctx
-        super().__init__()
-
     @discord.ui.button(label="3DS")
     async def bcallback(self, itx, button):
         message = """The latest nightly version of TWiLight Menu++ for 3DS can be downloaded from Universal Updater.
@@ -27,12 +25,11 @@ class TWLMNightlyView(CustomView):
 
 class TWLMThemeMenu(CustomView):
     def __init__(self, ctx, title, initDescription, themeSteps):
-        self.message: discord.Message = None
-        self.ctx = ctx
+        self.message: Optional[discord.Message] = None
         self.themeSteps = themeSteps
         self.embed = discord.Embed(title=title)
         self.embed.description = initDescription
-        super().__init__()
+        super().__init__(ctx)
 
     def edit_embed(self, title, text):
         if not self.embed.fields:
