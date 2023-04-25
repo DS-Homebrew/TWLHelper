@@ -134,7 +134,7 @@ class General(commands.Cog):
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html"))
         view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/installing-dsi.html"))
         view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"))
-        view.message = await ctx.send(embed=embed, view=view)
+        await ctx.send(embed=embed, view=view)
 
     @install.command(name="hiyacfw", aliases=["hiya"])
     async def hiyacfw_install(self, ctx):
@@ -168,7 +168,7 @@ class General(commands.Cog):
         view = discord.ui.View()
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/uninstalling-3ds.html"))
         view.add_item(discord.ui.Button(label="DS & DSi", url="http://wiki.ds-homebrew.com/twilightmenu/uninstalling-ds.html"))
-        view.message = await ctx.send(embed=embed, view=view)
+        await ctx.send(embed=embed, view=view)
 
     @uninstall.command(name="unlaunch")
     async def unlaunch_uninstall(self, ctx):

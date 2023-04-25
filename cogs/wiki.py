@@ -42,7 +42,7 @@ class Wiki(commands.Cog):
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/updating-3ds.html"))
         view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/updating-dsi.html"))
         view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/updating-flashcard.html"))
-        view.message = await ctx.send(embed=embed, view=view)
+        await ctx.send(embed=embed, view=view)
 
     @commands.command(aliases=["ds-index"])
     async def dsindex(self, ctx):
