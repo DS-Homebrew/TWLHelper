@@ -36,9 +36,6 @@ class CustomView(discord.ui.View):
         self.message: Optional[discord.Message] = None
         super().__init__(timeout=60)
 
-    async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        return self.ctx.author == interaction.user
-
     async def on_error(self, interaction: discord.Interaction, exc: Any, item: discord.ui.Item):
         exc = getattr(exc, 'original', exc)
         if isinstance(exc, discord.Forbidden):
@@ -59,6 +56,12 @@ class ViewPages(CustomView):
         self.current_page = 0
         self._source = source
         super().__init__(ctx)
+
+    async def interaction_check(self, interaction: discord.Interaction, /) -> bool:
+        if interaction.user.id != self.ctx.author.id:
+            await interaction.response.send_message("This view is not for you!", ephemeral=True)
+            return False
+        return True
 
     async def format_page(self, entry: Any) -> discord.Embed:
         """A coroutine that allows you to format an entry.
