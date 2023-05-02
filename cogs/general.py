@@ -160,7 +160,9 @@ class General(commands.Cog):
     @uninstall.command(name="twilight", aliases=twilightmenu_alias)
     async def twilight_uninstall(self, ctx):
         """Displays an embed with a link that tells you how to uninstall TWiLight Menu++ for a certain system."""
-        embed = build_wiki_embed(title="TWiLight Menu++ Uninstall Guide", url="twlightmenu/uninstalling.html")
+        embed = discord.Embed(title="TWiLight Menu++ Uninstall Guide")
+        embed.set_author(name="DS-Homebrew Wiki")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
         embed.description = "How to uninstall TWiLight Menu++"
         view = discord.ui.View()
         view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/uninstalling-3ds.html"))
