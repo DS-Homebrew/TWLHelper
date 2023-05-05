@@ -64,6 +64,75 @@ class TWLMThemeMenu(CustomView):
         self.message = await self.ctx.send(embed=self.embed, view=self)
 
 
+class NDSCardFlagCheck():
+    def __init__(self, inputFlags: int):
+        self.inputFlags = inputFlags
+
+    flags = {
+        "MCCNT1_LATENCY1_SHIFT": 0,
+        "MCCNT1_READ_DATA_DESCRAMBLE": (1 << 13),
+        "MCCNT1_CLOCK_SCRAMBLER": (1 << 14),
+        "MCCNT1_APPLY_SCRAMBLE_SEED": (1 << 15),
+        "MCCNT1_CMD_SCRAMBLE": (1 << 22),
+        "MCCNT1_DATA_READY": (1 << 23),
+        "MCCNT1_LEN_0":     (0 << 24),
+        "MCCNT1_LEN_512":   (1 << 24),
+        "MCCNT1_LEN_1024":  (2 << 24),
+        "MCCNT1_LEN_2048":  (3 << 24),
+        "MCCNT1_LEN_4096":  (4 << 24),
+        "MCCNT1_LEN_8192":  (5 << 24),
+        "MCCNT1_LEN_16384": (6 << 24),
+        "MCCNT1_LEN_4":     (7 << 24),
+        "MCCNT1_CLK_6_7_MHZ": (0 << 27),
+        "MCCNT1_CLK_4_2_MHZ": (1 << 27),
+        "MCCNT1_LATENCY_CLK": (1 << 28),
+        "MCCNT1_RESET_ON":  (0 << 29),
+        "MCCNT1_RESET_OFF": (1 << 29),
+        "MCCNT1_DIR_READ":  (0 << 30),
+        "MCCNT1_DIR_WRITE": (1 << 30),
+        "MCCNT1_ENABLE": (1 << 31)
+    }
+
+    def MCCNT1_LATENCY1(self, x):
+        return (x)
+
+    MCCNT1_LATENCY2_SHIFT = 16
+    MCCNT1_LATENCY2_MASK = 0x3F0000
+
+    def MCCNT1_LATENCY2(self, x) -> int:
+        return (((x) << self.MCCNT1_LATENCY2_SHIFT) & self.MCCNT1_LATENCY2_MASK)
+
+    def calculate(self) -> str:
+        inputFlags = self.inputFlags
+        result: int = 0
+
+        valid_flags = []
+
+        for i in reversed(self.flags):
+            if inputFlags & self.flags[i]:
+                valid_flags.append(i)
+                result |= self.flags[i]
+                inputFlags ^= self.flags[i]
+
+        for i in reversed(range(63)):
+            # Check equal instead of bitwise AND
+            # this u8 is dedicated entirely to latency2
+            if inputFlags == self.MCCNT1_LATENCY2(i):
+                valid_flags.append(f"MCCNT1_LATENCY2({i})")
+                result |= self.MCCNT1_LATENCY2(i)
+                inputFlags ^= self.MCCNT1_LATENCY2(i)
+                break
+
+        ret = ""
+        for i in valid_flags:
+            if valid_flags[-1] == i:
+                ret += f"{i}"
+            else:
+                ret += f"{i} | "
+
+        return ret
+
+
 class General(commands.Cog):
     """
     General commands
@@ -435,6 +504,14 @@ your device will refuse to write to it.
         embed = discord.Embed(title="Lazy DSi Downloader is deprecated")
         embed.description = "This application is deprecated. Please read the [guide](https://dsi.cfw.guide)."
         await ctx.send(embed=embed)
+
+    @commands.command()
+    async def cardflagcheck(self, ctx, inputFlags: str):
+        try:
+            card = NDSCardFlagCheck(int(inputFlags, 16))
+        except ValueError:
+            return await ctx.send("Input is not a valid hex number. Please try again.")
+        await ctx.send(f"0x{card.inputFlags:08X} = {card.calculate()}")
 
 
 async def setup(bot):
