@@ -96,9 +96,6 @@ class NDSCardFlagCheck():
         "MCCNT1_LEN_4":     (7 << 24),
     }
 
-    def MCCNT1_LATENCY1(self, x):
-        return (x)
-
     MCCNT1_LATENCY2_SHIFT = 16
     MCCNT1_LATENCY2_MASK = 0x3F0000
 
@@ -133,6 +130,15 @@ class NDSCardFlagCheck():
                 valid_flags.append(i)
                 result |= self.flags_length[i]
                 inputFlags ^= self.flags_length[i]
+                break
+
+        for i in reversed(range(0x1FFF)):
+            # Check equal instead of bitwise AND
+            # this u16 is dedicated entirely to latency1
+            if inputFlags & 0x1FFF == i:
+                valid_flags.append(f"MCCNT1_LATENCY1({i})")
+                result |= i
+                inputFlags ^= i
                 break
 
         ret = ""
