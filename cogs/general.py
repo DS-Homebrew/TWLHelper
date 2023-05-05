@@ -143,7 +143,7 @@ class NDSCardFlagCheck():
                 ret += f"{i} | "
 
         if inputFlags != 0:
-            ret += f"\nUnknown flags: {inputFlags}"
+            ret += f"\nUnknown flags: 0x{inputFlags:08X}"
 
         return ret
 
