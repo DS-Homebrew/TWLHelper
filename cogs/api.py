@@ -320,7 +320,7 @@ class API(commands.Cog):
         menu = UDBMenu(source, ctx)
         await menu.start()
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def skins(self, ctx):
         """Displays an embed with a link to a database of TWiLight Menu++ skins and Unlaunch backgrounds\n
         To show a random skin: `skins [console] -r`
@@ -512,7 +512,7 @@ class API(commands.Cog):
         menu = GbatekMenu(links, ctx)
         await menu.start()
 
-    @commands.command(aliases=['mkey'])
+    @commands.hybrid_command(aliases=['mkey'])
     async def generatemkey(self, ctx, device: str, month: int, day: int, inquiry: str, deviceid: Optional[str] = None):
         """
         Generate an mkey for given device.

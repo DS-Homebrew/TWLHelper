@@ -27,7 +27,7 @@ class Wiki(commands.Cog):
         embed.url = "https://wiki.ds-homebrew.com/"
         return embed
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def update(self, ctx):
         """Links and/or information on updating apps or system"""
         await ctx.send_help(ctx.command)
@@ -159,7 +159,7 @@ class Wiki(commands.Cog):
         embed.description = "How to get PictoChat and DS Download Play on the DS Classic Menu in TWiLight Menu++"
         await ctx.send(embed=embed)
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def bios(self, ctx):
         """BIOS info page"""
         await ctx.send_help(ctx.command)

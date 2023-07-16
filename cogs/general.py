@@ -208,7 +208,7 @@ class General(commands.Cog):
             embed.description = "The complete guide to modding your Nintendo DSi"
             await ctx.send(embed=embed)
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def install(self, ctx):
         """Links and/or information on installing apps"""
         await ctx.send_help(ctx.command)
@@ -242,7 +242,7 @@ class General(commands.Cog):
         embed.description = "How to install Unlaunch on the DSi"
         await ctx.send(embed=embed)
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def uninstall(self, ctx):
         """Links and/or information on uninstalling apps"""
         await ctx.send_help(ctx.command)
@@ -380,7 +380,7 @@ class General(commands.Cog):
                                     [Dumping DSiWare](https://dsi.cfw.guide/dsiware-backups.html)
                                     """, title="Dumping Games to ROM files")
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def nightly(self, ctx):
         """Instructions on installing nightly builds"""
         await ctx.send_help(ctx.command)
@@ -464,7 +464,7 @@ your device will refuse to write to it.
         embed.set_image(url="https://i.imgur.com/RvKjWcz.png")
         await ctx.send(embed=embed)
 
-    @commands.group(aliases=["flashcard", "flashcards", "flashcarts"], invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(aliases=["flashcard", "flashcards", "flashcarts"], invoke_without_command=True, case_insensitive=True)
     async def flashcart(self, ctx):
         """Links the r/flashcarts quick start guide for a given console"""
         await ctx.send_help(ctx.command)
