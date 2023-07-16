@@ -279,7 +279,7 @@ class General(commands.Cog):
         embed.description = "How to uninstall hiyaCFW on the DSi"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def twlfix(self, ctx):
         """Information on how to fix a broken TWL Partition"""
         await self.simple_embed(ctx, """
@@ -287,7 +287,7 @@ class General(commands.Cog):
                                 These instructions require that you **perform a system update** after running the app.
                                 """, title="Fix broken TWL")
 
-    @commands.command()
+    @commands.hybrid_command()
     async def twlmanual(self, ctx):
         """How to access TWiLight Menu++ Instruction Manual"""
         embed = discord.Embed(title="How to access TWiLight Menu++ Instruction Manual")
@@ -299,7 +299,7 @@ class General(commands.Cog):
         embed.add_field(name="Online", value=cleandoc("""The TWiLight Menu++ manual is also available online at https://manual.ds-homebrew.com."""), inline=False)
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def twlsettings(self, ctx):
         """How to access TWiLight Menu++ Settings"""
         title = "How to access TWiLight Menu++ Settings"
@@ -313,7 +313,7 @@ class General(commands.Cog):
         view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
         await view.start()
 
-    @commands.command()
+    @commands.hybrid_command()
     async def slot1launch(self, ctx):
         """How to launch the Slot-1 Game Card from TWiLight Menu++"""
         title = "How to launch the Slot-1 Game Card from TWiLight Menu++"
@@ -327,7 +327,7 @@ class General(commands.Cog):
         view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
         await view.start()
 
-    @commands.command(aliases=["dsimenulaunch"])
+    @commands.hybrid_command(aliases=["dsimenulaunch"])
     async def homemenulaunch(self, ctx):
         """How to launch the DSi Menu / 3DS HOME Menu from TWiLight Menu++"""
         title = "How to launch the DSi Menu / 3DS HOME Menu from TWiLight Menu++"
@@ -341,7 +341,7 @@ class General(commands.Cog):
         view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
         await view.start()
 
-    @commands.command(aliases=["sd-card-setup", "sdformat"])
+    @commands.hybrid_command(aliases=["sd-card-setup", "sdformat"])
     async def formatsd(self, ctx):
         """Displays an embed with a link that tells you how to properly format your SD card"""
         embed = discord.Embed(title="SD Card Setup")
@@ -351,7 +351,7 @@ class General(commands.Cog):
         embed.description = "How to properly format your SD card"
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["nanddump", "nandbackup"])
+    @commands.hybrid_command(aliases=["nanddump", "nandbackup"])
     async def nand(self, ctx):
         """Links to the NAND dumping guide"""
         embed = discord.Embed(title="Dumping NAND")
@@ -361,7 +361,7 @@ class General(commands.Cog):
         embed.description = "How to dump your DSi's NAND"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def vc(self, ctx):
         """Links to the 3DS Virtual Console Inject guide"""
         embed = discord.Embed(title="Virtual Console Injects for 3DS")
@@ -371,7 +371,7 @@ class General(commands.Cog):
         embed.description = "The recommended way to play old classics on your 3DS"
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def dump(self, ctx):
         """How to dump games and data for CFW consoles"""
         await self.simple_embed(ctx, text="""
@@ -399,7 +399,7 @@ class General(commands.Cog):
                         On the 3DS, this can be installed from Universal Updater. Select nds-bootstrap, then install the [nightly] build."
         await self.simple_embed(ctx, description, title="nds-bootstrap nightly")
 
-    @commands.command(aliases=["crowdin"])
+    @commands.hybrid_command(aliases=["crowdin"])
     async def translate(self, ctx):
         """Links to Crowdin projects"""
         crowdin_baseurl = "https://crowdin.com/project"
@@ -414,7 +414,7 @@ class General(commands.Cog):
         view.add_item(discord.ui.Button(label="DSi Guide", url=f"{crowdin_baseurl}/dsi-guide"))
         await ctx.send(embed=embed, view=view)
 
-    @commands.command(aliases=["colour"])
+    @commands.hybrid_command(aliases=["colour"])
     async def color(self, ctx, *, color):
         """Displays conversions of a color from #RRGGBB, #RGB, RRR GGG BBB, and BGR15"""
 
@@ -445,14 +445,14 @@ class General(commands.Cog):
         embed.add_field(name="BGR15", value=f"`0x{bgr15:04X}` `0x{bgr15 | 1 << 15:04X}`")
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def sdroot(self, ctx):
         """Displays an image that shows what a root is"""
         embed = discord.Embed()
         embed.set_image(url="https://media.discordapp.net/attachments/489307733074640926/756947922804932739/wherestheroot.png")
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def sdlock(self, ctx):
         """Tells you how to disable write protection on an SD Card"""
         embed = discord.Embed(title="Disable write protection on an SD Card")
@@ -489,7 +489,7 @@ your device will refuse to write to it.
         embed.set_thumbnail(url="https://b.thumbs.redditmedia.com/lBsOPXDyCx0p1MSx1qCdAtglHB4nineg5w9-3KHzO2A.png")
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["twlboot"])
+    @commands.hybrid_command(aliases=["twlboot"])
     async def dsiboot(self, ctx):
         """Tells you how to automatically boot TWiLight Menu++ with Unlaunch"""
         embed = discord.Embed(title="How to launch TWiLight Menu++ automatically with Unlaunch")
@@ -501,7 +501,7 @@ your device will refuse to write to it.
                                     """)
         await ctx.send(embed=embed)
 
-    @commands.command(name="7-zip", aliases=["7zip", "7z"])
+    @commands.hybrid_command(name="7-zip", aliases=["7zip", "7z"])
     async def sevenzip(self, ctx):
         """Links to the 7-Zip website"""
         embed = discord.Embed(title="7-Zip")
@@ -509,7 +509,7 @@ your device will refuse to write to it.
         embed.description = "7-Zip is the recommended program for Windows users to use to extract .7z files, such as the one TWiLight Menu++ comes in.\nMost people should download the '64-bit x64' version."
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def ysmenu(self, ctx):
         """Links to RetroGameFan's YSMenu download page"""
         embed = discord.Embed(title="RetroGameFan's YSMenu")
@@ -519,17 +519,17 @@ your device will refuse to write to it.
         embed.set_thumbnail(url="https://gbatemp.net/data/avatars/l/221/221134.jpg?1570890734")
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def lazydsi(self, ctx):
         """Tells you to stop trying to use it (and/or the vguide)"""
         embed = discord.Embed(title="Lazy DSi Downloader is deprecated")
         embed.description = "This application is deprecated. Please read the [guide](https://dsi.cfw.guide)."
         await ctx.send(embed=embed)
 
-    @commands.command()
-    async def cardflagcheck(self, ctx, inputFlags: str):
+    @commands.hybrid_command()
+    async def cardflagcheck(self, ctx, flags: str):
         try:
-            card = NDSCardFlagCheck(int(inputFlags, 16))
+            card = NDSCardFlagCheck(int(flags, 16))
         except ValueError:
             return await ctx.send("Input is not a valid hex number. Please try again.")
         await ctx.send(f"0x{card.inputFlags:08X} = {card.calculate()}")

@@ -184,7 +184,7 @@ class API(commands.Cog):
             matchlist.append(game)
         return matchlist
 
-    @commands.command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
+    @commands.hybrid_command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
     @gspreadkey_exists()
     async def ndsbcompat(self, ctx, *, title: Optional[str]):
         """
@@ -275,7 +275,7 @@ class API(commands.Cog):
 
         self.netinfo_embed = embed
 
-    @commands.command()
+    @commands.hybrid_command()
     async def netinfo(self, ctx):
         """Shows the Nintendo Network status information"""
         if await self.bot.is_owner(ctx.author):
