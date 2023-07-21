@@ -389,7 +389,7 @@ class General(commands.Cog):
     async def twilight_nightly(self, ctx):
         view = TWLMNightlyView(ctx)
         view.add_item(discord.ui.Button(label="DSi", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-DSi.7z"))
-        view.add_item(discord.ui.Button(label="Flashcard", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-Flashard.7z"))
+        view.add_item(discord.ui.Button(label="Flashcard", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-Flashcard.7z"))
         view.message = await ctx.send(content="**TWiLight Menu++ nightly**\n\nPlease select your platform below.", view=view)
 
     @nightly.command(name="ndsbootstrap", aliases=ndsbootstrap_alias)
