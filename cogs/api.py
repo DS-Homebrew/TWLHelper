@@ -313,7 +313,7 @@ class API(commands.Cog):
             resp = await self.request(url)
         except commands.CommandError as e:
             return await ctx.send(str(e))
-        source = resp['results'] if type(resp) == dict else resp
+        source = resp['results'] if isinstance(resp, dict) else resp
         if not source:
             return await ctx.send("App not found. Please try again.")
 
@@ -375,7 +375,7 @@ class API(commands.Cog):
             resp = await self.request(url)
         except commands.CommandError as e:
             return await ctx.send(str(e))
-        source = resp['results'] if type(resp) == dict else resp
+        source = resp['results'] if isinstance(resp, dict) else resp
         if not source:
             return await ctx.send("Skin not found. Please try again.")
         menu = SkinsMenu(source, ctx)
