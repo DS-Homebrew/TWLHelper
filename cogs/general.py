@@ -466,27 +466,27 @@ your device will refuse to write to it.
 
     @commands.group(aliases=["flashcard", "flashcards", "flashcarts"], invoke_without_command=True, case_insensitive=True)
     async def flashcart(self, ctx):
-        """Links the r/flashcarts quick start guide for a given console"""
+        """Links the Flashcarts Wiki quick start guide for a given console"""
         await ctx.send_help(ctx.command)
 
     @flashcart.command(aliases=["nds", "dsi", "3ds"])
     async def ds(self, ctx):
-        """Links the r/flashcarts DS flashcart quick start guide"""
+        """Links the Flashcarts Wiki DS flashcart quick start guide"""
         embed = discord.Embed(title="DS Flashcart Quick Start Guide")
-        embed.url = "https://www.reddit.com/r/flashcarts/wiki/ds-quick-start-guide"
+        embed.url = "https://flashcarts.net/ds-quick-start-guide.html"
         embed.description = "A Quick Guide on DS Flashcarts"
-        embed.set_author(name="r/flashcarts")
-        embed.set_thumbnail(url="https://b.thumbs.redditmedia.com/lBsOPXDyCx0p1MSx1qCdAtglHB4nineg5w9-3KHzO2A.png")
+        embed.set_author(name="The Flashcarts Wiki")
+        embed.set_thumbnail(url="https://flashcarts.net/assets/images/favicon/favicon-196x196.png")
         await ctx.send(embed=embed)
 
     @flashcart.command()
     async def gba(self, ctx):
-        """Links the r/flashcarts GBA flashcart quick start guide"""
+        """Links the Flashcarts Wiki  GBA flashcart quick start guide"""
         embed = discord.Embed(title="GBA Flashcart Quick Start Guide")
-        embed.url = "https://www.reddit.com/r/flashcarts/wiki/gba-quick-start-guide"
+        embed.url = "https://flashcarts.net/gba-quick-start-guide.html"
         embed.description = "A Quick Guide on GBA Flashcarts"
-        embed.set_author(name="r/flashcarts")
-        embed.set_thumbnail(url="https://b.thumbs.redditmedia.com/lBsOPXDyCx0p1MSx1qCdAtglHB4nineg5w9-3KHzO2A.png")
+        embed.set_author(name="The Flashcarts Wiki")
+        embed.set_thumbnail(url="https://flashcarts.net/assets/images/favicon/favicon-196x196.png")
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["twlboot"])
