@@ -196,9 +196,9 @@ class General(commands.Cog):
             embed.description = "Switch CFW Guide"
             await ctx.send(embed=embed)
         elif check_arg(guide, 'wii'):
-            embed.set_author(name="RiiConnect24")
+            embed.set_author(name="Nintendo Homebrew")
             embed.set_thumbnail(url="https://i.imgur.com/KI6IXmm.png")
-            embed.url = "https://wii.guide/"
+            embed.url = "https://wii.hacks.guide/"
             embed.description = "The complete guide to modding your Nintendo Wii"
             await ctx.send(embed=embed)
         elif check_arg(guide, 'dsi'):
