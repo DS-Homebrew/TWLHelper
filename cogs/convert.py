@@ -5,6 +5,7 @@ from shutil import which
 from time import time
 
 import discord
+import yarl
 from aiohttp import client_exceptions
 from discord.ext import commands
 
@@ -99,8 +100,9 @@ class Convert(commands.Cog):
             if int(r.headers['Content-Length']) >= 104857600:
                 return 4
             file = await r.read()
-            if filelink.find('/'):
-                fileName = f"downloads/{filelink.rsplit('/', 1)[1]}"
+            fileName = f"downloads/{ctx.message.id}_{yarl.URL(filelink).path.replace('/', '_')}"
+            #if filelink.find('/'):
+            #    fileName = f"downloads/{filelink.rsplit('/', 1)[1]}"
             try:
                 open(fileName, 'wb').write(file)
             except Exception:
