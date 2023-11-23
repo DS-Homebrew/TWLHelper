@@ -184,7 +184,7 @@ class API(commands.Cog):
             matchlist.append(game)
         return matchlist
 
-    @commands.command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
+    @commands.hybrid_command(aliases=["nbcompat", "ndscompat"], usage="[title id|game name]")
     @gspreadkey_exists()
     async def ndsbcompat(self, ctx, *, title: Optional[str]):
         """
@@ -275,7 +275,7 @@ class API(commands.Cog):
 
         self.netinfo_embed = embed
 
-    @commands.command()
+    @commands.hybrid_command()
     async def netinfo(self, ctx):
         """Shows the Nintendo Network status information"""
         if await self.bot.is_owner(ctx.author):
@@ -320,7 +320,7 @@ class API(commands.Cog):
         menu = UDBMenu(source, ctx)
         await menu.start()
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.hybrid_group(invoke_without_command=True, case_insensitive=True)
     async def skins(self, ctx):
         """Displays an embed with a link to a database of TWiLight Menu++ skins and Unlaunch backgrounds\n
         To show a random skin: `skins [console] -r`
@@ -512,7 +512,7 @@ class API(commands.Cog):
         menu = GbatekMenu(links, ctx)
         await menu.start()
 
-    @commands.command(aliases=['mkey'])
+    @commands.hybrid_command(aliases=['mkey'])
     async def generatemkey(self, ctx, device: str, month: int, day: int, inquiry: str, deviceid: Optional[str] = None):
         """
         Generate an mkey for given device.

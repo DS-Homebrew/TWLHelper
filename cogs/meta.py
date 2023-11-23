@@ -18,7 +18,7 @@ class Meta(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["botinfo", "whoisthisbot"])
+    @commands.hybrid_command(aliases=["botinfo", "whoisthisbot"])
     async def about(self, ctx):
         """About TWLHelper"""
         embed = discord.Embed(title="About TWLHelper")

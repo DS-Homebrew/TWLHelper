@@ -46,7 +46,7 @@ class NoIntro(commands.Cog):
             raise commands.CheckFailure()
         return True
 
-    @commands.command(usage="<title id|game name> <sha1 hash>")
+    @commands.hybrid_command(usage="<title id|game name> <sha1 hash>")
     async def nicompare(self, ctx, gamecode: str, sha1hash: str):
         """
         Compares input ROM and hash against No-Intro.
@@ -99,7 +99,7 @@ class NoIntro(commands.Cog):
             matchlist.append(game)
         return matchlist
 
-    @commands.command(usage="[title id|game name]")
+    @commands.hybrid_command(usage="[title id|game name]")
     async def nilookup(self, ctx, *, title: Optional[str]):
         """
         Shows a No-Intro database entry.
