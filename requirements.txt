@@ -6,4 +6,4 @@ markdownify~=0.11.6
 psutil~=5.9.6
 pytz~=2023.3
 rapidfuzz>=3.0.0,<4.0.0
-yarl~=1.9.3
+yarl~=1.9.4
