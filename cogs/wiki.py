@@ -135,6 +135,14 @@ class Wiki(commands.Cog):
         embed.description = "A list of DS games with special features"
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=["dsfamily"])
+    async def bestconsole(self, ctx):
+        """Links to the list of DS/DSi/3DS features"""
+        embed = self.embed("Which DS family console is the best for me?")
+        embed.url += "ds-index/best-console.html"
+        embed.description = "A list of features for every DS/DSi/3DS console"
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def customskins(self, ctx):
         """Displays an embed with a link to a guide on custom TWiLight Menu++ skins"""
