@@ -140,7 +140,7 @@ class Wiki(commands.Cog):
         """Links to the list of DS/DSi/3DS features"""
         embed = self.embed("Which DS family console is the best for me?")
         embed.url += "ds-index/best-console.html"
-        embed.description = "A list of features for every DS/DSi/3DS console"
+        embed.description = "Looking at the features of each console to decide the best DS(i) mode experience"
         await ctx.send(embed=embed)
 
     @commands.command()
