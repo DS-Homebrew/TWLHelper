@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye
+FROM python:3.11-slim-bookworm
 
 ENV HOME /home/twlhelper
 RUN useradd -m twlhelper
