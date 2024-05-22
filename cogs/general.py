@@ -301,7 +301,7 @@ class General(commands.Cog):
         embed.add_field(name="DS Classic Menu", value=cleandoc("""Tap the green book icon in the bottom right of the touchscreen"""), inline=False)
         embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the green book icon in the top middle of the touchscreen"""), inline=False)
         embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, tap the green book icon\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
-        embed.add_field(name="Wood UI theme", value=cleandoc("""Press the START button or tap the START icon in the bottom left of the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" above"""), inline=False)
+        embed.add_field(name="Wood UI theme", value=cleandoc("""Press the START button or tap the START icon in the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" above"""), inline=False)
         embed.add_field(name="Online", value=cleandoc("""The TWiLight Menu++ manual is also available online at https://manual.ds-homebrew.com."""), inline=False)
         await ctx.send(embed=embed)
 
@@ -315,7 +315,7 @@ class General(commands.Cog):
             "ds": """Tap the small icon in the bottom center of the touchscreen""",
             "3ds": """Tap the icon in the top left corner of the touchscreen""",
             "r4": """In the main menu, press the SELECT button\n- If you are in the file explorer, press the START button to return to the main menu""",
-            "wood": """Press the START button or tap the START icon in the bottom left of the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" below"""
+            "wood": """Press the START button or tap the START icon in the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" below"""
         }
         view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
         await view.start()
@@ -330,7 +330,7 @@ class General(commands.Cog):
             "ds": """Tap the Slot-1 card on the center of the touchscreen""",
             "3ds": """Tap the Game Card icon at the top of the touchscreen""",
             "r4": """In the main menu, tap the center icon\n- If you are in the file explorer, press the START button to return to the main menu""",
-            "wood": """Press the START button or tap the START icon in the bottom left of the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" below"""
+            "wood": """Press the START button or tap the START icon in the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" below"""
         }
         view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
         await view.start()
@@ -345,7 +345,7 @@ class General(commands.Cog):
             "ds": """Press X""",
             "3ds": """Tap the HOME icon at the top-right corner of the touchscreen""",
             "r4": """In the main menu, press B\n- If you are in the file explorer, press the START button to return to the main menu""",
-            "wood": """Press the START button or tap the START icon in the bottom left of the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" below"""
+            "wood": """Press the START button or tap the START icon in the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" below"""
         }
         view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
         await view.start()
