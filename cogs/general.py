@@ -12,15 +12,7 @@ import discord
 from discord.ext import commands
 
 from utils import (CustomView, Literal, build_wiki_embed, check_arg,
-                   ndsbootstrap_alias, twilightmenu_alias)
-
-
-class TWLMNightlyView(CustomView):
-    @discord.ui.button(label="3DS")
-    async def bcallback(self, itx, button):
-        message = """The latest nightly version of TWiLight Menu++ for 3DS can be downloaded from Universal Updater.
-                     Select TWiLight Menu++, then install the [nightly] build."""
-        await itx.response.send_message(cleandoc(message), ephemeral=True)
+                   twilightmenu_alias)
 
 
 class TWLMThemeMenu(CustomView):
@@ -389,24 +381,10 @@ class General(commands.Cog):
                                     [Dumping DSiWare](https://dsi.cfw.guide/dsiware-backups.html)
                                     """, title="Dumping Games to ROM files")
 
-    @commands.group(invoke_without_command=True, case_insensitive=True)
+    @commands.command()
     async def nightly(self, ctx):
         """Instructions on installing nightly builds"""
-        await ctx.send_help(ctx.command)
-
-    @nightly.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_nightly(self, ctx):
-        view = TWLMNightlyView(ctx)
-        view.add_item(discord.ui.Button(label="DSi", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-DSi.7z"))
-        view.add_item(discord.ui.Button(label="Flashcard", url="https://github.com/TWLBot/Builds/raw/master/TWiLightMenu-Flashcard.7z"))
-        view.message = await ctx.send(content="**TWiLight Menu++ nightly**\n\nPlease select your platform below.", view=view)
-
-    @nightly.command(name="ndsbootstrap", aliases=ndsbootstrap_alias)
-    async def ndsbootstrap_nightly(self, ctx):
-        url = "https://github.com/TWLBot/Builds/raw/master/nds-bootstrap.7z"
-        description = f"The latest nightly version of nds-bootstrap can be found here: {url}\n\n\
-                        On the 3DS, this can be installed from Universal Updater. Select nds-bootstrap, then install the [nightly] build."
-        await self.simple_embed(ctx, description, title="nds-bootstrap nightly")
+        await ctx.send("Nightly builds are currently unavailable for DS-Homebrew projects.")
 
     @commands.command(aliases=["crowdin"])
     async def translate(self, ctx):
