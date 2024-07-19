@@ -12,16 +12,6 @@
         "Admin"
     ],
 
-    "CHANNEL": {
-        "NINUPDATES": null,
-        "SUBREDDIT": null,
-        "GITHUBUPDATES": null
-    },
-
-    "THREAD": {
-        "DXUPDATES": null
-    },
-
     "GSPREADKEY": null,
     "NOINTRO": "no-intro.dat"
 }

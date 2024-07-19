@@ -25,19 +25,12 @@ Each function and related commands will be disabled until the instructions are f
 - The nds-boostrap compatibility list uses gspread, which requires a Google API key.
     1. You can read a guide on how to get this key here: https://docs.gspread.org/en/latest/oauth2.html
     1. In `settings.json`, set `GSPREADKEY` to the relative path of your API key JSON file.
-- The RSS cog pulls from the [Nintendo Updates API](https://yls8.mtheall.com/ninupdates), notifying when a system update for Nintendo 3DS consoles are published.
-    - In `settings.json`, set `NINUPDATES` to the channel ID of where the RSS data will be posted.
-- The RSS cog pulls from the [r/NDSBrew subreddit](https://reddit.com/r/ndsbrew), notifying when a new post is submitted.
-    - In `settings.json`, set `SUBREDDIT` to the channel ID of where the RSS data will be posted.
 - The Convert cog converts images, videos, and audio to a certain format, primarily designed for TWiLight Menu++ theming and video players.
     - To use the image/video/audio conversion functions, install `ffmpeg` for your host.
     - To use the Unlaunch background conversion functions, install `ffmpeg` and `gifsicle` for your host.
     - To use the GBARunner2 border conversion functions, install `grit` for your host. This can be found by installing the [devkitPro build environment](https://devkitpro.org/wiki/Getting_Started).
         - If your host is already configured to compile NDS or GBA software, this should already be set up.
         - If only installing the devkitPro build environment specifically for `grit`, you will need to install both `grit` and `devkit-env` package from pacman.
-- The GitHub cog pushes GitHub webhook updates into specific threads in the server.
-    - In `settings.json`, set `GITHUBUPDATES` to the channel where the main GitHub webhook is set.
-    - In `settings.json`, under `THREAD`, set values accordingly.
 - The NoIntro cog has commands related to searching the No-Intro database.
     - For now, only Nintendo DS games are supported.
     - In `settings.json`, set `NOINTRO` to the relative path of the database file.
