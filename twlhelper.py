@@ -17,6 +17,7 @@ import aiohttp
 import discord
 import gspread
 from discord.ext import commands
+from jishaku.help_command import DefaultPaginatorHelp
 
 from settings import loadSettings
 from utils.utils import create_error_embed
@@ -44,7 +45,7 @@ class TWLHelper(commands.Bot):
         self.settings = settings
         super().__init__(
             command_prefix=settings['PREFIX'],
-            help_command=EmbedHelp(),
+            help_command=DefaultPaginatorHelp(paginator=commands.Paginator(max_size=1250)),
             description=description,
             intents=intents,
             allowed_mentions=allowed_mentions,
