@@ -368,9 +368,9 @@ class API(commands.Cog):
         store_name = parse.quote(ctx.command.extras['store'])
 
         if argument.strip() == "-r":
-            url = f"https://twlmenu-extras.lifehacker.moe/random/{store_name}"
+            url = f"https://twlmenu-extras.lifehacker101.net/random?system={store_name}"
         else:
-            url = f"https://twlmenu-extras.lifehacker.moe/search/{store_name}/{parse.quote(argument)}"
+            url = f"https://twlmenu-extras.lifehacker101.net/search/{parse.quote(argument)}?system={store_name}"
         try:
             resp = await self.request(url)
         except commands.CommandError as e:
