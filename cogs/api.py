@@ -14,6 +14,7 @@ from urllib import parse
 import aiohttp
 import discord
 from discord.ext import commands, tasks
+from markdownify import markdownify
 from pytz import timezone
 from rapidfuzz import process
 from re import findall
@@ -540,6 +541,26 @@ class API(commands.Cog):
                 return await ctx.send(f'{ctx.author.mention} Your key is {ret["key"]}.')
             else:
                 return await ctx.send(f'{ctx.author.mention} API returned error {r.status}. Please check your values and try again.')
+
+    @commands.command()
+    async def wfcerror(self, ctx, error: int):
+        # It seems error codes must be within 6 digits
+        if error > 999999:
+            return await ctx.send(f"{ctx.author.mention} This is an invalid error code. Please try again.")
+        apicall = f"https://wiimmfi.de/error?m=json&e={error}"
+        async with ctx.typing():
+            async with self.bot.session.get(apicall) as r:
+                if r.status == 200:
+                    response = await r.json()
+                    if response[0]["found"] == 0:
+                        return await ctx.send(f"{ctx.author.mention} This error code does not exist.")
+                    else:
+                        embed = discord.Embed(title=f"WFC Error {error}")
+                        for i in response[0]["infolist"]:
+                            embed.add_field(name=i["type"], value=f'**{i["name"]}**: {markdownify(i["info"])}', inline=False)
+                        return await ctx.send(embed=embed)
+                else:
+                    return await ctx.send(f'{ctx.author.mention} API returned error {r.status}. Please check your values and try again.')
 
 
 async def setup(bot: TWLHelper):
