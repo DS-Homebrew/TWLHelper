@@ -544,6 +544,12 @@ class API(commands.Cog):
 
     @commands.command()
     async def wfcerror(self, ctx, error: int):
+        """
+        Get information about an error code displayed in Nintendo WFC.
+        Usage: `wfcerror <error code>`
+        Note: As the description is pulled from Wiimmfi's databases, some error codes may specify the Wii instead of the DS.
+              This is normal, and in most cases any instructions for the Wii may also apply to the DS.
+        """
         # It seems error codes must be within 6 digits
         if error > 999999:
             return await ctx.send(f"{ctx.author.mention} This is an invalid error code. Please try again.")
