@@ -538,7 +538,7 @@ class API(commands.Cog):
         async with self.bot.session.get(apicall) as r:
             if r.status == 200:
                 ret = await r.json()
-                return await ctx.send(f'{ctx.author.mention} Your key is {ret["key"]}.')
+                return await ctx.send(f'{ctx.author.mention} Your key is {ret["key"]:05}.')
             else:
                 return await ctx.send(f'{ctx.author.mention} API returned error {r.status}. Please check your values and try again.')
 
