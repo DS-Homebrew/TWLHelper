@@ -532,7 +532,7 @@ class API(commands.Cog):
             await ctx.message.delete()
         if device.lower() not in devices:
             return await ctx.send(f'{ctx.author.mention} This device is not supported. Valid options are: {", ".join(i for i in devices)}')
-        apicall = f"https://mkey.eiphax.tech/api?platform={devices[device.lower()]}&inquiry={inquiry}&month={month}&day={day}"
+        apicall = f"https://mkey.nintendohomebrew.com/api?platform={devices[device.lower()]}&inquiry={inquiry}&month={month}&day={day}"
         if deviceid:
             apicall += f"&aux={deviceid}"
         async with self.bot.session.get(apicall) as r:
