@@ -25,12 +25,4 @@ def loadSettings() -> Dict[str, Any]:
     ret['GUILD'] = settings.get('GUILD')
     ret['staff_roles'] = [x for x in settings['MODERATOR']]
 
-    # channels
-    ret['NINUPDATE'] = settings['CHANNEL']['NINUPDATES']
-    ret['SUBREDDIT'] = settings['CHANNEL']['SUBREDDIT']
-    ret['GITHUBUPDATES'] = settings['CHANNEL']['GITHUBUPDATES']
-
-    # threads
-    ret['DXUPDATES'] = settings['THREAD']['DXUPDATES']
-
     return ret
