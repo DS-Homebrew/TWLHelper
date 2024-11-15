@@ -277,6 +277,14 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
+    async def touchfix(self, ctx):
+        """Information on how to fix broken touch input"""
+        await self.simple_embed(ctx, """
+                                For DSi users with Unlaunch, hold A+B buttons after pressing POWER, then select `Launcher`.
+                                For 3DS users, follow [this guide](https://gbatemp.net/threads/recover-ds-mode-after-an-nvram-brick-eg-after-using-a-ds-bricker.516444/).
+                                """, title="Fix broken touch input")
+
+    @commands.command()
     async def twlfix(self, ctx):
         """Information on how to fix a broken TWL Partition"""
         await self.simple_embed(ctx, """
