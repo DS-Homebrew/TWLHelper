@@ -4,6 +4,6 @@ gspread~=6.1.4
 jishaku~=2.6.0
 markdownify~=0.14.1
 psutil~=6.1.0
-pytz~=2024.2
+pytz~=2025.1
 rapidfuzz>=3.0.0,<4.0.0
 yarl~=1.15.5
