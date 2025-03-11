@@ -35,7 +35,7 @@ class UDBMenu(ViewPages):
         return embed
 
 
-class SkinsMenu(ViewPages):
+class ThemesMenu(ViewPages):
     async def format_page(self, entry: Any):
         store_name = web_name(self.ctx.command.extras['store'])
         embed = discord.Embed()
@@ -322,18 +322,18 @@ class API(commands.Cog):
         await menu.start()
 
     @commands.group(invoke_without_command=True, case_insensitive=True)
-    async def skins(self, ctx):
-        """Displays an embed with a link to a database of TWiLight Menu++ skins and Unlaunch backgrounds\n
-        To show a random skin: `skins [console] -r`
-        To search for a skin: `skins [console] [search parameter]`"""
-        embed = discord.Embed(title="Skins", colour=0xda4a53)
+    async def themes(self, ctx):
+        """Displays an embed with a link to a database of TWiLight Menu++ themes and Unlaunch backgrounds\n
+        To show a random skin: `themes [console] -r`
+        To search for a skin: `themes [console] [search parameter]`"""
+        embed = discord.Embed(title="Themes", colour=0xda4a53)
         embed.set_author(name="DS-Homebrew")
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
-        embed.description = "A collection of skins for TWiLight Menu++ from DS-Homebrew/twlmenu-extras on GitHub"
+        embed.description = "A collection of themes for TWiLight Menu++ from DS-Homebrew/twlmenu-extras on GitHub"
         embed.url = "https://skins.ds-homebrew.com/"
         await ctx.send(embed=embed)
 
-    async def send_skin_help(self, ctx: commands.Context):
+    async def send_theme_help(self, ctx: commands.Context):
         embed = discord.Embed(colour=0xda4a53)
         store_name = ctx.command.extras['store']
         embed.url = f"https://skins.ds-homebrew.com/{web_name(store_name)}/"
@@ -343,17 +343,21 @@ class API(commands.Cog):
             embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/46971470?s=400&v=4")
             embed.description = "Custom backgrounds for Unlaunch"
         elif store_name == "Nintendo DSi":
-            embed.title = "DSi Menu Skins"
+            embed.title = "DSi Menu Themes"
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/dsi.png")
-            embed.description = "Custom skins for TWiLight Menu++'s DSi Menu theme"
-        elif store_name == "R4 Original":
-            embed.title = "R4 Original Menu Skins"
-            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/r4.png")
-            embed.description = "Custom skins for TWiLight Menu++'s R4 Original Menu theme"
+            embed.description = "Custom themes for TWiLight Menu++'s DSi Menu theme"
         elif store_name == "Nintendo 3DS":
-            embed.title = "3DS Menu Skins"
+            embed.title = "3DS Menu Themes"
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/3ds.png")
-            embed.description = "Custom skins for TWiLight Menu++'s 3DS Menu theme"
+            embed.description = "Custom themes for TWiLight Menu++'s 3DS Menu theme"
+        elif store_name == "R4 Original":
+            embed.title = "R4 Original Menu Themes"
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/r4.png")
+            embed.description = "Custom themes for TWiLight Menu++'s R4 Original Menu theme"
+        elif store_name == "Wood":
+            embed.title = "Wood Themes"
+            embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/ak.png")
+            embed.description = "Custom themes for TWiLight Menu++'s Wood theme"
         elif store_name == "Font":
             embed.title = "TWiLight Menu++ Fonts"
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/font.png")
@@ -365,7 +369,7 @@ class API(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    async def start_skin_menu(self, ctx, argument):
+    async def start_theme_menu(self, ctx, argument):
         store_name = parse.quote(ctx.command.extras['store'])
 
         if argument.strip() == "-r":
@@ -378,81 +382,93 @@ class API(commands.Cog):
             return await ctx.send(str(e))
         source = resp['results'] if isinstance(resp, dict) else resp
         if not source:
-            return await ctx.send("Skin not found. Please try again.")
-        menu = SkinsMenu(source, ctx)
+            return await ctx.send("Theme not found. Please try again.")
+        menu = ThemesMenu(source, ctx)
         await menu.start()
 
-    @skins.command(name="unlaunch", extras={"store": "Unlaunch"})
-    async def skin_unlaunch(self, ctx, *, skin=None):
+    @themes.command(name="unlaunch", extras={"store": "Unlaunch"})
+    async def theme_unlaunch(self, ctx, *, skin=None):
         """Displays an embed with a link to the Unlaunch backgrounds page.
 
-        To show a random background: `skins unlaunch [-r]`
-        To search for a background: `skins unlaunch [search parameter]`"""
+        To show a random background: `themes unlaunch [-r]`
+        To search for a background: `themes unlaunch [search parameter]`"""
         if not skin:
-            await self.send_skin_help(ctx)
+            await self.send_theme_help(ctx)
             return
 
-        await self.start_skin_menu(ctx, skin)
+        await self.start_theme_menu(ctx, skin)
 
-    @skins.command(name="dsi", aliases=["dsimenu"], extras={"store": "Nintendo DSi"})
-    async def skin_dsimenu(self, ctx, *, skin=None):
-        """Displays an embed with a link to the DSi Menu skins page.
+    @themes.command(name="dsi", aliases=["dsimenu"], extras={"store": "Nintendo DSi"})
+    async def theme_dsimenu(self, ctx, *, skin=None):
+        """Displays an embed with a link to the DSi Menu themes page.
 
-        To show a random skin: `skins dsi [-r]`
-        To search for a skin: `skins dsi [search parameter]`"""
+        To show a random skin: `themes dsi [-r]`
+        To search for a skin: `themes dsi [search parameter]`"""
         if not skin:
-            await self.send_skin_help(ctx)
+            await self.send_theme_help(ctx)
             return
 
-        await self.start_skin_menu(ctx, skin)
+        await self.start_theme_menu(ctx, skin)
 
-    @skins.command(name="3ds", aliases=["3dsmenu"], extras={"store": "Nintendo 3DS"})
-    async def skin_3dsmenu(self, ctx, *, skin=None):
-        """Displays an embed with a link to the 3DS Menu skins page.
+    @themes.command(name="3ds", aliases=["3dsmenu"], extras={"store": "Nintendo 3DS"})
+    async def theme_3dsmenu(self, ctx, *, skin=None):
+        """Displays an embed with a link to the 3DS Menu themes page.
 
-        To show a random skin: `skins 3ds [-r]`
-        To search for a skin: `skins 3ds [search parameter]`"""
+        To show a random skin: `themes 3ds [-r]`
+        To search for a skin: `themes 3ds [search parameter]`"""
         if not skin:
-            await self.send_skin_help(ctx)
+            await self.send_theme_help(ctx)
             return
 
-        await self.start_skin_menu(ctx, skin)
+        await self.start_theme_menu(ctx, skin)
 
-    @skins.command(name="r4", aliases=["r4theme"], extras={"store": "R4 Original"})
-    async def skin_r4menu(self, ctx, *, skin=None):
-        """Displays an embed with a link to the R4 Original Menu skins page.
+    @themes.command(name="r4", aliases=["r4theme"], extras={"store": "R4 Original"})
+    async def theme_r4menu(self, ctx, *, skin=None):
+        """Displays an embed with a link to the R4 Original Menu themes page.
 
-        To show a random skin: `skins r4 [-r]`
-        To search for a skin: `skins r4 [search parameter]`"""
+        To show a random skin: `themes r4 [-r]`
+        To search for a skin: `themes r4 [search parameter]`"""
         if not skin:
-            await self.send_skin_help(ctx)
+            await self.send_theme_help(ctx)
             return
 
-        await self.start_skin_menu(ctx, skin)
+        await self.start_theme_menu(ctx, skin)
 
-    @skins.command(name="font", extras={"store": "Font"})
-    async def skin_font(self, ctx, *, skin=None):
+    @themes.command(name="wood", aliases=["aktheme"], extras={"store": "Wood UI"})
+    async def theme_woodmenu(self, ctx, *, skin=None):
+        """Displays an embed with a link to the Wood themes page.
+
+        To show a random skin: `themes ak [-r]`
+        To search for a skin: `themes ak [search parameter]`"""
+        if not skin:
+            await self.send_theme_help(ctx)
+            return
+
+        await self.start_theme_menu(ctx, skin)
+
+    @themes.command(name="font", extras={"store": "Font"})
+    async def theme_font(self, ctx, *, skin=None):
         """Displays an embed with a link to the TWiLight Menu++ fonts page.
 
-        To show a random font: `skins fonts [-r]`
-        To search for a font: `skins fonts [search parameter]`"""
+        To show a random font: `themes fonts [-r]`
+        To search for a font: `themes fonts [search parameter]`"""
         if not skin:
-            await self.send_skin_help(ctx)
+            await self.send_theme_help(ctx)
             return
 
-        await self.start_skin_menu(ctx, skin)
+        await self.start_theme_menu(ctx, skin)
 
-    @skins.command(name="icon", extras={"store": "Icon"})
-    async def skin_icon(self, ctx, *, skin=None):
+    @themes.command(name="icon", extras={"store": "Icon"})
+    async def theme_icon(self, ctx, *, skin=None):
         """Displays an embed with a link to the TWiLight Menu++ icons page.
 
-        To show a random icon: `skins icon [-r]`
-        To search for an icon: `skins icon [search parameter]`"""
+        To show a random icon: `themes icon [-r]`
+        To search for an icon: `themes icon [search parameter]`"""
         if not skin:
-            await self.send_skin_help(ctx)
+            await self.send_theme_help(ctx)
             return
 
-        await self.start_skin_menu(ctx, skin)
+        await self.start_theme_menu(ctx, skin)
 
     # Gamebrew searching
     @commands.command()

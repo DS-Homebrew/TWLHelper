@@ -477,9 +477,9 @@ class Convert(commands.Cog):
                     await outputtext.edit(content=f"`All done! Completed in {round(time() - start_time, 2)} seconds`")
                 self.yeet(["downloads/bgm.pcm.raw", fileName])
         elif fileName == 1:
-            embed = self.embed("DSi/3DS Skins - Custom SFX")
+            embed = self.embed("DSi/3DS Themes - Custom SFX")
             embed.url += "twilightmenu/custom-dsi-3ds-sfx.html"
-            embed.description = "How to use custom background music and sound effects in DSi and 3DS skins for TWiLight Menu++"
+            embed.description = "How to use custom background music and sound effects in DSi and 3DS themes for TWiLight Menu++"
             return await ctx.send(embed=embed)
         else:
             await self.download_media_error(ctx, fileName)

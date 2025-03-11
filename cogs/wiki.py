@@ -143,12 +143,12 @@ class Wiki(commands.Cog):
         embed.description = "Looking at the features of each console to decide the best DS(i) mode experience"
         await ctx.send(embed=embed)
 
-    @commands.command()
-    async def customskins(self, ctx):
-        """Displays an embed with a link to a guide on custom TWiLight Menu++ skins"""
-        embed = self.embed("Custom DSi/3DS Skins")
-        embed.url += "twilightmenu/custom-dsi-3ds-skins.html"
-        embed.description = "How to Create DSi/3DS Skins for TWiLight Menu++"
+    @commands.command(aliases=["customskins"])
+    async def customthemes(self, ctx):
+        """Displays an embed with a link to a guide on custom TWiLight Menu++ themes"""
+        embed = self.embed("Custom DSi/3DS Themes")
+        embed.url += "twilightmenu/custom-dsi-3ds-themes.html"
+        embed.description = "How to Create DSi/3DS Themes for TWiLight Menu++"
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["ramdisks"])
