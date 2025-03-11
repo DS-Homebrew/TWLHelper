@@ -354,7 +354,7 @@ class API(commands.Cog):
             embed.title = "R4 Original Menu Themes"
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/r4.png")
             embed.description = "Custom themes for TWiLight Menu++'s R4 Original Menu theme"
-        elif store_name == "Wood":
+        elif store_name == "Wood UI":
             embed.title = "Wood Themes"
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/ak.png")
             embed.description = "Custom themes for TWiLight Menu++'s Wood theme"
@@ -438,8 +438,8 @@ class API(commands.Cog):
     async def theme_woodmenu(self, ctx, *, theme=None):
         """Displays an embed with a link to the Wood themes page.
 
-        To show a random theme: `themes ak [-r]`
-        To search for a theme: `themes ak [search parameter]`"""
+        To show a random theme: `themes wood [-r]`
+        To search for a theme: `themes wood [search parameter]`"""
         if not theme:
             await self.send_theme_help(ctx)
             return
