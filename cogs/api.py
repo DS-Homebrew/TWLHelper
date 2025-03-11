@@ -387,88 +387,88 @@ class API(commands.Cog):
         await menu.start()
 
     @themes.command(name="unlaunch", extras={"store": "Unlaunch"})
-    async def theme_unlaunch(self, ctx, *, skin=None):
+    async def theme_unlaunch(self, ctx, *, theme=None):
         """Displays an embed with a link to the Unlaunch backgrounds page.
 
         To show a random background: `themes unlaunch [-r]`
         To search for a background: `themes unlaunch [search parameter]`"""
-        if not skin:
+        if not theme:
             await self.send_theme_help(ctx)
             return
 
-        await self.start_theme_menu(ctx, skin)
+        await self.start_theme_menu(ctx, theme)
 
     @themes.command(name="dsi", aliases=["dsimenu"], extras={"store": "Nintendo DSi"})
-    async def theme_dsimenu(self, ctx, *, skin=None):
+    async def theme_dsimenu(self, ctx, *, theme=None):
         """Displays an embed with a link to the DSi Menu themes page.
 
-        To show a random skin: `themes dsi [-r]`
-        To search for a skin: `themes dsi [search parameter]`"""
-        if not skin:
+        To show a random theme: `themes dsi [-r]`
+        To search for a theme: `themes dsi [search parameter]`"""
+        if not theme:
             await self.send_theme_help(ctx)
             return
 
-        await self.start_theme_menu(ctx, skin)
+        await self.start_theme_menu(ctx, theme)
 
     @themes.command(name="3ds", aliases=["3dsmenu"], extras={"store": "Nintendo 3DS"})
-    async def theme_3dsmenu(self, ctx, *, skin=None):
+    async def theme_3dsmenu(self, ctx, *, theme=None):
         """Displays an embed with a link to the 3DS Menu themes page.
 
-        To show a random skin: `themes 3ds [-r]`
-        To search for a skin: `themes 3ds [search parameter]`"""
-        if not skin:
+        To show a random theme: `themes 3ds [-r]`
+        To search for a theme: `themes 3ds [search parameter]`"""
+        if not theme:
             await self.send_theme_help(ctx)
             return
 
-        await self.start_theme_menu(ctx, skin)
+        await self.start_theme_menu(ctx, theme)
 
     @themes.command(name="r4", aliases=["r4theme"], extras={"store": "R4 Original"})
-    async def theme_r4menu(self, ctx, *, skin=None):
+    async def theme_r4menu(self, ctx, *, theme=None):
         """Displays an embed with a link to the R4 Original Menu themes page.
 
-        To show a random skin: `themes r4 [-r]`
-        To search for a skin: `themes r4 [search parameter]`"""
-        if not skin:
+        To show a random theme: `themes r4 [-r]`
+        To search for a theme: `themes r4 [search parameter]`"""
+        if not theme:
             await self.send_theme_help(ctx)
             return
 
-        await self.start_theme_menu(ctx, skin)
+        await self.start_theme_menu(ctx, theme)
 
     @themes.command(name="wood", aliases=["aktheme"], extras={"store": "Wood UI"})
-    async def theme_woodmenu(self, ctx, *, skin=None):
+    async def theme_woodmenu(self, ctx, *, theme=None):
         """Displays an embed with a link to the Wood themes page.
 
-        To show a random skin: `themes ak [-r]`
-        To search for a skin: `themes ak [search parameter]`"""
-        if not skin:
+        To show a random theme: `themes ak [-r]`
+        To search for a theme: `themes ak [search parameter]`"""
+        if not theme:
             await self.send_theme_help(ctx)
             return
 
-        await self.start_theme_menu(ctx, skin)
+        await self.start_theme_menu(ctx, theme)
 
     @themes.command(name="font", extras={"store": "Font"})
-    async def theme_font(self, ctx, *, skin=None):
+    async def theme_font(self, ctx, *, theme=None):
         """Displays an embed with a link to the TWiLight Menu++ fonts page.
 
         To show a random font: `themes fonts [-r]`
         To search for a font: `themes fonts [search parameter]`"""
-        if not skin:
+        if not theme:
             await self.send_theme_help(ctx)
             return
 
-        await self.start_theme_menu(ctx, skin)
+        await self.start_theme_menu(ctx, theme)
 
     @themes.command(name="icon", extras={"store": "Icon"})
-    async def theme_icon(self, ctx, *, skin=None):
+    async def theme_icon(self, ctx, *, theme=None):
         """Displays an embed with a link to the TWiLight Menu++ icons page.
 
         To show a random icon: `themes icon [-r]`
         To search for an icon: `themes icon [search parameter]`"""
-        if not skin:
+        if not theme:
             await self.send_theme_help(ctx)
             return
 
-        await self.start_theme_menu(ctx, skin)
+        await self.start_theme_menu(ctx, theme)
 
     # Gamebrew searching
     @commands.command()
