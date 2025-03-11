@@ -15,7 +15,7 @@ from utils import (CustomView, Literal, build_wiki_embed, check_arg,
                    twilightmenu_alias)
 
 
-class TWLMThemeMenu(CustomView):
+class TWLMUIMenu(CustomView):
     def __init__(self, ctx, title, initDescription, themeSteps):
         self.message: Optional[discord.Message] = None
         self.themeSteps = themeSteps
@@ -32,9 +32,9 @@ class TWLMThemeMenu(CustomView):
             self.embed.description = None
         return
 
-    @discord.ui.button(label="DSi/Saturn/HBL Theme")
+    @discord.ui.button(label="DSi/Saturn/HBL UI")
     async def dsi_button(self, itx, button):
-        self.edit_embed("DSi/Saturn/HBL Theme", self.themeSteps["dsi"])
+        self.edit_embed("DSi/Saturn/HBL UI", self.themeSteps["dsi"])
         await itx.response.edit_message(embed=self.embed)
 
     @discord.ui.button(label="DS Classic Menu")
@@ -42,19 +42,19 @@ class TWLMThemeMenu(CustomView):
         self.edit_embed("DS Classic Menu", self.themeSteps["ds"])
         await itx.response.edit_message(embed=self.embed)
 
-    @discord.ui.button(label="3DS Theme")
+    @discord.ui.button(label="3DS UI")
     async def _3ds_button_text(self, itx, button):
-        self.edit_embed("3DS Theme", self.themeSteps["3ds"])
+        self.edit_embed("3DS UI", self.themeSteps["3ds"])
         await itx.response.edit_message(embed=self.embed)
 
-    @discord.ui.button(label="R4 Theme")
+    @discord.ui.button(label="R4 UI")
     async def r4_button_text(self, itx, button):
-        self.edit_embed("R4 Theme", self.themeSteps["r4"])
+        self.edit_embed("R4 UI", self.themeSteps["r4"])
         await itx.response.edit_message(embed=self.embed)
 
-    @discord.ui.button(label="Wood Theme")
+    @discord.ui.button(label="Wood UI")
     async def wood_button_text(self, itx, button):
-        self.edit_embed("Wood Theme", self.themeSteps["wood"])
+        self.edit_embed("Wood UI", self.themeSteps["wood"])
         await itx.response.edit_message(embed=self.embed)
 
     async def start(self):
@@ -297,11 +297,11 @@ class General(commands.Cog):
         """How to access TWiLight Menu++ Instruction Manual"""
         embed = discord.Embed(title="How to access TWiLight Menu++ Instruction Manual")
         embed.description = "To access TWiLight Menu++ Instruction Manual, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
-        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher theme", value=cleandoc("""Press the SELECT button\n- If you are met with a list of options, select **Open Manual**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below"""), inline=False)
+        embed.add_field(name="Nintendo DSi/SEGA Saturn/Homebrew Launcher UI", value=cleandoc("""Press the SELECT button\n- If you are met with a list of options, select **Open Manual**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below"""), inline=False)
         embed.add_field(name="DS Classic Menu", value=cleandoc("""Tap the green book icon in the bottom right of the touchscreen"""), inline=False)
-        embed.add_field(name="Nintendo 3DS theme", value=cleandoc("""Tap the green book icon in the top middle of the touchscreen"""), inline=False)
-        embed.add_field(name="R4 Original theme", value=cleandoc("""In the main menu, tap the green book icon\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
-        embed.add_field(name="Wood UI theme", value=cleandoc("""Press the START button or tap the START icon in the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" above"""), inline=False)
+        embed.add_field(name="Nintendo 3DS UI", value=cleandoc("""Tap the green book icon in the top middle of the touchscreen"""), inline=False)
+        embed.add_field(name="R4 Original UI", value=cleandoc("""In the main menu, tap the green book icon\n- If you are in the file explorer, press the START button to return to the main menu"""), inline=False)
+        embed.add_field(name="Wood UI", value=cleandoc("""Press the START button or tap the START icon in the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" above"""), inline=False)
         embed.add_field(name="Online", value=cleandoc("""The TWiLight Menu++ manual is also available online at https://manual.ds-homebrew.com."""), inline=False)
         await ctx.send(embed=embed)
 
@@ -317,7 +317,7 @@ class General(commands.Cog):
             "r4": """In the main menu, press the SELECT button\n- If you are in the file explorer, press the START button to return to the main menu""",
             "wood": """Press the START button or tap the START icon in the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" below"""
         }
-        view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
+        view = TWLMUIMenu(ctx, title, initDescription, themeSteps)
         await view.start()
 
     @commands.command()
@@ -332,7 +332,7 @@ class General(commands.Cog):
             "r4": """In the main menu, tap the center icon\n- If you are in the file explorer, press the START button to return to the main menu""",
             "wood": """Press the START button or tap the START icon in the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" below"""
         }
-        view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
+        view = TWLMUIMenu(ctx, title, initDescription, themeSteps)
         await view.start()
 
     @commands.command(aliases=["dsimenulaunch"])
@@ -347,7 +347,7 @@ class General(commands.Cog):
             "r4": """In the main menu, press B\n- If you are in the file explorer, press the START button to return to the main menu""",
             "wood": """Press the START button or tap the START icon in the touchscreen\n- The screen should turn white and then you will be met with a different menu, follow the instructions for "**DS Classic Menu**" below"""
         }
-        view = TWLMThemeMenu(ctx, title, initDescription, themeSteps)
+        view = TWLMUIMenu(ctx, title, initDescription, themeSteps)
         await view.start()
 
     @commands.command(aliases=["sd-card-setup", "sdformat"])
@@ -405,7 +405,7 @@ class General(commands.Cog):
         view = discord.ui.View()
         view.add_item(discord.ui.Button(label="TWiLight Menu++", url=f"{crowdin_baseurl}/TwilightMenu"))
         view.add_item(discord.ui.Button(label="nds-bootstrap", url=f"{crowdin_baseurl}/nds-bootstrap"))
-        view.add_item(discord.ui.Button(label="DS-Homebrew Wiki / Skins site", url=f"{crowdin_baseurl}/ds-homebrew-wiki"))
+        view.add_item(discord.ui.Button(label="DS-Homebrew Wiki / Themes site", url=f"{crowdin_baseurl}/ds-homebrew-wiki"))
         view.add_item(discord.ui.Button(label="DSi Guide", url=f"{crowdin_baseurl}/dsi-guide"))
         await ctx.send(embed=embed, view=view)
 
