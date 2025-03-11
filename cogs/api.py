@@ -345,19 +345,19 @@ class API(commands.Cog):
         elif store_name == "Nintendo DSi":
             embed.title = "DSi Menu Themes"
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/dsi.png")
-            embed.description = "Custom themes for TWiLight Menu++'s DSi Menu theme"
+            embed.description = "Custom themes for TWiLight Menu++'s DSi Menu UI"
         elif store_name == "Nintendo 3DS":
             embed.title = "3DS Menu Themes"
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/3ds.png")
-            embed.description = "Custom themes for TWiLight Menu++'s 3DS Menu theme"
+            embed.description = "Custom themes for TWiLight Menu++'s 3DS Menu UI"
         elif store_name == "R4 Original":
             embed.title = "R4 Original Menu Themes"
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/r4.png")
-            embed.description = "Custom themes for TWiLight Menu++'s R4 Original Menu theme"
+            embed.description = "Custom themes for TWiLight Menu++'s R4 Original Menu UI"
         elif store_name == "Wood UI":
             embed.title = "Wood Themes"
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/ak.png")
-            embed.description = "Custom themes for TWiLight Menu++'s Wood theme"
+            embed.description = "Custom themes for TWiLight Menu++'s Wood UI"
         elif store_name == "Font":
             embed.title = "TWiLight Menu++ Fonts"
             embed.set_thumbnail(url="https://raw.githubusercontent.com/DS-Homebrew/twlmenu-extras/master/unistore/icons/font.png")
