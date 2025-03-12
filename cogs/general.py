@@ -309,7 +309,7 @@ class General(commands.Cog):
     async def twlsettings(self, ctx):
         """How to access TWiLight Menu++ Settings"""
         title = "How to access TWiLight Menu++ Settings"
-        initDescription = "To access TWiLight Menu++ settings, follow the instructions relative to the way TWiLight Menu++ is setup on your device."
+        initDescription = "To access TWiLight Menu++ settings, follow the instructions relative to the way TWiLight Menu++ is setup on your device. If this is your first time opening TWLMenu++ Settings, click on DSi/Saturn/HBL UI, as the DSi UI is used by default."
         themeSteps = {
             "dsi": """Press the SELECT button\n- If you are met with a list of options, select **TWLMenu++ Settings**\n- If the screen turns white and then you are met with a different menu, follow the instructions for "**DS Classic Menu**" below""",
             "ds": """Tap the small icon in the bottom center of the touchscreen""",
