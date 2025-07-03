@@ -47,7 +47,7 @@ class NoIntro(commands.Cog):
         return True
 
     @commands.command(usage="<title id|game name> <sha1 hash>")
-    async def nicompare(self, ctx, gamecode: str, sha1hash: str):
+    async def nicompare(self, ctx, gamecode: str = commands.parameter(description="4 letter game code (e.g. YLZX)"), sha1hash: str = commands.parameter(description="SHA1 hash of the ROM file")):
         """
         Compares input ROM and hash against No-Intro.
         At the moment, only SHA1 comparison is supported.
