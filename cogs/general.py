@@ -280,7 +280,7 @@ class General(commands.Cog):
     async def touchfix(self, ctx):
         """Information on how to fix broken touch input"""
         await self.simple_embed(ctx, """
-                                For DSi users with Unlaunch, hold A+B buttons after pressing POWER, then select `Launcher`.
+                                For DSi users with Unlaunch, hold A+B buttons after pressing POWER, then select `Launcher`. If the issue persists or if Unlaunch is not installed, then re-insert the battery.
                                 For 3DS users, follow [this guide](https://gbatemp.net/threads/recover-ds-mode-after-an-nvram-brick-eg-after-using-a-ds-bricker.516444/).
                                 """, title="Fix broken touch input")
 
