@@ -1,4 +1,4 @@
-discord.py~=2.5.2
+discord.py~=2.6.0
 feedparser~=6.0.11
 gspread~=6.2.1
 jishaku~=2.6.0
