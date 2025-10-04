@@ -357,7 +357,7 @@ class General(commands.Cog):
         embed.set_author(name="emiyl & DS⁽ⁱ⁾ Mode Hacking")
         embed.set_thumbnail(url="https://i.imgur.com/OGelKVt.png")
         embed.url = "https://dsi.cfw.guide/sd-card-setup.html"
-        embed.description = "How to properly format your SD card\n\nEven if you already know how to format the SD card and/or check it for errors, this setup guide must be followed, as it provides the proper tools to be used."
+        embed.description = "How to properly format your SD card\n\nThis setup guide must be followed, as it provides the proper tools to be used in order to format the SD card and/or check it for errors."
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["nanddump", "nandbackup"])
