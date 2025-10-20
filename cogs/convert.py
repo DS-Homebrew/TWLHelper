@@ -293,7 +293,7 @@ class Convert(commands.Cog):
                 self.yeet([fileName, newFileName])
         elif fileName == 1:
             embed = self.embed("Custom Unlaunch Backgrounds")
-            embed.url += "twilightmenu/custom-unlaunch-backgrounds.html"
+            embed.url += "ds-index/custom-unlaunch-backgrounds.html"
             embed.description = "Run this command with an image attached or linked to convert it for use with Unlaunch. Use with `-nodither` to disable dithering.\n\nSee the above link for how to manually convert images in higher quality."
             return await ctx.send(embed=embed)
         else:
