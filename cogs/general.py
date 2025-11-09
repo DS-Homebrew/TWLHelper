@@ -215,7 +215,7 @@ class General(commands.Cog):
         if check_arg(twilight_install, 'addons'):
             embed = build_wiki_embed(title="TWiLight Menu++ Add-on Installation Guide", url="twilightmenu/installing-addons.html")
             embed.description = "How to install additional features to TWiLight Menu++"
-            await ctx.send(embed=embed)
+            await ctx.send(embed=embed, view=view)
         else:
             embed = build_wiki_embed(title="TWiLight Menu++ Installation Guide", url="twilightmenu/installing.html")
             embed.description = "How to install TWiLight Menu++"
