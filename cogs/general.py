@@ -220,7 +220,7 @@ class General(commands.Cog):
         view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"))
         await ctx.send(embed=embed, view=view)
 
-    @install.command(name="twilight addons", aliases=twilightmenu_addons_alias)
+    @install.command(name="twilightaddons", aliases=twilightmenu_addons_alias)
     async def twilight_addons_install(self, ctx):
         embed = build_wiki_embed(title="TWiLight Menu++ Add-on Installation Guide", url="twilightmenu/installing-addons.html")
         embed.description = "How to install additional features to TWiLight Menu++"

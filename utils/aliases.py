@@ -20,5 +20,5 @@ __all__ = ("twilightmenu_alias", "twilightmenu_addons_alias", "ndsbootstrap_alia
 
 
 twilightmenu_alias = ["twlmenu", "twl", "twilightmenu"]
-twilightmenu_addons_alias = ["twlmenu addons", "twl addons", "twilightmenu addons"]
+twilightmenu_addons_alias = ["twlmenuaddons", "twladdons", "twilightmenuaddons"]
 ndsbootstrap_alias = ["nds-bootstrap", "bootstrap", "ndsbs", "bs"]
