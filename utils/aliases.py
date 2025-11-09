@@ -16,8 +16,9 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-__all__ = ("twilightmenu_alias", "ndsbootstrap_alias",)
+__all__ = ("twilightmenu_alias", "twilightmenu_addons_alias", "ndsbootstrap_alias",)
 
 
 twilightmenu_alias = ["twlmenu", "twl", "twilightmenu"]
+twilightmenu_addons_alias = ["twlmenu addons", "twl addons", "twilightmenu addons"]
 ndsbootstrap_alias = ["nds-bootstrap", "bootstrap", "ndsbs", "bs"]
