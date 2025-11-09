@@ -211,7 +211,7 @@ class General(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @install.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_install(self, ctx, twilight_install: Literal("addons", "noqa")) -> "noqa":
+    async def twilight_install(self, ctx, twilight_install: Literal("addons", "noqa")) -> None:
         if check_arg(twilight_install, 'addons'):
             embed = build_wiki_embed(title="TWiLight Menu++ Add-on Installation Guide", url="twilightmenu/installing-addons.html")
             embed.description = "How to install additional features to TWiLight Menu++"
