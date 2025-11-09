@@ -211,14 +211,19 @@ class General(commands.Cog):
         await ctx.send_help(ctx.command)
 
     @install.command(name="twilight", aliases=twilightmenu_alias)
-    async def twilight_install(self, ctx):
-        embed = build_wiki_embed(title="TWiLight Menu++ Installation Guide", url="twilightmenu/installing.html")
-        embed.description = "How to install TWiLight Menu++"
-        view = discord.ui.View()
-        view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html"))
-        view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/installing-dsi.html"))
-        view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"))
-        await ctx.send(embed=embed, view=view)
+    async def twilight_install(self, ctx, twilight_install: Literal("addons")) -> None:  # noqa
+        if check_arg(twilight_install, 'addons'):
+            embed = build_wiki_embed(title="TWiLight Menu++ Add-on Installation Guide", url="twilightmenu/installing-addons.html")
+            embed.description = "How to install additional features to TWiLight Menu++"
+            await ctx.send(embed=embed, view=view)
+        else:
+            embed = build_wiki_embed(title="TWiLight Menu++ Installation Guide", url="twilightmenu/installing.html")
+            embed.description = "How to install TWiLight Menu++"
+            view = discord.ui.View()
+            view.add_item(discord.ui.Button(label="3DS", url="http://wiki.ds-homebrew.com/twilightmenu/installing-3ds.html"))
+            view.add_item(discord.ui.Button(label="DSi", url="http://wiki.ds-homebrew.com/twilightmenu/installing-dsi.html"))
+            view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/installing-flashcard.html"))
+            await ctx.send(embed=embed, view=view)
 
     @install.command(name="hiyacfw", aliases=["hiya"])
     async def hiyacfw_install(self, ctx):
