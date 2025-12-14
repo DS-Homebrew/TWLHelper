@@ -390,8 +390,8 @@ class General(commands.Cog):
     async def dump(self, ctx):
         """How to dump games and data for CFW consoles"""
         await self.simple_embed(ctx, text="""
-                                    [Dumping DS games from cartridges using a 3DS console](https://3ds.hacks.guide/dumping-titles-and-game-cartridges#dumping-a-game-cartridge)
                                     [Dumping DS games from cartridges using a DSi console](https://dsi.cfw.guide/dumping-game-cards.html)
+                                    [Dumping DS games from cartridges using a 3DS console](https://3ds.hacks.guide/dumping-titles-and-game-cartridges#dumping-a-game-cartridge)
                                     [Dumping DS games from a Wii U console](https://wiki.hacks.guide/wiki/Wii_U:VC_Extract)
                                     [Dumping DSiWare from a DSi console](https://dsi.cfw.guide/dsiware-backups.html)
                                     [Dumping DSiWare from a 3DS console](https://3ds.hacks.guide/dumping-titles-and-game-cartridges.html#dumping-an-installed-title)
