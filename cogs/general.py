@@ -394,6 +394,7 @@ class General(commands.Cog):
                                     [Dumping DS games from cartridges using a DSi console](https://dsi.cfw.guide/dumping-game-cards.html)
                                     [Dumping DS games from a Wii U console](https://wiki.hacks.guide/wiki/Wii_U:VC_Extract)
                                     [Dumping DSiWare from a DSi console](https://dsi.cfw.guide/dsiware-backups.html)
+                                    [Dumping DSiWare from a 3DS console](https://3ds.hacks.guide/dumping-titles-and-game-cartridges.html#dumping-an-installed-title)
                                     """, title="Dumping Games to ROM files")
 
     @commands.command()
