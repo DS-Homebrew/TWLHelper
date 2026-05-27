@@ -44,6 +44,14 @@ class Wiki(commands.Cog):
         view.add_item(discord.ui.Button(label="Flashcard", url="http://wiki.ds-homebrew.com/twilightmenu/updating-flashcard.html"))
         await ctx.send(embed=embed, view=view)
 
+    @update.command(name="hiyacfw", aliases=["hiya"])
+    async def hiyacfw_update(self, ctx):
+        """hiyaCFW update guide."""
+        embed = self.embed("hiyaCFW Update Guide")
+        embed.url += "hiyacfw/updating.html"
+        embed.description = "How to update hiyaCFW on the DSi"
+        await ctx.send(embed=embed)
+
     @commands.command(aliases=["ds-index"])
     async def dsindex(self, ctx):
         """Links to the DS index"""
