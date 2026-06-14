@@ -38,7 +38,7 @@ class TWLHelper(commands.Bot):
     session: aiohttp.ClientSession
 
     def __init__(self, settings: Dict[str, Any], description: str):
-        intents = discord.Intents(guilds=True, members=True, bans=True, messages=True, message_content=True)
+        intents = discord.Intents(guilds=True, messages=True, message_content=True)
         allowed_mentions = discord.AllowedMentions(everyone=False, roles=False)
         activity = discord.Game(settings['STATUS'])
         status = discord.Status.online
